@@ -35,11 +35,25 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-4 items-center">
+          <div className="flex gap-4">
+            <Link
+              href="/login"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/signup"
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+            >
+              Sign Up
+            </Link>
+          </div>
           <Link
             href="/dashboard"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+            className="text-blue-600 hover:underline text-sm"
           >
-            View Dashboard
+            Go to Dashboard
           </Link>
           <div className="flex gap-3 text-sm">
             <a
