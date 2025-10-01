@@ -1,0 +1,61 @@
+// Prisma schema for Affiliate Aggregator
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Affiliate Networks
+model AffiliateNetwork {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  website     String?
+  country     String?
+  commission  Float?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  programs AffiliateProgram[]
+
+  @@index([country])
+  @@index([active])
+}
+
+// Affiliate Programs
+model AffiliateProgram {
+  id               String   @id @default(cuid())
+  networkId        String
+  name             String
+  description      String?
+  category         String?
+  commissionRate   Float?
+  commissionType   String?  // CPA, CPS, CPL, etc.
+  cookieDuration   Int?     // in days
+  paymentThreshold Float?
+  paymentMethods   String[] // JSON array of payment methods
+  active           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  network AffiliateNetwork @relation(fields: [networkId], references: [id], onDelete: Cascade)
+
+  @@index([networkId])
+  @@index([category])
+  @@index([active])
+}
+
+// User tracking (optional for future)
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
