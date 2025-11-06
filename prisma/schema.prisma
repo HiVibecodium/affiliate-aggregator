@@ -33,6 +33,7 @@ model AffiliateNetwork {
 model AffiliateProgram {
   id               String   @id @default(cuid())
   networkId        String
+  externalId       String   // Unique identifier from the network
   name             String
   description      String?
   category         String?
@@ -48,6 +49,7 @@ model AffiliateProgram {
   network            AffiliateNetwork @relation(fields: [networkId], references: [id], onDelete: Cascade)
   organizationAccess ProgramAccess[]
 
+  @@unique([networkId, externalId])
   @@index([networkId])
   @@index([category])
   @@index([active])
