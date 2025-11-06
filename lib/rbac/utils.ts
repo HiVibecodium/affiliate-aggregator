@@ -3,7 +3,10 @@
  * Implements constraint-driven permission validation with optimal performance
  */
 
-import { Permission, getRolePermissions, getRole, hasHigherOrEqualRole } from './permissions';
+import { Permission, getRolePermissions, getRole, hasHigherOrEqualRole, isValidRole } from './permissions';
+
+// Re-export commonly used types and functions
+export { Permission, isValidRole } from './permissions';
 
 export interface RBACContext {
   userId: string;
@@ -257,5 +260,5 @@ export function isOwner(context: RBACContext): boolean {
  * Check if user is admin or above
  */
 export function isAdminOrAbove(context: RBACContext): boolean {
-  return hasHigherOrEqualRole(context.role, 'admin').allowed;
+  return hasHigherOrEqualRole(context.role, 'admin');
 }

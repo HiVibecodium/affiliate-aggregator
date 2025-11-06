@@ -102,8 +102,6 @@ export class AffiliateProgramImporter {
               cookieDuration: programData.cookieDuration,
               paymentThreshold: programData.paymentThreshold,
               paymentMethods: programData.paymentMethods || [],
-              lastSyncedAt: new Date(),
-              updatedAt: new Date(),
             },
           });
           result.programsUpdated++;
@@ -121,8 +119,6 @@ export class AffiliateProgramImporter {
               cookieDuration: programData.cookieDuration,
               paymentThreshold: programData.paymentThreshold,
               paymentMethods: programData.paymentMethods || [],
-              dataSource,
-              lastSyncedAt: new Date(),
               active: true,
             },
           });
@@ -182,10 +178,8 @@ export class AffiliateProgramImporter {
     totalNetworks: number;
     totalPrograms: number;
     programsByNetwork: { networkName: string; count: number }[];
-    programsBySource: { source: string; count: number }[];
-    lastSync: Date | null;
   }> {
-    const [totalNetworks, totalPrograms, programsByNetwork, programsBySource, lastSyncResult] = await Promise.all([
+    const [totalNetworks, totalPrograms, programsByNetwork] = await Promise.all([
       prisma.affiliateNetwork.count(),
       prisma.affiliateProgram.count(),
       prisma.affiliateNetwork.findMany({
@@ -194,14 +188,6 @@ export class AffiliateProgramImporter {
             select: { programs: true },
           },
         },
-      }),
-      prisma.affiliateProgram.groupBy({
-        by: ['dataSource'],
-        _count: true,
-      }),
-      prisma.affiliateProgram.findFirst({
-        orderBy: { lastSyncedAt: 'desc' },
-        select: { lastSyncedAt: true },
       }),
     ]);
 
@@ -212,11 +198,6 @@ export class AffiliateProgramImporter {
         networkName: network.name,
         count: network._count.programs,
       })),
-      programsBySource: programsBySource.map((group) => ({
-        source: group.dataSource || 'unknown',
-        count: group._count,
-      })),
-      lastSync: lastSyncResult?.lastSyncedAt || null,
     };
   }
 }

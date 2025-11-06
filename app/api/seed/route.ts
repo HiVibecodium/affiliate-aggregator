@@ -44,6 +44,7 @@ export async function POST() {
       data: [
         {
           networkId: amazonAssociates.id,
+          externalId: 'SEED001',
           name: 'Amazon Electronics',
           description: 'Electronics and gadgets category',
           category: 'Electronics',
@@ -56,6 +57,7 @@ export async function POST() {
         },
         {
           networkId: amazonAssociates.id,
+          externalId: 'SEED002',
           name: 'Amazon Fashion',
           description: 'Clothing and fashion items',
           category: 'Fashion',
@@ -68,6 +70,7 @@ export async function POST() {
         },
         {
           networkId: cj.id,
+          externalId: 'SEED003',
           name: 'Travel Deals',
           description: 'Hotels and travel booking affiliates',
           category: 'Travel',
@@ -80,6 +83,7 @@ export async function POST() {
         },
         {
           networkId: awin.id,
+          externalId: 'SEED004',
           name: 'Financial Services',
           description: 'Credit cards and loans',
           category: 'Finance',

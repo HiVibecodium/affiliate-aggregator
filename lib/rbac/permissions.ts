@@ -165,7 +165,7 @@ export function isValidRole(roleId: string): roleId is RoleIdValue {
  */
 export function getRolePermissions(roleId: string): Permission[] {
   const role = getRole(roleId);
-  return role?.permissions || [];
+  return role?.permissions ? [...role.permissions] : [];
 }
 
 /**

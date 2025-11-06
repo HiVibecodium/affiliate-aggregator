@@ -31,7 +31,7 @@ export async function executeBulkImport(options: BulkImportOptions = {}): Promis
   console.log('🚀 Starting bulk affiliate program import...');
   console.log('Target: 80,000+ programs across 5 major networks\\n');
 
-  const configs = [];
+  const configs: ReturnType<typeof generateClickBankData>[] = [];
 
   if (includeAll || options.clickbankCount !== undefined) {
     console.log(`Generating ClickBank data (${clickbankCount} programs)...`);
