@@ -233,10 +233,11 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      - name: Run database migrations
-        run: npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+      # Temporarily disabled - using db push instead of migrations
+      # - name: Run database migrations
+      #   run: npx prisma migrate deploy
+      #   env:
+      #     DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
 
       - name: Build for staging
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
@@ -288,15 +289,16 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      - name: Backup production database
-        run: |
-          echo "Creating database backup before deployment..."
-          # Add your backup script here
+      # Temporarily disabled - using db push instead of migrations
+      # - name: Backup production database
+      #   run: |
+      #     echo "Creating database backup before deployment..."
+      #     # Add your backup script here
 
-      - name: Run database migrations
-        run: npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+      # - name: Run database migrations
+      #   run: npx prisma migrate deploy
+      #   env:
+      #     DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
 
       - name: Build for production
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
