@@ -22,7 +22,8 @@ model AffiliateNetwork {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  programs AffiliateProgram[]
+  programs           AffiliateProgram[]
+  organizationAccess NetworkAccess[]
 
   @@index([country])
   @@index([active])
@@ -36,26 +37,172 @@ model AffiliateProgram {
   description      String?
   category         String?
   commissionRate   Float?
-  commissionType   String?  // CPA, CPS, CPL, etc.
-  cookieDuration   Int?     // in days
+  commissionType   String? // CPA, CPS, CPL, etc.
+  cookieDuration   Int? // in days
   paymentThreshold Float?
   paymentMethods   String[] // JSON array of payment methods
   active           Boolean  @default(true)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  network AffiliateNetwork @relation(fields: [networkId], references: [id], onDelete: Cascade)
+  network            AffiliateNetwork @relation(fields: [networkId], references: [id], onDelete: Cascade)
+  organizationAccess ProgramAccess[]
 
   @@index([networkId])
   @@index([category])
   @@index([active])
 }
 
-// User tracking (optional for future)
+// User tracking and authentication
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relations for multi-tenancy
+  organizationMembers OrganizationMember[]
+}
+
+// Organization/Tenant model
+model Organization {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+  logo        String?
+  website     String?
+
+  // Subscription and billing
+  tier               String @default("free") // free, pro, enterprise
+  subscriptionStatus String @default("active") // active, paused, cancelled
+
+  // Organization settings
+  settings Json? // Flexible settings storage
+
+  // Timestamps
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // Relations
+  members  OrganizationMember[]
+  programs ProgramAccess[]
+  networks NetworkAccess[]
+
+  @@index([slug])
+  @@index([tier])
+  @@index([subscriptionStatus])
+}
+
+// Organization membership with role-based access
+model OrganizationMember {
+  id             String @id @default(cuid())
+  organizationId String
+  userId         String
+
+  // Role assignment
+  role String @default("member") // owner, admin, manager, member, viewer
+
+  // Permissions override (for custom permissions)
+  permissions String[] @default([]) // List of explicit permissions
+
+  // Status and metadata
+  status       String    @default("active") // active, pending, inactive
+  invitedEmail String? // For pending invites
+  invitedAt    DateTime?
+  acceptedAt   DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@unique([organizationId, invitedEmail])
+  @@index([organizationId])
+  @@index([userId])
+  @@index([role])
+  @@index([status])
+}
+
+// Role-Permission mapping
+model Role {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+
+  // Permissions for this role (array of permission keys)
+  permissions String[] @default([])
+
+  // System role flag
+  isSystem Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isSystem])
+}
+
+// Data isolation: AffiliateNetwork access control
+model NetworkAccess {
+  id             String @id @default(cuid())
+  organizationId String
+  networkId      String
+
+  // Access level
+  accessLevel String @default("viewer") // viewer, manager, admin
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  network      AffiliateNetwork @relation(fields: [networkId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, networkId])
+  @@index([organizationId])
+  @@index([networkId])
+}
+
+// Data isolation: AffiliateProgram access control
+model ProgramAccess {
+  id             String @id @default(cuid())
+  organizationId String
+  programId      String
+
+  // Access level
+  accessLevel String @default("viewer") // viewer, manager, admin
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  program      AffiliateProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, programId])
+  @@index([organizationId])
+  @@index([programId])
+}
+
+// Audit log for organization actions
+model AuditLog {
+  id             String @id @default(cuid())
+  organizationId String
+
+  action       String // e.g., "user_added", "role_changed", "data_exported"
+  resourceType String // e.g., "user", "program", "network"
+  resourceId   String?
+
+  performedBy String // userId
+  details     Json? // Additional details about the action
+
+  createdAt DateTime @default(now())
+
+  @@index([organizationId])
+  @@index([action])
+  @@index([createdAt])
 }
