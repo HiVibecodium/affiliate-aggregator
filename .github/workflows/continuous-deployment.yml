@@ -133,7 +133,7 @@ jobs:
   migration-check:
     runs-on: ubuntu-latest
     needs: quality-gates
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    if: false  # Temporarily disabled - using db push instead of migrations
 
     steps:
       - name: Checkout code
@@ -214,7 +214,7 @@ jobs:
   # Staging deployment
   deploy-staging:
     runs-on: ubuntu-latest
-    needs: [quality-gates, build-verification, migration-check]
+    needs: [quality-gates, build-verification]
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     environment:
       name: staging
@@ -269,7 +269,7 @@ jobs:
   # Production deployment
   deploy-production:
     runs-on: ubuntu-latest
-    needs: [quality-gates, build-verification, migration-check]
+    needs: [quality-gates, build-verification]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment:
       name: production
