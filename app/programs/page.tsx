@@ -24,21 +24,42 @@ interface Stats {
   networks: { name: string; programs: number }[];
 }
 
+interface Filters {
+  categories: { value: string; count: number }[];
+  commissionTypes: { value: string; count: number }[];
+  commissionRange: { min: number; max: number };
+}
+
 export default function ProgramsPage() {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
-  const [selectedNetwork, setSelectedNetwork] = useState<string>('');
+  const [filters, setFilters] = useState<Filters | null>(null);
+
+  // Filter states
+  const [search, setSearch] = useState('');
+  const [selectedNetwork, setSelectedNetwork] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCommissionType, setSelectedCommissionType] = useState('');
+  const [minCommission, setMinCommission] = useState('');
+  const [maxCommission, setMaxCommission] = useState('');
+
+  // Sorting
+  const [sortBy, setSortBy] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchStats();
+    fetchFilters();
   }, []);
 
   useEffect(() => {
     fetchPrograms();
-  }, [selectedNetwork, currentPage]);
+  }, [selectedNetwork, selectedCategory, selectedCommissionType, search, minCommission, maxCommission, sortBy, sortOrder, currentPage]);
 
   async function fetchStats() {
     try {
@@ -50,13 +71,30 @@ export default function ProgramsPage() {
     }
   }
 
+  async function fetchFilters() {
+    try {
+      const response = await fetch('/api/programs/filters');
+      const data = await response.json();
+      setFilters(data);
+    } catch (error) {
+      console.error('Failed to fetch filters:', error);
+    }
+  }
+
   async function fetchPrograms() {
     setLoading(true);
     try {
       const params = new URLSearchParams({
         page: currentPage.toString(),
         limit: '20',
+        sortBy,
+        sortOrder,
         ...(selectedNetwork && { network: selectedNetwork }),
+        ...(selectedCategory && { category: selectedCategory }),
+        ...(selectedCommissionType && { commissionType: selectedCommissionType }),
+        ...(search && { search }),
+        ...(minCommission && { minCommission }),
+        ...(maxCommission && { maxCommission }),
       });
 
       const response = await fetch(`/api/programs?${params}`);
@@ -70,6 +108,32 @@ export default function ProgramsPage() {
       setLoading(false);
     }
   }
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setCurrentPage(1);
+  };
+
+  const resetFilters = () => {
+    setSearch('');
+    setSelectedNetwork('');
+    setSelectedCategory('');
+    setSelectedCommissionType('');
+    setMinCommission('');
+    setMaxCommission('');
+    setSortBy('createdAt');
+    setSortOrder('desc');
+    setCurrentPage(1);
+  };
+
+  const activeFiltersCount = [
+    search,
+    selectedNetwork,
+    selectedCategory,
+    selectedCommissionType,
+    minCommission,
+    maxCommission
+  ].filter(Boolean).length;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -96,11 +160,35 @@ export default function ProgramsPage() {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Sidebar with filters */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6 sticky top-4">
-              <h3 className="font-bold text-lg mb-4">Фильтры</h3>
+            <div className="bg-white rounded-lg shadow p-6 sticky top-4 space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-lg">Фильтры</h3>
+                {activeFiltersCount > 0 && (
+                  <button
+                    onClick={resetFilters}
+                    className="text-sm text-blue-600 hover:text-blue-700"
+                  >
+                    Сбросить ({activeFiltersCount})
+                  </button>
+                )}
+              </div>
+
+              {/* Search */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Поиск по названию
+                </label>
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  placeholder="Введите название..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
 
               {/* Network filter */}
-              <div className="mb-6">
+              <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Партнерская сеть
                 </label>
@@ -119,6 +207,86 @@ export default function ProgramsPage() {
                     </option>
                   ))}
                 </select>
+              </div>
+
+              {/* Category filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Категория
+                </label>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Все категории</option>
+                  {filters?.categories.map((cat) => (
+                    <option key={cat.value} value={cat.value}>
+                      {cat.value} ({cat.count.toLocaleString()})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Commission type filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Тип комиссии
+                </label>
+                <select
+                  value={selectedCommissionType}
+                  onChange={(e) => {
+                    setSelectedCommissionType(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Все типы</option>
+                  {filters?.commissionTypes.map((ct) => (
+                    <option key={ct.value} value={ct.value}>
+                      {ct.value} ({ct.count.toLocaleString()})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Commission range */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Диапазон комиссии (%)
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    value={minCommission}
+                    onChange={(e) => {
+                      setMinCommission(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    placeholder="От"
+                    min={0}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <input
+                    type="number"
+                    value={maxCommission}
+                    onChange={(e) => {
+                      setMaxCommission(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    placeholder="До"
+                    max={100}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                {filters && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Доступно: {filters.commissionRange.min}% - {filters.commissionRange.max}%
+                  </p>
+                )}
               </div>
 
               {/* Quick stats */}
@@ -142,10 +310,48 @@ export default function ProgramsPage() {
 
           {/* Programs list */}
           <div className="lg:col-span-3">
+            {/* Sorting controls */}
+            <div className="bg-white rounded-lg shadow p-4 mb-6">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">Сортировать:</span>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                    <option value="createdAt">По дате добавления</option>
+                    <option value="commission">По комиссии</option>
+                    <option value="name">По названию</option>
+                  </select>
+                  <button
+                    onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                    className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm"
+                  >
+                    {sortOrder === 'asc' ? '↑ По возрастанию' : '↓ По убыванию'}
+                  </button>
+                </div>
+                <div className="text-sm text-gray-600">
+                  Найдено программ: {stats?.totalPrograms.toLocaleString()}
+                </div>
+              </div>
+            </div>
+
             {loading ? (
               <div className="text-center py-12">
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
                 <p className="mt-4 text-gray-600">Загрузка программ...</p>
+              </div>
+            ) : programs.length === 0 ? (
+              <div className="bg-white rounded-lg shadow p-12 text-center">
+                <p className="text-gray-500 text-lg">Программы не найдены</p>
+                <p className="text-gray-400 text-sm mt-2">Попробуйте изменить параметры фильтрации</p>
+                <button
+                  onClick={resetFilters}
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Сбросить фильтры
+                </button>
               </div>
             ) : (
               <>
@@ -160,13 +366,18 @@ export default function ProgramsPage() {
                           <h3 className="text-xl font-semibold text-gray-900 mb-2">
                             {program.name}
                           </h3>
-                          <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                          <div className="flex items-center gap-2 text-sm text-gray-600 mb-2 flex-wrap">
                             <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
                               {program.network.name}
                             </span>
                             {program.category && (
                               <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded">
                                 {program.category}
+                              </span>
+                            )}
+                            {program.commissionType && (
+                              <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
+                                {program.commissionType}
                               </span>
                             )}
                           </div>
