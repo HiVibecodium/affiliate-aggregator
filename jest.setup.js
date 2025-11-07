@@ -1,5 +1,11 @@
 require('@testing-library/jest-dom');
 
+// Mock Next.js globals (Request, Response, etc.)
+global.Request = class Request {};
+global.Response = class Response {};
+global.Headers = class Headers {};
+global.FormData = class FormData {};
+
 // Set test environment variables
 process.env.NEXT_PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:3000';
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'test-key';

@@ -21,8 +21,6 @@ const customJestConfig = {
     '<rootDir>/node_modules/',
     '<rootDir>/tests/e2e/',
     '<rootDir>/tests/integration/e2e/',
-    '<rootDir>/tests/unit/',  // Temporarily skip until Jest config fixed
-    '<rootDir>/tests/integration/',  // Temporarily skip until Jest config fixed
   ],
   collectCoverageFrom: [
     'app/**/*.{js,jsx,ts,tsx}',
