@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { ComparisonProvider } from '@/contexts/ComparisonContext'
+import { ComparisonBar } from '@/components/ComparisonBar'
 
 export const metadata: Metadata = {
   title: 'Affiliate Aggregator',
@@ -13,7 +15,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ComparisonProvider>
+          {children}
+          <ComparisonBar />
+        </ComparisonProvider>
+      </body>
     </html>
   )
 }

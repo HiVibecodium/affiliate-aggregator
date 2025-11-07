@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useComparison } from '@/contexts/ComparisonContext';
 
 interface Program {
   id: string;
@@ -12,6 +13,7 @@ interface Program {
   commissionType: string;
   cookieDuration: number;
   paymentThreshold: number;
+  paymentMethods: string[];
   network: {
     name: string;
     website: string;
@@ -36,6 +38,9 @@ export default function ProgramsPage() {
   const [filters, setFilters] = useState<Filters | null>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [favoritesLoading, setFavoritesLoading] = useState(false);
+
+  // Comparison hook
+  const { addToComparison, removeFromComparison, isInComparison } = useComparison();
 
   // Filter states
   const [search, setSearch] = useState('');
@@ -62,6 +67,7 @@ export default function ProgramsPage() {
 
   useEffect(() => {
     fetchPrograms();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedNetwork, selectedCategory, selectedCommissionType, search, minCommission, maxCommission, sortBy, sortOrder, currentPage]);
 
   async function fetchStats() {
@@ -142,6 +148,14 @@ export default function ProgramsPage() {
       alert('Произошла ошибка. Попробуйте снова.');
     } finally {
       setFavoritesLoading(false);
+    }
+  }
+
+  function toggleComparison(program: Program) {
+    if (isInComparison(program.id)) {
+      removeFromComparison(program.id);
+    } else {
+      addToComparison(program);
     }
   }
 
@@ -449,30 +463,55 @@ export default function ProgramsPage() {
                             {program.description}
                           </p>
                         </div>
-                        <button
-                          onClick={() => toggleFavorite(program.id)}
-                          disabled={favoritesLoading}
-                          className={`ml-4 p-2 rounded-full transition-all ${
-                            favorites.has(program.id)
-                              ? 'text-red-500 bg-red-50 hover:bg-red-100'
-                              : 'text-gray-400 bg-gray-50 hover:bg-gray-100 hover:text-red-500'
-                          } disabled:opacity-50 disabled:cursor-not-allowed`}
-                          title={favorites.has(program.id) ? 'Удалить из избранного' : 'Добавить в избранное'}
-                        >
-                          <svg
-                            className="w-6 h-6"
-                            fill={favorites.has(program.id) ? 'currentColor' : 'none'}
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                        <div className="flex gap-2 ml-4">
+                          <button
+                            onClick={() => toggleComparison(program)}
+                            className={`p-2 rounded-full transition-all ${
+                              isInComparison(program.id)
+                                ? 'text-blue-600 bg-blue-50 hover:bg-blue-100'
+                                : 'text-gray-400 bg-gray-50 hover:bg-gray-100 hover:text-blue-600'
+                            }`}
+                            title={isInComparison(program.id) ? 'Убрать из сравнения' : 'Добавить к сравнению'}
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                            />
-                          </svg>
-                        </button>
+                            <svg
+                              className="w-6 h-6"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => toggleFavorite(program.id)}
+                            disabled={favoritesLoading}
+                            className={`p-2 rounded-full transition-all ${
+                              favorites.has(program.id)
+                                ? 'text-red-500 bg-red-50 hover:bg-red-100'
+                                : 'text-gray-400 bg-gray-50 hover:bg-gray-100 hover:text-red-500'
+                            } disabled:opacity-50 disabled:cursor-not-allowed`}
+                            title={favorites.has(program.id) ? 'Удалить из избранного' : 'Добавить в избранное'}
+                          >
+                            <svg
+                              className="w-6 h-6"
+                              fill={favorites.has(program.id) ? 'currentColor' : 'none'}
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                              />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
