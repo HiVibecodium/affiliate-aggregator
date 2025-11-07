@@ -281,8 +281,10 @@ describe('RBAC Permissions', () => {
       const memberPerms = new Set(ROLES.MEMBER.permissions);
 
       // Owner should have permissions that admin doesn't have
-      const ownerOnly = ownerPerms.difference?.(adminPerms) ||
-        [...ownerPerms].filter((p) => !adminPerms.has(p));
+      const ownerOnlySet = ownerPerms.difference?.(adminPerms);
+      const ownerOnly = ownerOnlySet
+        ? [...ownerOnlySet]
+        : [...ownerPerms].filter((p) => !adminPerms.has(p));
       expect(ownerOnly.length).toBeGreaterThan(0);
 
       // Admin should have permissions that member doesn't have

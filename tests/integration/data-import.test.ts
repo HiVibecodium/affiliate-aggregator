@@ -371,6 +371,7 @@ describe('Data Import Integration Tests', () => {
   describe('Import data validation', () => {
     it('should handle program with minimal data', async () => {
       const mockProgram = testDataFactories.affiliateProgram({
+        name: 'Minimal Program',
         description: null,
         category: null,
         commissionRate: null,

@@ -81,11 +81,17 @@ export function createMockNextRequest(
 }
 
 /**
+ * Counter for generating unique test IDs
+ */
+let idCounter = 0;
+const getUniqueId = (prefix: string) => `${prefix}-${++idCounter}-${Date.now()}`;
+
+/**
  * Test data factories for common entities
  */
 export const testDataFactories = {
   user: (overrides?: any) => ({
-    id: 'test-user-id',
+    id: overrides?.id || getUniqueId('test-user'),
     email: 'test@example.com',
     name: 'Test User',
     createdAt: new Date(),
@@ -94,9 +100,9 @@ export const testDataFactories = {
   }),
 
   organization: (overrides?: any) => ({
-    id: 'test-org-id',
+    id: overrides?.id || getUniqueId('test-org'),
     name: 'Test Organization',
-    slug: 'test-org',
+    slug: overrides?.slug || `test-org-${++idCounter}`,
     description: 'Test organization description',
     logo: null,
     website: null,
@@ -109,9 +115,9 @@ export const testDataFactories = {
   }),
 
   organizationMember: (overrides?: any) => ({
-    id: 'test-member-id',
-    organizationId: 'test-org-id',
-    userId: 'test-user-id',
+    id: overrides?.id || getUniqueId('test-member'),
+    organizationId: overrides?.organizationId || 'test-org-id',
+    userId: overrides?.userId || 'test-user-id',
     role: 'member',
     permissions: [],
     status: 'active',
