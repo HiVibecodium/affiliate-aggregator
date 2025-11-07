@@ -2,7 +2,11 @@ import Link from 'next/link';
 
 async function getStats() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    // Use VERCEL_URL for build time, fallback to localhost for local dev
+    const protocol = process.env.VERCEL_URL ? 'https' : 'http';
+    const host = process.env.VERCEL_URL || process.env.NEXT_PUBLIC_APP_URL || 'localhost:3000';
+    const baseUrl = `${protocol}://${host}`;
+
     const response = await fetch(`${baseUrl}/api/programs/stats`, {
       cache: 'no-store'
     });
