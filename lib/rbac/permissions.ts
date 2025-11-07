@@ -200,8 +200,14 @@ export const ROLE_HIERARCHY: Record<RoleIdValue, number> = {
  * Check if one role has equal or higher level than another
  */
 export function hasHigherOrEqualRole(userRoleId: string, requiredRoleId: string): boolean {
-  const userLevel = ROLE_HIERARCHY[userRoleId as RoleIdValue] ?? -1;
-  const requiredLevel = ROLE_HIERARCHY[requiredRoleId as RoleIdValue] ?? -1;
+  const userLevel = ROLE_HIERARCHY[userRoleId as RoleIdValue];
+  const requiredLevel = ROLE_HIERARCHY[requiredRoleId as RoleIdValue];
+
+  // Return false if either role is invalid
+  if (userLevel === undefined || requiredLevel === undefined) {
+    return false;
+  }
+
   return userLevel >= requiredLevel;
 }
 

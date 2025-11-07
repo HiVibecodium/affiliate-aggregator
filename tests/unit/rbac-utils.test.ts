@@ -112,7 +112,7 @@ describe('RBAC Utils', () => {
       ]);
 
       expect(result.allowed).toBe(false);
-      expect(result.reason).toContain('MANAGE_USERS');
+      expect(result.reason).toContain('manage_users');
     });
 
     it('should return not allowed if user has no permissions', () => {

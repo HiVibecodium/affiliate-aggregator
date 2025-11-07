@@ -9,6 +9,9 @@ import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { RBACContext, createRBACContext } from '@/lib/rbac/utils';
 
+// Re-export for convenience
+export { createRBACContext };
+
 export interface OrgContextRequest extends NextRequest {
   orgContext?: OrgContext;
 }
@@ -248,7 +251,11 @@ export async function getUserCurrentOrganization(
     },
   });
 
-  return membership ? membership.organization : null;
+  if (!membership) return null;
+
+  // Explicitly return only the required fields to prevent leaking extra fields
+  const { id, name, slug } = membership.organization;
+  return { id, name, slug };
 }
 
 /**
