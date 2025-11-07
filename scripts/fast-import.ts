@@ -23,11 +23,11 @@ async function fastImport() {
     // Generate data
     console.log('Generating data...');
     const configs = [
-      generateClickBankData(1000),    // Reduced for speed
-      generateShareASaleData(2500),
-      generateCJAffiliateData(1500),
-      generateRakutenData(1200),
-      generateAwinData(1800),
+      generateClickBankData(10000),    // 10K programs
+      generateShareASaleData(25000),   // 25K programs
+      generateCJAffiliateData(15000),  // 15K programs
+      generateRakutenData(12000),      // 12K programs
+      generateAwinData(18000),         // 18K programs
     ];
 
     let totalPrograms = 0;
