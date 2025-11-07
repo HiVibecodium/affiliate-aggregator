@@ -1,177 +1,299 @@
-import { PrismaClient } from '@prisma/client'
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
-import LogoutButton from '@/components/LogoutButton'
+'use client';
 
-const prisma = new PrismaClient()
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+interface DashboardAnalytics {
+  overview: {
+    totalPrograms: number;
+    totalNetworks: number;
+    activeNetworks: number;
+    avgCommission: string;
+  };
+  programsByNetwork: Array<{ network: string; programs: number }>;
+  programsByCategory: Array<{ category: string; count: number }>;
+  topCommissions: Array<{
+    id: string;
+    name: string;
+    commissionRate: number;
+    commissionType: string;
+    category: string;
+    network: { name: string };
+  }>;
+  recentPrograms: Array<{
+    id: string;
+    name: string;
+    category: string;
+    commissionRate: number;
+    createdAt: string;
+    network: { name: string };
+  }>;
+}
 
-export default async function DashboardPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+export default function DashboardPage() {
+  const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!user) {
-    redirect('/login')
+  useEffect(() => {
+    async function fetchAnalytics() {
+      try {
+        const response = await fetch('/api/dashboard/analytics');
+        if (!response.ok) {
+          throw new Error('Failed to fetch analytics');
+        }
+        const data = await response.json();
+        setAnalytics(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchAnalytics();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading analytics...</p>
+        </div>
+      </div>
+    );
   }
 
-  const networks = await prisma.affiliateNetwork.findMany({
-    include: {
-      programs: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  })
-
-  await prisma.$disconnect()
+  if (error || !analytics) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Error: {error || 'Failed to load data'}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-gray-900">
-            🌐 Affiliate Aggregator
-          </h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">
-              {user.email}
-            </span>
-            <LogoutButton />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+      {/* Header */}
+      <nav className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/" className="text-2xl font-bold text-gray-900">
+                🌐 Affiliate Aggregator
+              </Link>
+              <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                Dashboard
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/programs"
+                className="text-gray-600 hover:text-gray-900 font-medium"
+              >
+                Browse Programs
+              </Link>
+              <Link
+                href="/"
+                className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                Home
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
 
-      <div className="p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Affiliate Networks Dashboard
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Page Title */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            📊 Analytics Dashboard
+          </h1>
+          <p className="text-gray-600">
+            Global overview of affiliate programs and networks
+          </p>
+        </div>
+
+        {/* Overview Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500 uppercase">Total Programs</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">
+                  {analytics.overview.totalPrograms.toLocaleString()}
+                </p>
+              </div>
+              <div className="text-4xl">📦</div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500 uppercase">Networks</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">
+                  {analytics.overview.totalNetworks}
+                </p>
+                <p className="text-xs text-green-600 mt-1">
+                  {analytics.overview.activeNetworks} active
+                </p>
+              </div>
+              <div className="text-4xl">🌐</div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500 uppercase">Avg Commission</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">
+                  {analytics.overview.avgCommission}%
+                </p>
+              </div>
+              <div className="text-4xl">💰</div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500 uppercase">Categories</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">
+                  {analytics.programsByCategory.length}
+                </p>
+              </div>
+              <div className="text-4xl">🏷️</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Top Networks */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              📊 Programs by Network
             </h2>
-            <p className="text-gray-600 mt-2">
-              Manage and track global affiliate programs
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-gray-500">Total Networks</h3>
-              <p className="text-3xl font-bold text-gray-900 mt-2">
-                {networks.length}
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-gray-500">Total Programs</h3>
-              <p className="text-3xl font-bold text-gray-900 mt-2">
-                {networks.reduce((acc, n) => acc + n.programs.length, 0)}
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-gray-500">Active Networks</h3>
-              <p className="text-3xl font-bold text-green-600 mt-2">
-                {networks.filter((n) => n.active).length}
-              </p>
+            <div className="space-y-3">
+              {analytics.programsByNetwork.slice(0, 6).map((item) => (
+                <div key={item.network} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium text-gray-900">{item.network}</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-blue-600 h-2 rounded-full"
+                        style={{
+                          width: `${(item.programs / analytics.overview.totalPrograms) * 100}%`
+                        }}
+                      ></div>
+                    </div>
+                    <span className="text-sm font-semibold text-gray-600 min-w-[60px] text-right">
+                      {item.programs.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="space-y-6">
-            {networks.map((network) => (
-              <div key={network.id} className="bg-white rounded-lg shadow overflow-hidden">
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h2 className="text-xl font-semibold text-gray-900">
-                        {network.name}
-                      </h2>
-                      <p className="text-gray-600 text-sm mt-1">
-                        {network.description}
-                      </p>
+          {/* Top Categories */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              🏷️ Top Categories
+            </h2>
+            <div className="space-y-3">
+              {analytics.programsByCategory.slice(0, 6).map((item) => (
+                <div key={item.category} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium text-gray-900">{item.category}</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-purple-600 h-2 rounded-full"
+                        style={{
+                          width: `${(item.count / analytics.overview.totalPrograms) * 100 * 10}%`
+                        }}
+                      ></div>
+                    </div>
+                    <span className="text-sm font-semibold text-gray-600 min-w-[60px] text-right">
+                      {item.count.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Top Commissions */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              💎 Highest Commissions
+            </h2>
+            <div className="space-y-3">
+              {analytics.topCommissions.slice(0, 5).map((program) => (
+                <div key={program.id} className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900">{program.name}</h3>
+                      <p className="text-sm text-gray-500">{program.network.name}</p>
                     </div>
                     <div className="text-right">
-                      <span
-                        className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                          network.active
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}
-                      >
-                        {network.active ? 'Active' : 'Inactive'}
+                      <span className="text-2xl font-bold text-green-600">
+                        {program.commissionRate}%
                       </span>
-                      {network.country && (
-                        <p className="text-sm text-gray-500 mt-2">
-                          📍 {network.country}
-                        </p>
-                      )}
+                      <p className="text-xs text-gray-500">{program.commissionType}</p>
                     </div>
                   </div>
-
-                  {network.website && (
-                    <a
-                      href={network.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 text-sm"
-                    >
-                      {network.website}
-                    </a>
-                  )}
-
-                  {network.programs.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <h3 className="text-sm font-medium text-gray-700 mb-3">
-                        Programs ({network.programs.length})
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {network.programs.map((program) => (
-                          <div
-                            key={program.id}
-                            className="border border-gray-200 rounded p-3"
-                          >
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h4 className="font-medium text-gray-900">
-                                  {program.name}
-                                </h4>
-                                <p className="text-xs text-gray-500 mt-1">
-                                  {program.category}
-                                </p>
-                              </div>
-                              <span className="text-sm font-semibold text-green-600">
-                                {program.commissionRate}%
-                              </span>
-                            </div>
-                            <div className="mt-2 flex gap-2 text-xs text-gray-600">
-                              <span className="bg-gray-100 px-2 py-1 rounded">
-                                {program.commissionType}
-                              </span>
-                              <span className="bg-gray-100 px-2 py-1 rounded">
-                                {program.cookieDuration}d cookie
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  <span className="inline-block px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded">
+                    {program.category}
+                  </span>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
 
-            {networks.length === 0 && (
-              <div className="bg-white rounded-lg shadow p-12 text-center">
-                <p className="text-gray-500 text-lg mb-4">
-                  No affiliate networks found
-                </p>
-                <p className="text-sm text-gray-400">
-                  Use the seed API to populate with sample data
-                </p>
-              </div>
-            )}
+          {/* Recent Programs */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              🆕 Recently Added
+            </h2>
+            <div className="space-y-3">
+              {analytics.recentPrograms.map((program) => (
+                <div key={program.id} className="p-4 border border-gray-200 rounded-lg hover:border-purple-300 transition-colors">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900">{program.name}</h3>
+                      <p className="text-sm text-gray-500">{program.network.name}</p>
+                    </div>
+                    <span className="text-lg font-bold text-green-600">
+                      {program.commissionRate}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="inline-block px-2 py-1 bg-gray-50 text-gray-700 text-xs rounded">
+                      {program.category}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {new Date(program.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
