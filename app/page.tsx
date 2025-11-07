@@ -43,12 +43,18 @@ export default async function Home() {
           <p className="text-xl text-gray-600 mb-8">
             Откройте для себя 80,000+ партнерских программ со всего мира
           </p>
-          <div className="flex gap-4 justify-center">
+          <div className="flex gap-4 justify-center flex-wrap">
             <Link
               href="/programs"
               className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
             >
               Посмотреть все программы →
+            </Link>
+            <Link
+              href="/favorites"
+              className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+            >
+              ❤️ Избранное
             </Link>
             <Link
               href="/dashboard"

@@ -49,6 +49,7 @@ model AffiliateProgram {
 
   network            AffiliateNetwork @relation(fields: [networkId], references: [id], onDelete: Cascade)
   organizationAccess ProgramAccess[]
+  favoredBy          Favorite[]
 
   @@unique([networkId, externalId])
   @@index([networkId])
@@ -66,6 +67,7 @@ model User {
 
   // Relations for multi-tenancy
   organizationMembers OrganizationMember[]
+  favorites           Favorite[]
 }
 
 // Organization/Tenant model
@@ -207,5 +209,21 @@ model AuditLog {
 
   @@index([organizationId])
   @@index([action])
+  @@index([createdAt])
+}
+
+// User favorites/bookmarks for programs
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  programId String
+  createdAt DateTime @default(now())
+
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program AffiliateProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, programId])
+  @@index([userId])
+  @@index([programId])
   @@index([createdAt])
 }

@@ -34,6 +34,8 @@ export default function ProgramsPage() {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [filters, setFilters] = useState<Filters | null>(null);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [favoritesLoading, setFavoritesLoading] = useState(false);
 
   // Filter states
   const [search, setSearch] = useState('');
@@ -55,6 +57,7 @@ export default function ProgramsPage() {
   useEffect(() => {
     fetchStats();
     fetchFilters();
+    fetchFavorites();
   }, []);
 
   useEffect(() => {
@@ -78,6 +81,67 @@ export default function ProgramsPage() {
       setFilters(data);
     } catch (error) {
       console.error('Failed to fetch filters:', error);
+    }
+  }
+
+  async function fetchFavorites() {
+    try {
+      const response = await fetch('/api/favorites');
+      if (response.ok) {
+        const data = await response.json();
+        const favoriteIds = new Set<string>(data.favorites.map((fav: any) => fav.programId as string));
+        setFavorites(favoriteIds);
+      }
+    } catch (error) {
+      console.error('Failed to fetch favorites:', error);
+    }
+  }
+
+  async function toggleFavorite(programId: string) {
+    if (favoritesLoading) return;
+
+    const isFavorited = favorites.has(programId);
+    setFavoritesLoading(true);
+
+    try {
+      if (isFavorited) {
+        const response = await fetch(`/api/favorites?programId=${programId}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          setFavorites(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(programId);
+            return newSet;
+          });
+        } else {
+          const error = await response.json();
+          alert(error.error || 'Failed to remove favorite');
+        }
+      } else {
+        const response = await fetch('/api/favorites', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ programId }),
+        });
+
+        if (response.ok) {
+          setFavorites(prev => new Set([...prev, programId]));
+        } else {
+          const error = await response.json();
+          if (response.status === 401) {
+            alert('Пожалуйста, войдите в систему, чтобы добавить в избранное');
+          } else {
+            alert(error.error || 'Failed to add favorite');
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to toggle favorite:', error);
+      alert('Произошла ошибка. Попробуйте снова.');
+    } finally {
+      setFavoritesLoading(false);
     }
   }
 
@@ -385,6 +449,30 @@ export default function ProgramsPage() {
                             {program.description}
                           </p>
                         </div>
+                        <button
+                          onClick={() => toggleFavorite(program.id)}
+                          disabled={favoritesLoading}
+                          className={`ml-4 p-2 rounded-full transition-all ${
+                            favorites.has(program.id)
+                              ? 'text-red-500 bg-red-50 hover:bg-red-100'
+                              : 'text-gray-400 bg-gray-50 hover:bg-gray-100 hover:text-red-500'
+                          } disabled:opacity-50 disabled:cursor-not-allowed`}
+                          title={favorites.has(program.id) ? 'Удалить из избранного' : 'Добавить в избранное'}
+                        >
+                          <svg
+                            className="w-6 h-6"
+                            fill={favorites.has(program.id) ? 'currentColor' : 'none'}
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                            />
+                          </svg>
+                        </button>
                       </div>
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
