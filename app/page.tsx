@@ -1,17 +1,28 @@
 import Link from 'next/link';
+import { prisma } from '@/lib/prisma';
 
 async function getStats() {
   try {
-    // Use VERCEL_URL for build time, fallback to localhost for local dev
-    const protocol = process.env.VERCEL_URL ? 'https' : 'http';
-    const host = process.env.VERCEL_URL || process.env.NEXT_PUBLIC_APP_URL || 'localhost:3000';
-    const baseUrl = `${protocol}://${host}`;
+    const [totalPrograms, totalNetworks, programsByNetwork] = await Promise.all([
+      prisma.affiliateProgram.count(),
+      prisma.affiliateNetwork.count(),
+      prisma.affiliateNetwork.findMany({
+        include: {
+          _count: {
+            select: { programs: true }
+          }
+        }
+      })
+    ]);
 
-    const response = await fetch(`${baseUrl}/api/programs/stats`, {
-      cache: 'no-store'
-    });
-    if (!response.ok) return null;
-    return await response.json();
+    return {
+      totalPrograms,
+      totalNetworks,
+      networks: programsByNetwork.map(n => ({
+        name: n.name,
+        programs: n._count.programs
+      }))
+    };
   } catch (error) {
     console.error('Failed to fetch stats:', error);
     return null;
