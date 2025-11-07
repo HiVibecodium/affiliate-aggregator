@@ -27,6 +27,16 @@ export default function LoginPage() {
       setError(error.message)
       setLoading(false)
     } else {
+      // Sync user with database (in case not synced yet)
+      try {
+        await fetch('/api/auth/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        })
+      } catch (syncError) {
+        console.error('Sync error:', syncError)
+      }
+
       router.push('/dashboard')
       router.refresh()
     }

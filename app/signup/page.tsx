@@ -31,6 +31,20 @@ export default function SignupPage() {
       setError(error.message)
       setLoading(false)
     } else {
+      // Sync user with database and create organization
+      try {
+        const syncResponse = await fetch('/api/auth/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        })
+
+        if (!syncResponse.ok) {
+          console.error('Failed to sync user with database')
+        }
+      } catch (syncError) {
+        console.error('Sync error:', syncError)
+      }
+
       setSuccess(true)
       setLoading(false)
       // Auto redirect to dashboard after signup
