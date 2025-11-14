@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getCached, CacheKeys } from '@/lib/cache';
 
 /**
  * GET /api/programs/filters
@@ -15,6 +16,33 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
     const commissionType = searchParams.get('commissionType');
 
+    // Use cache with 5 minute TTL
+    const cacheKey = CacheKeys.PROGRAMS_FILTERS(network || undefined, category || undefined);
+
+    return getCached(
+      cacheKey,
+      async () => {
+        return await fetchFiltersData(network, category, commissionType);
+      },
+      300
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: 'Failed to fetch filters',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
+  }
+}
+
+async function fetchFiltersData(
+  network: string | null,
+  category: string | null,
+  commissionType: string | null
+) {
+  try {
     // Build base where clause for cascading filters
     const baseWhere: any = { active: true };
 
@@ -92,7 +120,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({
+    const result = {
       categories: categories.map((c) => ({
         value: c.category,
         count: c._count.category,
@@ -109,14 +137,10 @@ export async function GET(request: NextRequest) {
         min: commissionStats._min.commissionRate || 0,
         max: commissionStats._max.commissionRate || 100,
       },
-    });
+    };
+
+    return NextResponse.json(result);
   } catch (error) {
-    return NextResponse.json(
-      {
-        error: 'Failed to fetch filters',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    throw error;
   }
 }

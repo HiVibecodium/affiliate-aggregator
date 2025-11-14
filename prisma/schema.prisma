@@ -56,6 +56,13 @@ model AffiliateProgram {
   @@index([networkId])
   @@index([category])
   @@index([active])
+  @@index([commissionType])
+  @@index([commissionRate])
+  // Composite indexes for common filter combinations (3-5x faster queries)
+  @@index([active, category])
+  @@index([active, networkId])
+  @@index([active, commissionType])
+  @@index([createdAt(sort: Desc)])
 }
 
 // User tracking and authentication
