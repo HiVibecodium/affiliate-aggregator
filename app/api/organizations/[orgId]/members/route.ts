@@ -17,10 +17,11 @@ import { can, canManageUser, createAuditLogData, Permission, isValidRole } from 
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
-    const orgContext = await getOrgContext(request, params.orgId);
+    const { orgId } = await params;
+    const orgContext = await getOrgContext(request, orgId);
 
     if (!orgContext) {
       return OrgAuth.unauthorized();
@@ -35,7 +36,7 @@ export async function GET(
     // Get organization members
     const members = await prisma.organizationMember.findMany({
       where: {
-        organizationId: params.orgId,
+        organizationId: orgId,
         status: 'active',
       },
       include: {
@@ -77,10 +78,11 @@ export async function GET(
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { orgId: string } }
+  { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
-    const orgContext = await getOrgContext(request, params.orgId);
+    const { orgId } = await params;
+    const orgContext = await getOrgContext(request, orgId);
 
     if (!orgContext) {
       return OrgAuth.unauthorized();
@@ -110,14 +112,14 @@ export async function POST(
     }
 
     // Check if user can assign this role
-    if (!canManageUser(rbacContext, role, params.orgId).allowed) {
+    if (!canManageUser(rbacContext, role, orgId).allowed) {
       return OrgAuth.forbidden('You cannot assign users to this role');
     }
 
     // Check if user already exists as member
     const existingMember = await prisma.organizationMember.findFirst({
       where: {
-        organizationId: params.orgId,
+        organizationId: orgId,
         OR: [
           { user: { email } },
           { invitedEmail: email },
@@ -141,7 +143,7 @@ export async function POST(
       // User exists, add them directly
       const member = await prisma.organizationMember.create({
         data: {
-          organizationId: params.orgId,
+          organizationId: orgId,
           userId: user.id,
           role,
           status: 'active',
@@ -185,7 +187,7 @@ export async function POST(
       // Create invitation for new user
       const member = await prisma.organizationMember.create({
         data: {
-          organizationId: params.orgId,
+          organizationId: orgId,
           userId: '', // Temporary, will be set when user accepts invitation
           role,
           status: 'pending',
@@ -197,7 +199,7 @@ export async function POST(
       // Log audit entry
       await prisma.auditLog.create({
         data: {
-          organizationId: params.orgId,
+          organizationId: orgId,
           action: 'user_invited',
           resourceType: 'invitation',
           performedBy: orgContext.userId,

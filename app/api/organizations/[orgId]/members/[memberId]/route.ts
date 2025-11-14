@@ -22,10 +22,11 @@ import {
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { orgId: string; memberId: string } }
+  { params }: { params: Promise<{ orgId: string; memberId: string }> }
 ) {
   try {
-    const orgContext = await getOrgContext(request, params.orgId);
+    const { orgId, memberId } = await params;
+    const orgContext = await getOrgContext(request, orgId);
 
     if (!orgContext) {
       return OrgAuth.unauthorized();
@@ -39,7 +40,7 @@ export async function PUT(
 
     // Get the member to update
     const targetMember = await prisma.organizationMember.findUnique({
-      where: { id: params.memberId },
+      where: { id: memberId },
       include: {
         user: {
           select: {
@@ -50,7 +51,7 @@ export async function PUT(
       },
     });
 
-    if (!targetMember || targetMember.organizationId !== params.orgId) {
+    if (!targetMember || targetMember.organizationId !== orgId) {
       return OrgAuth.notFound('Member not found');
     }
 
@@ -65,7 +66,7 @@ export async function PUT(
     }
 
     // Check if user can manage target role
-    if (role && !canManageUser(rbacContext, role, params.orgId).allowed) {
+    if (role && !canManageUser(rbacContext, role, orgId).allowed) {
       return OrgAuth.forbidden('You cannot assign users to this role');
     }
 
@@ -76,7 +77,7 @@ export async function PUT(
 
     // Update member
     const updatedMember = await prisma.organizationMember.update({
-      where: { id: params.memberId },
+      where: { id: memberId },
       data: {
         ...(role && { role }),
         ...(permissions && { permissions }),
@@ -127,10 +128,11 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { orgId: string; memberId: string } }
+  { params }: { params: Promise<{ orgId: string; memberId: string }> }
 ) {
   try {
-    const orgContext = await getOrgContext(request, params.orgId);
+    const { orgId, memberId } = await params;
+    const orgContext = await getOrgContext(request, orgId);
 
     if (!orgContext) {
       return OrgAuth.unauthorized();
@@ -144,7 +146,7 @@ export async function DELETE(
 
     // Get the member to delete
     const targetMember = await prisma.organizationMember.findUnique({
-      where: { id: params.memberId },
+      where: { id: memberId },
       include: {
         user: {
           select: {
@@ -155,7 +157,7 @@ export async function DELETE(
       },
     });
 
-    if (!targetMember || targetMember.organizationId !== params.orgId) {
+    if (!targetMember || targetMember.organizationId !== orgId) {
       return OrgAuth.notFound('Member not found');
     }
 
@@ -165,13 +167,13 @@ export async function DELETE(
     }
 
     // Check if user can manage this member
-    if (!canManageUser(rbacContext, targetMember.role, params.orgId).allowed) {
+    if (!canManageUser(rbacContext, targetMember.role, orgId).allowed) {
       return OrgAuth.forbidden('You cannot remove users with equal or higher roles');
     }
 
     // Delete member
     await prisma.organizationMember.delete({
-      where: { id: params.memberId },
+      where: { id: memberId },
     });
 
     // Log audit entry
