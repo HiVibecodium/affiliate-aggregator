@@ -1,7 +1,5 @@
-import { NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function POST() {
   try {
@@ -15,7 +13,7 @@ export async function POST() {
         commission: 10.0,
         active: true,
       },
-    })
+    });
 
     const cj = await prisma.affiliateNetwork.create({
       data: {
@@ -26,7 +24,7 @@ export async function POST() {
         commission: 8.0,
         active: true,
       },
-    })
+    });
 
     const awin = await prisma.affiliateNetwork.create({
       data: {
@@ -37,7 +35,7 @@ export async function POST() {
         commission: 7.5,
         active: true,
       },
-    })
+    });
 
     // Create sample programs
     await prisma.affiliateProgram.createMany({
@@ -95,12 +93,12 @@ export async function POST() {
           active: true,
         },
       ],
-    })
+    });
 
-    const networkCount = await prisma.affiliateNetwork.count()
-    const programCount = await prisma.affiliateProgram.count()
+    const networkCount = await prisma.affiliateNetwork.count();
+    const programCount = await prisma.affiliateProgram.count();
 
-    await prisma.$disconnect()
+    await prisma.$disconnect();
 
     return NextResponse.json({
       success: true,
@@ -109,9 +107,9 @@ export async function POST() {
         networks: networkCount,
         programs: programCount,
       },
-    })
+    });
   } catch (error) {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
 
     return NextResponse.json(
       {
@@ -119,6 +117,6 @@ export async function POST() {
         error: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
-    )
+    );
   }
 }

@@ -3,8 +3,6 @@
  * Tests logout flow and navigation
  */
 
-import React from 'react';
-
 describe('LogoutButton Component', () => {
   describe('Component Structure', () => {
     it('should render button element', () => {

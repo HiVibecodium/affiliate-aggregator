@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/lib/supabase/server';
 import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit';
-
-const prisma = new PrismaClient();
 
 /**
  * GET /api/favorites
