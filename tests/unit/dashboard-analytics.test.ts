@@ -3,8 +3,6 @@
  * Tests getDashboardAnalytics helper function
  */
 
-import { testDataFactories } from '../helpers';
-
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
   prisma: {

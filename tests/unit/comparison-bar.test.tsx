@@ -5,30 +5,17 @@
 
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ComparisonBar } from '@/components/ComparisonBar';
-import { ComparisonProvider } from '@/contexts/ComparisonContext';
-import { useRouter } from 'next/navigation';
-
-// Mock next/navigation
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
-}));
 
 // Mock ComparisonContext
 jest.mock('@/contexts/ComparisonContext', () => ({
-  ComparisonProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   useComparison: jest.fn(),
 }));
 
 describe('ComparisonBar Component', () => {
   const mockUseComparison = require('@/contexts/ComparisonContext').useComparison;
-  const mockRouter = {
-    push: jest.fn(),
-    refresh: jest.fn(),
-  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useRouter as jest.Mock).mockReturnValue(mockRouter);
   });
 
   it('should not render when comparison list is empty', () => {
@@ -68,7 +55,7 @@ describe('ComparisonBar Component', () => {
       clearComparison: jest.fn(),
     });
 
-    const { container } = render(<ComparisonBar />);
+    render(<ComparisonBar />);
     // Just check that 3 programs are displayed
     expect(screen.getByText('Program 1')).toBeInTheDocument();
     expect(screen.getByText('Program 2')).toBeInTheDocument();

@@ -1,0 +1,101 @@
+
+> affiliate-aggregator@0.1.0 lint
+> eslint .
+
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\app\api\auth\sync\route.ts
+  11:28  warning  '_request' is defined but never used               @typescript-eslint/no-unused-vars
+  64:13  warning  'organization' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\app\api\favorites\route.ts
+  12:36  warning  '_request' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\app\api\health\route.ts
+   59:11  warning  'startTime' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  121:12  warning  'error' is defined but never used               @typescript-eslint/no-unused-vars
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\app\api\organizations\[orgId]\members\[memberId]\route.ts
+   16:3   warning  'isRole' is defined but never used        @typescript-eslint/no-unused-vars
+  103:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  186:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\app\api\organizations\[orgId]\members\route.ts
+  153:92  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\app\api\organizations\route.ts
+   11:10  warning  'getOrgContext' is defined but never used  @typescript-eslint/no-unused-vars
+   11:25  warning  'toRBACContext' is defined but never used  @typescript-eslint/no-unused-vars
+   12:10  warning  'can' is defined but never used            @typescript-eslint/no-unused-vars
+   12:15  warning  'Permission' is defined but never used     @typescript-eslint/no-unused-vars
+   18:27  warning  'request' is defined but never used        @typescript-eslint/no-unused-vars
+  224:19  warning  Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\app\api\programs\route.ts
+  27:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  55:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\app\compare\page.tsx
+   63:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  160:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  201:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\app\favorites\page.tsx
+  30:9  warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\app\page.tsx
+  116:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\app\programs\page.tsx
+  98:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\components\OrganizationSwitcher.tsx
+  11:10  warning  'createClient' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\lib\rbac\utils.ts
+    6:42  warning  'getRole' is defined but never used       @typescript-eslint/no-unused-vars
+    6:73  warning  'isValidRole' is defined but never used   @typescript-eslint/no-unused-vars
+  208:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  214:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\lib\supabase\middleware.ts
+  27:48  warning  'options' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\tests\e2e\auth-flow.e2e.ts
+   95:72  warning  'context' is defined but never used  @typescript-eslint/no-unused-vars
+  110:71  warning  'context' is defined but never used  @typescript-eslint/no-unused-vars
+  118:51  warning  'context' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\tests\helpers.ts
+   67:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   80:8   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   93:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  102:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  117:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  131:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  144:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  162:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  200:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\tests\integration\data-import.test.ts
+   22:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  330:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  336:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  352:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  366:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\tests\integration\organizations-api.test.ts
+  178:66  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\tests\unit\comparison-bar.test.tsx
+   8:10  warning  'ComparisonProvider' is defined but never used  @typescript-eslint/no-unused-vars
+  71:13  warning  'container' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\tests\unit\dashboard-analytics.test.ts
+   6:10  warning  'testDataFactories' is defined but never used  @typescript-eslint/no-unused-vars
+  25:19  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\Users\siniy\WebstormProjects\base\affiliate-aggregator\tests\unit\org-middleware.test.ts
+  204:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 52 problems (0 errors, 52 warnings)
+

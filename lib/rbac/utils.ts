@@ -3,7 +3,7 @@
  * Implements constraint-driven permission validation with optimal performance
  */
 
-import { Permission, getRolePermissions, getRole, hasHigherOrEqualRole, isValidRole } from './permissions';
+import { Permission, getRolePermissions, hasHigherOrEqualRole, isValidRole } from './permissions';
 
 // Re-export commonly used types and functions
 export { Permission, isValidRole } from './permissions';
@@ -88,10 +88,7 @@ export function hasAllPermissions(
 /**
  * Check if user has a minimum role level
  */
-export function hasMinimumRole(
-  context: RBACContext,
-  minimumRole: string
-): PermissionCheckResult {
+export function hasMinimumRole(context: RBACContext, minimumRole: string): PermissionCheckResult {
   if (hasHigherOrEqualRole(context.role, minimumRole)) {
     return { allowed: true };
   }
