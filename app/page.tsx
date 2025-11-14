@@ -9,19 +9,19 @@ async function getStats() {
       prisma.affiliateNetwork.findMany({
         include: {
           _count: {
-            select: { programs: true }
-          }
-        }
-      })
+            select: { programs: true },
+          },
+        },
+      }),
     ]);
 
     return {
       totalPrograms,
       totalNetworks,
-      networks: programsByNetwork.map(n => ({
+      networks: programsByNetwork.map((n) => ({
         name: n.name,
-        programs: n._count.programs
-      }))
+        programs: n._count.programs,
+      })),
     };
   } catch (error) {
     console.error('Failed to fetch stats:', error);
@@ -75,9 +75,7 @@ export default async function Home() {
               <div className="text-4xl font-bold text-gray-900 mb-1">
                 {stats.totalPrograms?.toLocaleString() || '0'}
               </div>
-              <div className="text-green-600 text-sm">
-                ✓ База полностью загружена
-              </div>
+              <div className="text-green-600 text-sm">✓ База полностью загружена</div>
             </div>
 
             <div className="bg-white rounded-xl shadow-lg p-8 border-t-4 border-purple-500">
@@ -87,21 +85,15 @@ export default async function Home() {
               <div className="text-4xl font-bold text-gray-900 mb-1">
                 {stats.totalNetworks || '0'}
               </div>
-              <div className="text-blue-600 text-sm">
-                Крупнейшие мировые сети
-              </div>
+              <div className="text-blue-600 text-sm">Крупнейшие мировые сети</div>
             </div>
 
             <div className="bg-white rounded-xl shadow-lg p-8 border-t-4 border-green-500">
               <div className="text-gray-500 text-sm font-semibold uppercase mb-2">
                 Средний процент
               </div>
-              <div className="text-4xl font-bold text-gray-900 mb-1">
-                5-30%
-              </div>
-              <div className="text-purple-600 text-sm">
-                Комиссия с продаж
-              </div>
+              <div className="text-4xl font-bold text-gray-900 mb-1">5-30%</div>
+              <div className="text-purple-600 text-sm">Комиссия с продаж</div>
             </div>
           </div>
         )}
@@ -109,28 +101,32 @@ export default async function Home() {
         {/* Networks Section */}
         {stats && stats.networks && (
           <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              📊 Программ по сетям
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">📊 Программ по сетям</h2>
             <div className="space-y-4">
               {stats.networks.map((network: any) => (
-                <div key={network.name} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <Link
+                  key={network.name}
+                  href={`/programs?network=${encodeURIComponent(network.name)}`}
+                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-blue-50 hover:border-blue-200 border border-transparent transition-all cursor-pointer group"
+                >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-xl group-hover:scale-110 transition-transform">
                       {network.name[0]}
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">{network.name}</div>
+                      <div className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                        {network.name}
+                      </div>
                       <div className="text-sm text-gray-500">Партнерская сеть</div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-gray-900">
+                    <div className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
                       {network.programs.toLocaleString()}
                     </div>
                     <div className="text-sm text-gray-500">программ</div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -148,16 +144,12 @@ export default async function Home() {
           <div className="text-center p-6 bg-white rounded-xl shadow-lg">
             <div className="text-4xl mb-4">📈</div>
             <h3 className="text-xl font-semibold mb-2">Актуальные данные</h3>
-            <p className="text-gray-600">
-              База из 80,000+ программ обновляется регулярно
-            </p>
+            <p className="text-gray-600">База из 80,000+ программ обновляется регулярно</p>
           </div>
           <div className="text-center p-6 bg-white rounded-xl shadow-lg">
             <div className="text-4xl mb-4">💼</div>
             <h3 className="text-xl font-semibold mb-2">Для бизнеса</h3>
-            <p className="text-gray-600">
-              Multi-tenant система с ролевым доступом
-            </p>
+            <p className="text-gray-600">Multi-tenant система с ролевым доступом</p>
           </div>
         </div>
 
@@ -177,11 +169,7 @@ export default async function Home() {
               Sign Up
             </Link>
           </div>
-          <a
-            href="/api/health"
-            target="_blank"
-            className="text-blue-600 hover:underline text-sm"
-          >
+          <a href="/api/health" target="_blank" className="text-blue-600 hover:underline text-sm">
             Health Check
           </a>
         </div>

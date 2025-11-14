@@ -42,13 +42,24 @@ export default function ProgramsPage() {
   // Comparison hook
   const { addToComparison, removeFromComparison, isInComparison } = useComparison();
 
+  // Initialize filter states from URL params
+  const getInitialFilterValue = (param: string) => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(param) || '';
+    }
+    return '';
+  };
+
   // Filter states
-  const [search, setSearch] = useState('');
-  const [selectedNetwork, setSelectedNetwork] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedCommissionType, setSelectedCommissionType] = useState('');
-  const [minCommission, setMinCommission] = useState('');
-  const [maxCommission, setMaxCommission] = useState('');
+  const [search, setSearch] = useState(() => getInitialFilterValue('search'));
+  const [selectedNetwork, setSelectedNetwork] = useState(() => getInitialFilterValue('network'));
+  const [selectedCategory, setSelectedCategory] = useState(() => getInitialFilterValue('category'));
+  const [selectedCommissionType, setSelectedCommissionType] = useState(() =>
+    getInitialFilterValue('commissionType')
+  );
+  const [minCommission, setMinCommission] = useState(() => getInitialFilterValue('minCommission'));
+  const [maxCommission, setMaxCommission] = useState(() => getInitialFilterValue('maxCommission'));
 
   // Sorting
   const [sortBy, setSortBy] = useState('createdAt');
