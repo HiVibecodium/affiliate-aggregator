@@ -61,9 +61,14 @@ export default function ProgramsPage() {
 
   useEffect(() => {
     fetchStats();
-    fetchFilters();
     fetchFavorites();
   }, []);
+
+  // Refetch filters when network, category, or commissionType changes (cascading filters)
+  useEffect(() => {
+    fetchFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedNetwork, selectedCategory, selectedCommissionType]);
 
   useEffect(() => {
     fetchPrograms();
@@ -92,7 +97,15 @@ export default function ProgramsPage() {
 
   async function fetchFilters() {
     try {
-      const response = await fetch('/api/programs/filters');
+      // Build query params for cascading filters
+      const params = new URLSearchParams();
+      if (selectedNetwork) params.set('network', selectedNetwork);
+      if (selectedCategory) params.set('category', selectedCategory);
+      if (selectedCommissionType) params.set('commissionType', selectedCommissionType);
+
+      const url = params.toString() ? `/api/programs/filters?${params}` : '/api/programs/filters';
+
+      const response = await fetch(url);
       const data = await response.json();
       setFilters(data);
     } catch (error) {
