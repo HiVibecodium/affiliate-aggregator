@@ -52,7 +52,7 @@ export async function GET(
     });
 
     return NextResponse.json({
-      members: members.map(m => ({
+      members: members.map((m) => ({
         id: m.id,
         userId: m.userId,
         email: m.user.email,
@@ -65,10 +65,7 @@ export async function GET(
     });
   } catch (error) {
     console.error('Error fetching members:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -98,17 +95,11 @@ export async function POST(
     const { email, role = 'member' } = body;
 
     if (!email) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
     if (!isValidRole(role)) {
-      return NextResponse.json(
-        { error: `Invalid role: ${role}` },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: `Invalid role: ${role}` }, { status: 400 });
     }
 
     // Check if user can assign this role
@@ -120,10 +111,7 @@ export async function POST(
     const existingMember = await prisma.organizationMember.findFirst({
       where: {
         organizationId: orgId,
-        OR: [
-          { user: { email } },
-          { invitedEmail: email },
-        ],
+        OR: [{ user: { email } }, { invitedEmail: email }],
       },
     });
 
@@ -135,7 +123,7 @@ export async function POST(
     }
 
     // Try to find existing user
-    let user = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email },
     });
 
@@ -162,12 +150,7 @@ export async function POST(
 
       // Log audit entry
       await prisma.auditLog.create({
-        data: createAuditLogData(
-          'member_added',
-          rbacContext,
-          user.id,
-          { email, role }
-        ) as any,
+        data: createAuditLogData('member_added', rbacContext, user.id, { email, role }) as any,
       });
 
       return NextResponse.json(
@@ -226,9 +209,6 @@ export async function POST(
     }
   } catch (error) {
     console.error('Error adding member:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
