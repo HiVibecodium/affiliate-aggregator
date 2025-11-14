@@ -20,10 +20,7 @@ export default async function DashboardPage() {
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <Link
-                href="/programs"
-                className="text-gray-600 hover:text-gray-900 font-medium"
-              >
+              <Link href="/programs" className="text-gray-600 hover:text-gray-900 font-medium">
                 Browse Programs
               </Link>
               <Link
@@ -40,12 +37,8 @@ export default async function DashboardPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Title */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            📊 Analytics Dashboard
-          </h1>
-          <p className="text-gray-600">
-            Global overview of affiliate programs and networks
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Analytics Dashboard</h1>
+          <p className="text-gray-600">Global overview of affiliate programs and networks</p>
         </div>
 
         {/* Overview Cards */}
@@ -105,19 +98,23 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Top Networks */}
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              📊 Programs by Network
-            </h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">📊 Programs by Network</h2>
             <div className="space-y-3">
               {analytics.programsByNetwork.slice(0, 6).map((item) => (
-                <div key={item.network} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">{item.network}</span>
+                <Link
+                  key={item.network}
+                  href={`/programs?network=${encodeURIComponent(item.network)}`}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-blue-50 hover:border-blue-200 border border-transparent transition-all cursor-pointer group"
+                >
+                  <span className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                    {item.network}
+                  </span>
                   <div className="flex items-center gap-2">
                     <div className="w-24 bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-blue-600 h-2 rounded-full"
                         style={{
-                          width: `${(item.programs / analytics.overview.totalPrograms) * 100}%`
+                          width: `${(item.programs / analytics.overview.totalPrograms) * 100}%`,
                         }}
                       ></div>
                     </div>
@@ -125,26 +122,30 @@ export default async function DashboardPage() {
                       {item.programs.toLocaleString()}
                     </span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
 
           {/* Top Categories */}
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              🏷️ Top Categories
-            </h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">🏷️ Top Categories</h2>
             <div className="space-y-3">
               {analytics.programsByCategory.slice(0, 6).map((item) => (
-                <div key={item.category} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">{item.category}</span>
+                <Link
+                  key={item.category}
+                  href={`/programs?category=${encodeURIComponent(item.category)}`}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-purple-50 hover:border-purple-200 border border-transparent transition-all cursor-pointer group"
+                >
+                  <span className="font-medium text-gray-900 group-hover:text-purple-600 transition-colors">
+                    {item.category}
+                  </span>
                   <div className="flex items-center gap-2">
                     <div className="w-24 bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-purple-600 h-2 rounded-full"
                         style={{
-                          width: `${(item.count / analytics.overview.totalPrograms) * 100 * 10}%`
+                          width: `${(item.count / analytics.overview.totalPrograms) * 100 * 10}%`,
                         }}
                       ></div>
                     </div>
@@ -152,7 +153,7 @@ export default async function DashboardPage() {
                       {item.count.toLocaleString()}
                     </span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -161,15 +162,19 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Top Commissions */}
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              💎 Highest Commissions
-            </h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">💎 Highest Commissions</h2>
             <div className="space-y-3">
               {analytics.topCommissions.slice(0, 5).map((program) => (
-                <div key={program.id} className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors">
+                <Link
+                  key={program.id}
+                  href={`/programs/${program.id}`}
+                  className="block p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer"
+                >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">{program.name}</h3>
+                      <h3 className="font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+                        {program.name}
+                      </h3>
                       <p className="text-sm text-gray-500">{program.network.name}</p>
                     </div>
                     <div className="text-right">
@@ -182,22 +187,26 @@ export default async function DashboardPage() {
                   <span className="inline-block px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded">
                     {program.category}
                   </span>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
 
           {/* Recent Programs */}
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              🆕 Recently Added
-            </h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">🆕 Recently Added</h2>
             <div className="space-y-3">
               {analytics.recentPrograms.map((program) => (
-                <div key={program.id} className="p-4 border border-gray-200 rounded-lg hover:border-purple-300 transition-colors">
+                <Link
+                  key={program.id}
+                  href={`/programs/${program.id}`}
+                  className="block p-4 border border-gray-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition-colors cursor-pointer"
+                >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">{program.name}</h3>
+                      <h3 className="font-semibold text-gray-900 hover:text-purple-600 transition-colors">
+                        {program.name}
+                      </h3>
                       <p className="text-sm text-gray-500">{program.network.name}</p>
                     </div>
                     <span className="text-lg font-bold text-green-600">
@@ -212,7 +221,7 @@ export default async function DashboardPage() {
                       {new Date(program.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
