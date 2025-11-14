@@ -202,6 +202,19 @@ function ProgramsContent() {
     }
   }
 
+  async function trackClick(programId: string) {
+    try {
+      await fetch('/api/track/click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ programId }),
+      });
+    } catch (error) {
+      // Silent fail - tracking shouldn't break UX
+      console.error('Failed to track click:', error);
+    }
+  }
+
   async function fetchPrograms() {
     setLoading(true);
     try {
@@ -625,6 +638,7 @@ function ProgramsContent() {
                         <div>
                           <Link
                             href={`/programs/${program.id}`}
+                            onClick={() => trackClick(program.id)}
                             className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded transition-colors"
                           >
                             Подробнее →

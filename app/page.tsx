@@ -62,6 +62,12 @@ export default async function Home() {
             >
               Dashboard →
             </Link>
+            <Link
+              href="/analytics"
+              className="inline-block bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+            >
+              📊 Аналитика
+            </Link>
           </div>
         </div>
 
