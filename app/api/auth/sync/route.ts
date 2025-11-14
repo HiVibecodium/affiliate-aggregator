@@ -1,13 +1,14 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
+import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit';
 
 /**
  * POST /api/auth/sync
  * Synchronizes Supabase user with Prisma database
  * Creates User record and default Organization on first signup
  */
-export async function POST(request: Request) {
+async function syncHandler(request: NextRequest) {
   try {
     const supabase = await createClient();
 
@@ -116,3 +117,6 @@ export async function POST(request: Request) {
     );
   }
 }
+
+// Apply strict rate limiting for auth endpoints (5 req/min)
+export const POST = withRateLimit(syncHandler, RateLimitPresets.strict);

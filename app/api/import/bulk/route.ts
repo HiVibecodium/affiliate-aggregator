@@ -5,8 +5,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { executeBulkImport } from '@/lib/data-import/bulk-import';
 import type { BulkImportOptions } from '@/lib/data-import/bulk-import';
+import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit';
 
-export async function POST(request: NextRequest) {
+async function bulkImportHandler(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({})) as BulkImportOptions;
 
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
+async function getStatsHandler() {
   try {
     const { importer } = await import('@/lib/data-import/importer');
     const stats = await importer.getImportStats();
@@ -52,3 +53,7 @@ export async function GET() {
     );
   }
 }
+
+// Apply rate limiting (strict for imports, relaxed for stats)
+export const POST = withRateLimit(bulkImportHandler, RateLimitPresets.strict); // 5 req/min for imports
+export const GET = withRateLimit(getStatsHandler, RateLimitPresets.relaxed); // 100 req/min for stats

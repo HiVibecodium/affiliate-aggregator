@@ -9,6 +9,32 @@ const nextConfig = {
     },
   },
 
+  // Performance optimizations
+  compress: true,
+  poweredByHeader: false,
+
+  // Image optimization
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
+  },
+
+  // Webpack optimizations
+  webpack: (config, { dev, isServer }) => {
+    // Production optimizations
+    if (!dev) {
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: 'deterministic',
+        minimize: true,
+      };
+    }
+
+    return config;
+  },
+
   // Sentry configuration
   sentry: {
     // Upload source maps for better error tracking

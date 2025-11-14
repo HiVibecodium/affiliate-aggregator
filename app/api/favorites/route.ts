@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { createClient } from '@/lib/supabase/server';
+import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit';
 
 const prisma = new PrismaClient();
 
@@ -8,7 +9,7 @@ const prisma = new PrismaClient();
  * GET /api/favorites
  * Get all favorite programs for the current user
  */
-export async function GET(request: NextRequest) {
+async function getFavoritesHandler(request: NextRequest) {
   try {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -75,7 +76,7 @@ export async function GET(request: NextRequest) {
  * POST /api/favorites
  * Add a program to favorites
  */
-export async function POST(request: NextRequest) {
+async function postFavoriteHandler(request: NextRequest) {
   try {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -185,7 +186,7 @@ export async function POST(request: NextRequest) {
  * DELETE /api/favorites
  * Remove a program from favorites by programId
  */
-export async function DELETE(request: NextRequest) {
+async function deleteFavoriteHandler(request: NextRequest) {
   try {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -244,3 +245,8 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
+
+// Apply rate limiting
+export const GET = withRateLimit(getFavoritesHandler, RateLimitPresets.standard);
+export const POST = withRateLimit(postFavoriteHandler, RateLimitPresets.standard);
+export const DELETE = withRateLimit(deleteFavoriteHandler, RateLimitPresets.standard);
