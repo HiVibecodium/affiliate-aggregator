@@ -68,7 +68,17 @@ export default function ProgramsPage() {
   useEffect(() => {
     fetchPrograms();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedNetwork, selectedCategory, selectedCommissionType, search, minCommission, maxCommission, sortBy, sortOrder, currentPage]);
+  }, [
+    selectedNetwork,
+    selectedCategory,
+    selectedCommissionType,
+    search,
+    minCommission,
+    maxCommission,
+    sortBy,
+    sortOrder,
+    currentPage,
+  ]);
 
   async function fetchStats() {
     try {
@@ -95,7 +105,9 @@ export default function ProgramsPage() {
       const response = await fetch('/api/favorites');
       if (response.ok) {
         const data = await response.json();
-        const favoriteIds = new Set<string>(data.favorites.map((fav: any) => fav.programId as string));
+        const favoriteIds = new Set<string>(
+          data.favorites.map((fav: any) => fav.programId as string)
+        );
         setFavorites(favoriteIds);
       }
     } catch (error) {
@@ -116,7 +128,7 @@ export default function ProgramsPage() {
         });
 
         if (response.ok) {
-          setFavorites(prev => {
+          setFavorites((prev) => {
             const newSet = new Set(prev);
             newSet.delete(programId);
             return newSet;
@@ -133,7 +145,7 @@ export default function ProgramsPage() {
         });
 
         if (response.ok) {
-          setFavorites(prev => new Set([...prev, programId]));
+          setFavorites((prev) => new Set([...prev, programId]));
         } else {
           const error = await response.json();
           if (response.status === 401) {
@@ -180,6 +192,14 @@ export default function ProgramsPage() {
 
       setPrograms(data.programs);
       setTotalPages(data.pagination.totalPages);
+
+      // Update stats with filtered count
+      if (stats) {
+        setStats({
+          ...stats,
+          totalPrograms: data.pagination.total,
+        });
+      }
     } catch (error) {
       console.error('Failed to fetch programs:', error);
     } finally {
@@ -210,7 +230,7 @@ export default function ProgramsPage() {
     selectedCategory,
     selectedCommissionType,
     minCommission,
-    maxCommission
+    maxCommission,
   ].filter(Boolean).length;
 
   return (
@@ -220,14 +240,16 @@ export default function ProgramsPage() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <Link href="/" className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
+              <Link
+                href="/"
+                className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block"
+              >
                 ← Назад на главную
               </Link>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Партнерские программы
-              </h1>
+              <h1 className="text-3xl font-bold text-gray-900">Партнерские программы</h1>
               <p className="text-gray-600 mt-1">
-                {stats?.totalPrograms.toLocaleString() || '0'} программ от {stats?.totalNetworks || '0'} сетей
+                {stats?.totalPrograms.toLocaleString() || '0'} программ от{' '}
+                {stats?.totalNetworks || '0'} сетей
               </p>
             </div>
           </div>
@@ -289,9 +311,7 @@ export default function ProgramsPage() {
 
               {/* Category filter */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Категория
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Категория</label>
                 <select
                   value={selectedCategory}
                   onChange={(e) => {
@@ -369,9 +389,7 @@ export default function ProgramsPage() {
 
               {/* Quick stats */}
               <div className="border-t pt-4">
-                <h4 className="font-semibold text-sm text-gray-700 mb-3">
-                  Статистика
-                </h4>
+                <h4 className="font-semibold text-sm text-gray-700 mb-3">Статистика</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Всего программ:</span>
@@ -423,7 +441,9 @@ export default function ProgramsPage() {
             ) : programs.length === 0 ? (
               <div className="bg-white rounded-lg shadow p-12 text-center">
                 <p className="text-gray-500 text-lg">Программы не найдены</p>
-                <p className="text-gray-400 text-sm mt-2">Попробуйте изменить параметры фильтрации</p>
+                <p className="text-gray-400 text-sm mt-2">
+                  Попробуйте изменить параметры фильтрации
+                </p>
                 <button
                   onClick={resetFilters}
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -471,7 +491,11 @@ export default function ProgramsPage() {
                                 ? 'text-blue-600 bg-blue-50 hover:bg-blue-100'
                                 : 'text-gray-400 bg-gray-50 hover:bg-gray-100 hover:text-blue-600'
                             }`}
-                            title={isInComparison(program.id) ? 'Убрать из сравнения' : 'Добавить к сравнению'}
+                            title={
+                              isInComparison(program.id)
+                                ? 'Убрать из сравнения'
+                                : 'Добавить к сравнению'
+                            }
                           >
                             <svg
                               className="w-6 h-6"
@@ -495,7 +519,11 @@ export default function ProgramsPage() {
                                 ? 'text-red-500 bg-red-50 hover:bg-red-100'
                                 : 'text-gray-400 bg-gray-50 hover:bg-gray-100 hover:text-red-500'
                             } disabled:opacity-50 disabled:cursor-not-allowed`}
-                            title={favorites.has(program.id) ? 'Удалить из избранного' : 'Добавить в избранное'}
+                            title={
+                              favorites.has(program.id)
+                                ? 'Удалить из избранного'
+                                : 'Добавить в избранное'
+                            }
                           >
                             <svg
                               className="w-6 h-6"
@@ -523,15 +551,11 @@ export default function ProgramsPage() {
                         </div>
                         <div>
                           <div className="text-xs text-gray-500 mb-1">Cookie</div>
-                          <div className="font-semibold">
-                            {program.cookieDuration} дней
-                          </div>
+                          <div className="font-semibold">{program.cookieDuration} дней</div>
                         </div>
                         <div>
                           <div className="text-xs text-gray-500 mb-1">Мин. выплата</div>
-                          <div className="font-semibold">
-                            ${program.paymentThreshold}
-                          </div>
+                          <div className="font-semibold">${program.paymentThreshold}</div>
                         </div>
                         <div>
                           <a
