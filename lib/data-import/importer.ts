@@ -2,6 +2,8 @@
 // Resolves C1: Data Starvation (4 → 50,000+ programs)
 
 import { PrismaClient } from '@prisma/client';
+import { parse } from 'csv-parse/sync';
+import * as fs from 'fs';
 import type { NetworkImportConfig, ImportResult, BulkImportSummary, NetworkProgramData } from './types';
 
 const prisma = new PrismaClient();
@@ -165,10 +167,120 @@ export class AffiliateProgramImporter {
 
   /**
    * Import from CSV file
+   * Expected CSV format:
+   * networkName,externalId,name,description,category,commissionRate,commissionType,cookieDuration,paymentThreshold,paymentMethods
+   *
+   * Example:
+   * "ShareASale","12345","Example Program","Great program","E-commerce",5.5,"CPS",30,50,"PayPal,Bank Transfer"
    */
-  async importFromCSV(filePath: string): Promise<ImportResult> {
-    // TODO: Implement CSV parsing
-    throw new Error('CSV import not yet implemented');
+  async importFromCSV(filePath: string, networkName?: string): Promise<ImportResult> {
+    const startTime = Date.now();
+    const result: ImportResult = {
+      success: false,
+      programsImported: 0,
+      programsSkipped: 0,
+      programsUpdated: 0,
+      errors: [],
+      duration: 0,
+    };
+
+    try {
+      // Read and parse CSV file
+      const fileContent = fs.readFileSync(filePath, 'utf-8');
+      const records = parse(fileContent, {
+        columns: true,
+        skip_empty_lines: true,
+        trim: true,
+        cast: (value, context) => {
+          // Auto-cast numeric values
+          if (context.column === 'commissionRate' ||
+              context.column === 'cookieDuration' ||
+              context.column === 'paymentThreshold') {
+            const num = parseFloat(value);
+            return isNaN(num) ? null : num;
+          }
+          return value;
+        },
+      }) as Array<{
+        networkName?: string;
+        externalId: string;
+        name: string;
+        description?: string;
+        category?: string;
+        commissionRate?: string | number;
+        commissionType?: string;
+        cookieDuration?: string | number;
+        paymentThreshold?: string | number;
+        paymentMethods?: string;
+      }>;
+
+      if (records.length === 0) {
+        result.errors.push('CSV file is empty or has no valid records');
+        result.duration = Date.now() - startTime;
+        return result;
+      }
+
+      // Group programs by network
+      const programsByNetwork = new Map<string, NetworkProgramData[]>();
+
+      for (const record of records) {
+        const network = networkName || record.networkName || 'Unknown Network';
+
+        if (!record.externalId || !record.name) {
+          result.programsSkipped++;
+          result.errors.push(`Skipped row: missing externalId or name`);
+          continue;
+        }
+
+        const programData: NetworkProgramData = {
+          externalId: record.externalId,
+          name: record.name,
+          description: record.description || undefined,
+          category: record.category || undefined,
+          commissionRate: typeof record.commissionRate === 'number' ? record.commissionRate : undefined,
+          commissionType: record.commissionType || undefined,
+          cookieDuration: typeof record.cookieDuration === 'number' ? record.cookieDuration : undefined,
+          paymentThreshold: typeof record.paymentThreshold === 'number' ? record.paymentThreshold : undefined,
+          paymentMethods: record.paymentMethods
+            ? record.paymentMethods.split(',').map(m => m.trim())
+            : undefined,
+        };
+
+        if (!programsByNetwork.has(network)) {
+          programsByNetwork.set(network, []);
+        }
+        programsByNetwork.get(network)!.push(programData);
+      }
+
+      // Import each network
+      for (const [network, programs] of programsByNetwork) {
+        const config: NetworkImportConfig = {
+          networkName: network,
+          dataSource: 'csv',
+          programs,
+        };
+
+        const networkResult = await this.importNetwork(config);
+
+        result.programsImported += networkResult.programsImported;
+        result.programsSkipped += networkResult.programsSkipped;
+        result.programsUpdated += networkResult.programsUpdated;
+        result.errors.push(...networkResult.errors);
+
+        if (!result.networkId && networkResult.networkId) {
+          result.networkId = networkResult.networkId;
+        }
+      }
+
+      result.success = result.errors.length === 0 || result.programsImported > 0;
+      result.duration = Date.now() - startTime;
+
+      return result;
+    } catch (error) {
+      result.errors.push(`CSV import failed: ${error instanceof Error ? error.message : String(error)}`);
+      result.duration = Date.now() - startTime;
+      return result;
+    }
   }
 
   /**
