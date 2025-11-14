@@ -64,16 +64,17 @@ jobs:
 
       - name: Build and analyze
         run: |
+          # Use staging credentials for build check (we only need to verify bundle compiles)
           npm run build
           # Check bundle size
           du -sh .next
         env:
-          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.PRODUCTION_DIRECT_URL }}
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.STAGING_DIRECT_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_APP_URL: https://affiliate-aggregator-five.vercel.app
+          NODE_ENV: production
 
       - name: Bundle size report
         run: |
