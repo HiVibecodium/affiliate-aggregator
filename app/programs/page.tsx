@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useComparison } from '@/contexts/ComparisonContext';
 
 interface Program {
@@ -33,6 +34,9 @@ interface Filters {
 }
 
 export default function ProgramsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [programs, setPrograms] = useState<Program[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [filters, setFilters] = useState<Filters | null>(null);
@@ -42,24 +46,23 @@ export default function ProgramsPage() {
   // Comparison hook
   const { addToComparison, removeFromComparison, isInComparison } = useComparison();
 
-  // Initialize filter states from URL params
-  const getInitialFilterValue = (param: string) => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(param) || '';
-    }
-    return '';
-  };
+  // Filter states - initialized from URL params
+  const [search, setSearch] = useState('');
+  const [selectedNetwork, setSelectedNetwork] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCommissionType, setSelectedCommissionType] = useState('');
+  const [minCommission, setMinCommission] = useState('');
+  const [maxCommission, setMaxCommission] = useState('');
 
-  // Filter states
-  const [search, setSearch] = useState(() => getInitialFilterValue('search'));
-  const [selectedNetwork, setSelectedNetwork] = useState(() => getInitialFilterValue('network'));
-  const [selectedCategory, setSelectedCategory] = useState(() => getInitialFilterValue('category'));
-  const [selectedCommissionType, setSelectedCommissionType] = useState(() =>
-    getInitialFilterValue('commissionType')
-  );
-  const [minCommission, setMinCommission] = useState(() => getInitialFilterValue('minCommission'));
-  const [maxCommission, setMaxCommission] = useState(() => getInitialFilterValue('maxCommission'));
+  // Initialize from URL params on client side
+  useEffect(() => {
+    setSearch(searchParams.get('search') || '');
+    setSelectedNetwork(searchParams.get('network') || '');
+    setSelectedCategory(searchParams.get('category') || '');
+    setSelectedCommissionType(searchParams.get('commissionType') || '');
+    setMinCommission(searchParams.get('minCommission') || '');
+    setMaxCommission(searchParams.get('maxCommission') || '');
+  }, [searchParams]);
 
   // Sorting
   const [sortBy, setSortBy] = useState('createdAt');
@@ -234,6 +237,40 @@ export default function ProgramsPage() {
       setLoading(false);
     }
   }
+
+  // Update URL when filters change
+  const updateURL = () => {
+    const params = new URLSearchParams();
+
+    if (search) params.set('search', search);
+    if (selectedNetwork) params.set('network', selectedNetwork);
+    if (selectedCategory) params.set('category', selectedCategory);
+    if (selectedCommissionType) params.set('commissionType', selectedCommissionType);
+    if (minCommission) params.set('minCommission', minCommission);
+    if (maxCommission) params.set('maxCommission', maxCommission);
+    if (sortBy !== 'createdAt') params.set('sortBy', sortBy);
+    if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
+    if (currentPage > 1) params.set('page', currentPage.toString());
+
+    const newURL = params.toString() ? `/programs?${params}` : '/programs';
+    router.push(newURL, { scroll: false });
+  };
+
+  // Sync filters to URL
+  useEffect(() => {
+    updateURL();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    selectedNetwork,
+    selectedCategory,
+    selectedCommissionType,
+    search,
+    minCommission,
+    maxCommission,
+    sortBy,
+    sortOrder,
+    currentPage,
+  ]);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -586,14 +623,12 @@ export default function ProgramsPage() {
                           <div className="font-semibold">${program.paymentThreshold}</div>
                         </div>
                         <div>
-                          <a
-                            href={program.network.website || '#'}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link
+                            href={`/programs/${program.id}`}
                             className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded transition-colors"
                           >
                             Подробнее →
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>
