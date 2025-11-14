@@ -61,12 +61,16 @@ export default function ProgramsPage() {
 
   useEffect(() => {
     fetchStats();
+    fetchFilters(); // Initial load
     fetchFavorites();
   }, []);
 
   // Refetch filters when network, category, or commissionType changes (cascading filters)
   useEffect(() => {
-    fetchFilters();
+    // Skip initial run (already called above)
+    if (selectedNetwork || selectedCategory || selectedCommissionType) {
+      fetchFilters();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedNetwork, selectedCategory, selectedCommissionType]);
 
