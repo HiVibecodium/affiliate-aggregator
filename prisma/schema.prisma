@@ -34,7 +34,7 @@ model AffiliateNetwork {
 model AffiliateProgram {
   id               String   @id @default(cuid())
   networkId        String
-  externalId       String   // Unique identifier from the network
+  externalId       String // Unique identifier from the network
   name             String
   description      String?
   category         String?
@@ -50,6 +50,7 @@ model AffiliateProgram {
   network            AffiliateNetwork @relation(fields: [networkId], references: [id], onDelete: Cascade)
   organizationAccess ProgramAccess[]
   favoredBy          Favorite[]
+  clicks             ProgramClick[]
 
   @@unique([networkId, externalId])
   @@index([networkId])
@@ -226,4 +227,21 @@ model Favorite {
   @@index([userId])
   @@index([programId])
   @@index([createdAt])
+}
+
+// Click tracking for analytics
+model ProgramClick {
+  id        String   @id @default(cuid())
+  programId String
+  userId    String? // Optional - can track anonymous clicks
+  userAgent String?
+  referrer  String?
+  ipAddress String?
+  clickedAt DateTime @default(now())
+
+  program AffiliateProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@index([programId])
+  @@index([userId])
+  @@index([clickedAt])
 }
