@@ -15,6 +15,7 @@ interface PopularProgram {
 export default function AnalyticsPage() {
   const [popularPrograms, setPopularPrograms] = useState<PopularProgram[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPopularPrograms();
@@ -23,10 +24,30 @@ export default function AnalyticsPage() {
   async function fetchPopularPrograms() {
     try {
       const response = await fetch('/api/analytics/popular');
+
+      if (!response.ok) {
+        console.error('Analytics API error:', response.status);
+        setError('Analytics data temporarily unavailable');
+        setPopularPrograms([]);
+        setLoading(false);
+        return;
+      }
+
       const data = await response.json();
-      setPopularPrograms(data.popular);
-    } catch (error) {
-      console.error('Failed to fetch analytics:', error);
+
+      // Handle API errors gracefully
+      if (data.error) {
+        setError(data.error);
+        setPopularPrograms([]);
+      } else {
+        setPopularPrograms(data.popular || []);
+        setError(null);
+      }
+    } catch (err) {
+      console.error('Failed to fetch analytics:', err);
+      // Gracefully handle error - show empty state instead of crashing
+      setError('Failed to load analytics data');
+      setPopularPrograms([]);
     } finally {
       setLoading(false);
     }
@@ -46,6 +67,26 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
+        {/* Error State */}
+        {error && (
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path
+                    fillRule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-yellow-700">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Popular Programs */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">🔥 Самые популярные программы</h2>
@@ -57,10 +98,17 @@ export default function AnalyticsPage() {
             </div>
           ) : popularPrograms.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500">Пока нет данных по кликам</p>
-              <p className="text-sm text-gray-400 mt-2">
+              <div className="text-6xl mb-4">📊</div>
+              <p className="text-gray-700 font-semibold text-lg">Пока нет данных по кликам</p>
+              <p className="text-sm text-gray-500 mt-2">
                 Начните просматривать программы, чтобы увидеть статистику
               </p>
+              <Link
+                href="/programs"
+                className="inline-block mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Перейти к программам
+              </Link>
             </div>
           ) : (
             <div className="space-y-4">
