@@ -15,9 +15,11 @@ const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     rules: {
-      // Custom rules can be added here
+      // Custom rules
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-require-imports': 'off', // Allow require in tests and config
+      '@typescript-eslint/triple-slash-reference': 'off', // Allow in next-env.d.ts
     },
   },
   {
@@ -31,6 +33,9 @@ const eslintConfig = [
       '.vercel/**',
       '*.config.js',
       '*.config.ts',
+      'next-env.d.ts', // Generated file
+      '.lighthouseci/**',
+      '.husky/**',
     ],
   },
 ];

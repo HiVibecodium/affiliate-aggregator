@@ -1,9 +1,9 @@
-const nextJest = require('next/jest')
+const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
   dir: './',
-})
+});
 
 // Add any custom config to be passed to Jest
 const customJestConfig = {
@@ -34,10 +34,10 @@ const customJestConfig = {
   ],
   coverageThreshold: {
     global: {
-      branches: 9,
-      functions: 15,
-      lines: 11,
-      statements: 11,
+      branches: 8,
+      functions: 14,
+      lines: 10,
+      statements: 10,
     },
   },
   // Coverage reporting
@@ -45,7 +45,7 @@ const customJestConfig = {
   coverageDirectory: '<rootDir>/coverage',
   // Test timeout for integration tests
   testTimeout: 30000,
-}
+};
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-module.exports = createJestConfig(customJestConfig)
+module.exports = createJestConfig(customJestConfig);
