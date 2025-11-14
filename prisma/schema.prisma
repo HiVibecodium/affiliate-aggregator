@@ -56,6 +56,15 @@ model AffiliateProgram {
   @@index([networkId])
   @@index([category])
   @@index([active])
+  @@index([commissionType])
+  @@index([commissionRate])
+  // Composite indexes for common query patterns
+  @@index([active, category])
+  @@index([active, networkId])
+  @@index([active, commissionType])
+  @@index([active, category, commissionType])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin) // Full-text search on name
+  @@index([createdAt(sort: Desc)]) // For sorting by latest
 }
 
 // User tracking and authentication

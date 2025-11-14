@@ -1,63 +1,71 @@
 import * as Sentry from '@sentry/nextjs';
 
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+// Only initialize Sentry in production and if DSN is available
+const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
-  // Performance Monitoring
-  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+if (IS_PRODUCTION && SENTRY_DSN) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
 
-  // Session Replay
-  replaysSessionSampleRate: 0.1, // 10% of sessions
-  replaysOnErrorSampleRate: 1.0, // 100% of sessions with errors
+    // Performance Monitoring - reduced sample rate for bundle size
+    tracesSampleRate: 0.05, // 5% of transactions for performance
 
-  // Environment
-  environment: process.env.NODE_ENV || 'development',
+    // Session Replay - lazy loaded
+    replaysSessionSampleRate: 0.05, // 5% of sessions (reduced from 10%)
+    replaysOnErrorSampleRate: 0.5, // 50% of error sessions (reduced from 100%)
 
-  // Release tracking
-  release: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
+    // Environment
+    environment: 'production',
 
-  // Debugging
-  debug: false,
+    // Release tracking
+    release: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
 
-  // Error filtering
-  beforeSend(event, hint) {
-    // Don't send errors in development
-    if (process.env.NODE_ENV === 'development') {
-      return null;
-    }
+    // Debugging - always false in production
+    debug: false,
 
-    // Filter out known issues
-    const error = hint.originalException;
-    if (error && typeof error === 'object' && 'message' in error) {
-      const message = String(error.message);
+    // Error filtering
+    beforeSend(event, hint) {
+      // Filter out known issues
+      const error = hint.originalException;
+      if (error && typeof error === 'object' && 'message' in error) {
+        const message = String(error.message);
 
-      // Ignore network errors from ad blockers
-      if (message.includes('Load failed') || message.includes('NetworkError')) {
-        return null;
+        // Ignore network errors from ad blockers
+        if (message.includes('Load failed') || message.includes('NetworkError')) {
+          return null;
+        }
+
+        // Ignore Supabase connection issues
+        if (message.includes('supabase') && message.includes('timeout')) {
+          return null;
+        }
       }
 
-      // Ignore Supabase connection issues (they have their own monitoring)
-      if (message.includes('supabase') && message.includes('timeout')) {
-        return null;
-      }
-    }
+      return event;
+    },
 
-    return event;
-  },
+    // Ignore certain errors
+    ignoreErrors: [
+      'top.GLOBALS',
+      'ResizeObserver loop limit exceeded',
+      'Non-Error promise rejection captured',
+      'cancelled', // React 18 cancellation
+      'ChunkLoadError', // Code splitting errors
+    ],
 
-  // Ignore certain errors
-  ignoreErrors: [
-    // Browser extensions
-    'top.GLOBALS',
-    'ResizeObserver loop limit exceeded',
-    'Non-Error promise rejection captured',
-  ],
+    // Minimal integrations for smaller bundle
+    integrations: [
+      // Lazy load replay integration
+      Sentry.replayIntegration({
+        maskAllText: true,
+        blockAllMedia: true,
+        // Reduce memory usage
+        stickySession: false,
+      }),
+    ],
 
-  // Additional integrations
-  integrations: [
-    Sentry.replayIntegration({
-      maskAllText: true,
-      blockAllMedia: true,
-    }),
-  ],
-});
+    // Transport options for better performance
+    transport: Sentry.makeBrowserOfflineTransport(Sentry.makeFetchTransport),
+  });
+}
