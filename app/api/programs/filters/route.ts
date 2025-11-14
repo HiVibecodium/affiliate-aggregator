@@ -77,6 +77,23 @@ export async function GET(request: NextRequest) {
       _max: { commissionRate: true },
     });
 
+    // Get unique countries from networks
+    const countries = await prisma.affiliateNetwork.groupBy({
+      by: ['country'],
+      where: {
+        country: { not: null },
+        active: true,
+      },
+      _count: {
+        country: true,
+      },
+      orderBy: {
+        _count: {
+          country: 'desc',
+        },
+      },
+    });
+
     return NextResponse.json({
       categories: categories.map((c) => ({
         value: c.category,
@@ -85,6 +102,10 @@ export async function GET(request: NextRequest) {
       commissionTypes: commissionTypes.map((ct) => ({
         value: ct.commissionType,
         count: ct._count.commissionType,
+      })),
+      countries: countries.map((c) => ({
+        value: c.country,
+        count: c._count.country,
       })),
       commissionRange: {
         min: commissionStats._min.commissionRate || 0,

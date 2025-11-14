@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
     const network = searchParams.get('network');
     const category = searchParams.get('category');
     const commissionType = searchParams.get('commissionType');
+    const country = searchParams.get('country');
     const search = searchParams.get('search');
     const minCommission = searchParams.get('minCommission');
     const maxCommission = searchParams.get('maxCommission');
@@ -30,6 +31,13 @@ export async function GET(request: NextRequest) {
       where.network = { name: network };
     }
 
+    if (country) {
+      where.network = {
+        ...where.network,
+        country: country,
+      };
+    }
+
     if (category) {
       where.category = category;
     }
@@ -41,7 +49,7 @@ export async function GET(request: NextRequest) {
     if (search) {
       where.name = {
         contains: search,
-        mode: 'insensitive'
+        mode: 'insensitive',
       };
     }
 
@@ -68,15 +76,15 @@ export async function GET(request: NextRequest) {
           network: {
             select: {
               name: true,
-              website: true
-            }
-          }
+              website: true,
+            },
+          },
         },
         skip,
         take: limit,
-        orderBy
+        orderBy,
       }),
-      prisma.affiliateProgram.count({ where })
+      prisma.affiliateProgram.count({ where }),
     ]);
 
     return NextResponse.json({
@@ -85,12 +93,15 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit)
-      }
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to fetch programs', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch programs',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }

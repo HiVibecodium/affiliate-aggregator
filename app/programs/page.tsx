@@ -30,6 +30,7 @@ interface Stats {
 interface Filters {
   categories: { value: string; count: number }[];
   commissionTypes: { value: string; count: number }[];
+  countries: { value: string; count: number }[];
   commissionRange: { min: number; max: number };
 }
 
@@ -51,6 +52,7 @@ function ProgramsContent() {
   const [selectedNetwork, setSelectedNetwork] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedCommissionType, setSelectedCommissionType] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('');
   const [minCommission, setMinCommission] = useState('');
   const [maxCommission, setMaxCommission] = useState('');
 
@@ -60,6 +62,7 @@ function ProgramsContent() {
     setSelectedNetwork(searchParams.get('network') || '');
     setSelectedCategory(searchParams.get('category') || '');
     setSelectedCommissionType(searchParams.get('commissionType') || '');
+    setSelectedCountry(searchParams.get('country') || '');
     setMinCommission(searchParams.get('minCommission') || '');
     setMaxCommission(searchParams.get('maxCommission') || '');
   }, [searchParams]);
@@ -226,6 +229,7 @@ function ProgramsContent() {
         ...(selectedNetwork && { network: selectedNetwork }),
         ...(selectedCategory && { category: selectedCategory }),
         ...(selectedCommissionType && { commissionType: selectedCommissionType }),
+        ...(selectedCountry && { country: selectedCountry }),
         ...(search && { search }),
         ...(minCommission && { minCommission }),
         ...(maxCommission && { maxCommission }),
@@ -259,6 +263,7 @@ function ProgramsContent() {
     if (selectedNetwork) params.set('network', selectedNetwork);
     if (selectedCategory) params.set('category', selectedCategory);
     if (selectedCommissionType) params.set('commissionType', selectedCommissionType);
+    if (selectedCountry) params.set('country', selectedCountry);
     if (minCommission) params.set('minCommission', minCommission);
     if (maxCommission) params.set('maxCommission', maxCommission);
     if (sortBy !== 'createdAt') params.set('sortBy', sortBy);
@@ -277,6 +282,7 @@ function ProgramsContent() {
     selectedNetwork,
     selectedCategory,
     selectedCommissionType,
+    selectedCountry,
     search,
     minCommission,
     maxCommission,
@@ -295,6 +301,7 @@ function ProgramsContent() {
     setSelectedNetwork('');
     setSelectedCategory('');
     setSelectedCommissionType('');
+    setSelectedCountry('');
     setMinCommission('');
     setMaxCommission('');
     setSortBy('createdAt');
@@ -424,6 +431,28 @@ function ProgramsContent() {
                   {filters?.commissionTypes.map((ct) => (
                     <option key={ct.value} value={ct.value}>
                       {ct.value} ({ct.count.toLocaleString()})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Country filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  🌍 Страна сети
+                </label>
+                <select
+                  value={selectedCountry}
+                  onChange={(e) => {
+                    setSelectedCountry(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Все страны</option>
+                  {filters?.countries.map((country) => (
+                    <option key={country.value} value={country.value}>
+                      {country.value} ({country.count} сетей)
                     </option>
                   ))}
                 </select>
