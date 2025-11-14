@@ -1,0 +1,254 @@
+// Prisma schema for Affiliate Aggregator
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Affiliate Networks
+model AffiliateNetwork {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  website     String?
+  country     String?
+  commission  Float?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  programs           AffiliateProgram[]
+  organizationAccess NetworkAccess[]
+
+  @@index([country])
+  @@index([active])
+}
+
+// Affiliate Programs
+model AffiliateProgram {
+  id               String   @id @default(cuid())
+  networkId        String
+  externalId       String // Unique identifier from the network
+  name             String
+  description      String?
+  category         String?
+  commissionRate   Float?
+  commissionType   String? // CPA, CPS, CPL, etc.
+  cookieDuration   Int? // in days
+  paymentThreshold Float?
+  paymentMethods   String[] // JSON array of payment methods
+  active           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  network            AffiliateNetwork @relation(fields: [networkId], references: [id], onDelete: Cascade)
+  organizationAccess ProgramAccess[]
+  favoredBy          Favorite[]
+  clicks             ProgramClick[]
+
+  @@unique([networkId, externalId])
+  @@index([networkId])
+  @@index([category])
+  @@index([active])
+  @@index([commissionType])
+  @@index([commissionRate])
+  // Composite indexes for common filter combinations (3-5x faster queries)
+  @@index([active, category])
+  @@index([active, networkId])
+  @@index([active, commissionType])
+  @@index([createdAt(sort: Desc)])
+}
+
+// User tracking and authentication
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations for multi-tenancy
+  organizationMembers OrganizationMember[]
+  favorites           Favorite[]
+}
+
+// Organization/Tenant model
+model Organization {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+  logo        String?
+  website     String?
+
+  // Subscription and billing
+  tier               String @default("free") // free, pro, enterprise
+  subscriptionStatus String @default("active") // active, paused, cancelled
+
+  // Organization settings
+  settings Json? // Flexible settings storage
+
+  // Timestamps
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // Relations
+  members  OrganizationMember[]
+  programs ProgramAccess[]
+  networks NetworkAccess[]
+
+  @@index([slug])
+  @@index([tier])
+  @@index([subscriptionStatus])
+}
+
+// Organization membership with role-based access
+model OrganizationMember {
+  id             String @id @default(cuid())
+  organizationId String
+  userId         String
+
+  // Role assignment
+  role String @default("member") // owner, admin, manager, member, viewer
+
+  // Permissions override (for custom permissions)
+  permissions String[] @default([]) // List of explicit permissions
+
+  // Status and metadata
+  status       String    @default("active") // active, pending, inactive
+  invitedEmail String? // For pending invites
+  invitedAt    DateTime?
+  acceptedAt   DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@unique([organizationId, invitedEmail])
+  @@index([organizationId])
+  @@index([userId])
+  @@index([role])
+  @@index([status])
+}
+
+// Role-Permission mapping
+model Role {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+
+  // Permissions for this role (array of permission keys)
+  permissions String[] @default([])
+
+  // System role flag
+  isSystem Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isSystem])
+}
+
+// Data isolation: AffiliateNetwork access control
+model NetworkAccess {
+  id             String @id @default(cuid())
+  organizationId String
+  networkId      String
+
+  // Access level
+  accessLevel String @default("viewer") // viewer, manager, admin
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  network      AffiliateNetwork @relation(fields: [networkId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, networkId])
+  @@index([organizationId])
+  @@index([networkId])
+}
+
+// Data isolation: AffiliateProgram access control
+model ProgramAccess {
+  id             String @id @default(cuid())
+  organizationId String
+  programId      String
+
+  // Access level
+  accessLevel String @default("viewer") // viewer, manager, admin
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  program      AffiliateProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, programId])
+  @@index([organizationId])
+  @@index([programId])
+}
+
+// Audit log for organization actions
+model AuditLog {
+  id             String @id @default(cuid())
+  organizationId String
+
+  action       String // e.g., "user_added", "role_changed", "data_exported"
+  resourceType String // e.g., "user", "program", "network"
+  resourceId   String?
+
+  performedBy String // userId
+  details     Json? // Additional details about the action
+
+  createdAt DateTime @default(now())
+
+  @@index([organizationId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+// User favorites/bookmarks for programs
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  programId String
+  createdAt DateTime @default(now())
+
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program AffiliateProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, programId])
+  @@index([userId])
+  @@index([programId])
+  @@index([createdAt])
+}
+
+// Click tracking for analytics
+model ProgramClick {
+  id        String   @id @default(cuid())
+  programId String
+  userId    String? // Optional - can track anonymous clicks
+  userAgent String?
+  referrer  String?
+  ipAddress String?
+  clickedAt DateTime @default(now())
+
+  program AffiliateProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@index([programId])
+  @@index([userId])
+  @@index([clickedAt])
+}
