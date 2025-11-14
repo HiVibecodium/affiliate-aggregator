@@ -1,7 +1,22 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { getDashboardAnalytics } from '@/lib/dashboard/get-analytics';
 
 export async function GET() {
+  try {
+    const analytics = await getDashboardAnalytics();
+    return NextResponse.json(analytics);
+  } catch (error) {
+    console.error('Dashboard analytics error:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch analytics', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
+  }
+}
+
+// Legacy implementation (keeping for reference)
+/*
+export async function GET_OLD() {
   try {
     // Parallel queries for performance
     const [
@@ -147,3 +162,4 @@ export async function GET() {
     );
   }
 }
+*/

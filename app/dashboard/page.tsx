@@ -1,85 +1,9 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { getDashboardAnalytics } from '@/lib/dashboard/get-analytics';
 
-interface DashboardAnalytics {
-  overview: {
-    totalPrograms: number;
-    totalNetworks: number;
-    activeNetworks: number;
-    avgCommission: string;
-  };
-  programsByNetwork: Array<{ network: string; programs: number }>;
-  programsByCategory: Array<{ category: string; count: number }>;
-  topCommissions: Array<{
-    id: string;
-    name: string;
-    commissionRate: number;
-    commissionType: string;
-    category: string;
-    network: { name: string };
-  }>;
-  recentPrograms: Array<{
-    id: string;
-    name: string;
-    category: string;
-    commissionRate: number;
-    createdAt: string;
-    network: { name: string };
-  }>;
-}
-
-export default function DashboardPage() {
-  const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function fetchAnalytics() {
-      try {
-        const response = await fetch('/api/dashboard/analytics');
-        if (!response.ok) {
-          throw new Error('Failed to fetch analytics');
-        }
-        const data = await response.json();
-        setAnalytics(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchAnalytics();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading analytics...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !analytics) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">Error: {error || 'Failed to load data'}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
+export default async function DashboardPage() {
+  // Fetch data directly on the server - no client-side loading!
+  const analytics = await getDashboardAnalytics();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
