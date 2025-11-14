@@ -8,7 +8,7 @@ import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit';
  * Synchronizes Supabase user with Prisma database
  * Creates User record and default Organization on first signup
  */
-async function syncHandler(request: NextRequest) {
+async function syncHandler(_request: NextRequest) {
   try {
     const supabase = await createClient();
 
@@ -98,7 +98,7 @@ async function syncHandler(request: NextRequest) {
         email: dbUser!.email,
         name: dbUser!.name,
       },
-      organizations: dbUser!.organizationMembers.map(m => ({
+      organizations: dbUser!.organizationMembers.map((m) => ({
         id: m.organization.id,
         name: m.organization.name,
         slug: m.organization.slug,
