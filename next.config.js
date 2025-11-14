@@ -1,3 +1,5 @@
+const { withSentryConfig } = require('@sentry/nextjs');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -5,6 +7,13 @@ const nextConfig = {
     serverActions: {
       allowedOrigins: ['localhost:3000'],
     },
+  },
+
+  // Sentry configuration
+  sentry: {
+    // Upload source maps for better error tracking
+    hideSourceMaps: true,
+    widenClientFileUpload: true,
   },
 
   // Security Headers
@@ -23,7 +32,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'", // unsafe-inline needed for Tailwind
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://vercel.live",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://vercel.live https://*.ingest.sentry.io",
               "frame-src 'self' https://vercel.live",
               "object-src 'none'",
               "base-uri 'self'",
@@ -82,4 +91,22 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+// Wrap config with Sentry
+module.exports = withSentryConfig(nextConfig, {
+  // Sentry Webpack Plugin Options
+  silent: true, // Suppresses all logs
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+
+  // Upload source maps in production only
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
+  // Disable source maps upload in development
+  disableServerWebpackPlugin: process.env.NODE_ENV !== 'production',
+  disableClientWebpackPlugin: process.env.NODE_ENV !== 'production',
+
+  // Additional config options
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+  disableLogger: true,
+})
