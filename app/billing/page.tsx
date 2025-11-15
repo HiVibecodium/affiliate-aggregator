@@ -99,15 +99,14 @@ export default async function BillingPage() {
                 )}
 
                 <div className="pt-4">
-                  <button
-                    onClick={async () => {
-                      // TODO: Implement portal session
-                      alert('Customer portal - coming soon!')
-                    }}
-                    className="text-sm text-blue-500 hover:text-blue-600 font-medium"
-                  >
-                    Manage subscription →
-                  </button>
+                  <form action="/api/billing/portal" method="POST">
+                    <button
+                      type="submit"
+                      className="text-sm text-blue-500 hover:text-blue-600 font-medium"
+                    >
+                      Manage subscription →
+                    </button>
+                  </form>
                 </div>
               </div>
             )}
