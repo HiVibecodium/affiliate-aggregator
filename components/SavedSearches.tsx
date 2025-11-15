@@ -232,7 +232,7 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
               <p className="text-sm text-blue-900">
-                <strong>Email Alerts:</strong> You'll receive daily emails when new programs match
+                <strong>Email Alerts:</strong> You&apos;ll receive daily emails when new programs match
                 this search.
               </p>
             </div>
