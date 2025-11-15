@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { calculateDifficulty, calculateQuality, isNewProgram } from '@/lib/program-utils';
 
 interface Program {
   id: string;
@@ -12,6 +13,7 @@ interface Program {
   cookieDuration: number;
   paymentThreshold: number;
   paymentMethods: string[];
+  createdAt?: string;
   network: {
     name: string;
     website: string;
@@ -35,8 +37,27 @@ export function ProgramCard({
   onComparisonToggle,
   onClickTrack,
 }: ProgramCardProps) {
+  const difficulty = calculateDifficulty(program);
+  const quality = calculateQuality(program);
+  const isNew = program.createdAt ? isNewProgram(program.createdAt) : false;
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow border-l-4 border-blue-500">
+      {/* Badges row */}
+      <div className="flex flex-wrap gap-2 mb-3">
+        {isNew && (
+          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">
+            🆕 НОВАЯ
+          </span>
+        )}
+        <span className={`px-2 py-1 text-xs font-semibold rounded ${difficulty.color}`}>
+          {difficulty.label}
+        </span>
+        <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded">
+          {quality.emoji} {quality.label}
+        </span>
+      </div>
+
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <Link
