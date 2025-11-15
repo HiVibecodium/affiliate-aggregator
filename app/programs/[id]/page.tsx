@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { ProgramReviews } from '@/components/ProgramReviews';
 import { ReviewForm } from '@/components/ReviewForm';
+import { TrackApplicationButton } from '@/components/TrackApplicationButton';
 
 async function getProgramDetails(id: string) {
   const program = await prisma.affiliateProgram.findUnique({
@@ -175,11 +176,12 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Действия</h3>
               <div className="space-y-3">
+                <TrackApplicationButton programId={id} programName={program.name} />
                 <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
-                  Добавить в избранное
+                  ❤️ Добавить в избранное
                 </button>
                 <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
-                  Добавить к сравнению
+                  📊 Добавить к сравнению
                 </button>
                 <Link
                   href={program.network.website || '#'}
