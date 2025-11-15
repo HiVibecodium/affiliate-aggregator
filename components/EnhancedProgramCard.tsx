@@ -146,10 +146,16 @@ export function EnhancedProgramCard({
 
         {showFavoriteButton && (
           <button
-            onClick={(e) => {
+            onClick={async (e) => {
               e.preventDefault()
-              // TODO: Implement favorite toggle
-              console.log('Add to favorites:', program.id)
+              const res = await fetch('/api/favorites', {
+                method: 'POST',
+                body: JSON.stringify({ programId: program.id }),
+              })
+              if (res.status === 403) {
+                const data = await res.json()
+                if (confirm(data.error)) window.location.href = '/billing/upgrade'
+              }
             }}
             className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm"
             title="Add to favorites"
