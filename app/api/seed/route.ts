@@ -98,7 +98,8 @@ export async function POST() {
     const networkCount = await prisma.affiliateNetwork.count();
     const programCount = await prisma.affiliateProgram.count();
 
-    await prisma.$disconnect();
+    // Note: DO NOT disconnect - Prisma client is a singleton
+    // await prisma.$disconnect();
 
     return NextResponse.json({
       success: true,
@@ -109,7 +110,8 @@ export async function POST() {
       },
     });
   } catch (error) {
-    await prisma.$disconnect();
+    // Note: DO NOT disconnect - Prisma client is a singleton
+    // await prisma.$disconnect();
 
     return NextResponse.json(
       {

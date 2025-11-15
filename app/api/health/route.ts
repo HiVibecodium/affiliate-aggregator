@@ -42,9 +42,9 @@ async function checkDatabase(): Promise<{
       status: 'down',
       error: error instanceof Error ? error.message : 'Unknown error',
     };
-  } finally {
-    await prisma.$disconnect();
   }
+  // Note: DO NOT disconnect here - Prisma client is a singleton and should remain connected
+  // Disconnecting on every health check creates connection pool exhaustion
 }
 
 function getMemoryUsage() {
