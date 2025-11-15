@@ -51,6 +51,12 @@ export default async function Home() {
               Посмотреть все программы →
             </Link>
             <Link
+              href="/programs/new"
+              className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+            >
+              🆕 Новые программы
+            </Link>
+            <Link
               href="/favorites"
               className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
             >

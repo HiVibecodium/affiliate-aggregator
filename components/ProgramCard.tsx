@@ -99,13 +99,52 @@ export function ProgramCard({
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-sm">
-        <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-medium">
-          {program.category}
-        </span>
-        <span className="text-gray-600">
-          Мин. выплата: ${program.paymentThreshold.toLocaleString()}
-        </span>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-sm">
+          <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-medium">
+            {program.category}
+          </span>
+          <span className="text-gray-600">
+            Мин. выплата: ${program.paymentThreshold.toLocaleString()}
+          </span>
+        </div>
+
+        {/* Payment methods */}
+        {program.paymentMethods && program.paymentMethods.length > 0 && (
+          <div className="flex items-center gap-2 text-xs">
+            <span className="text-gray-500">Способы оплаты:</span>
+            <div className="flex flex-wrap gap-1">
+              {program.paymentMethods.slice(0, 3).map((method) => (
+                <span
+                  key={method}
+                  className="px-2 py-1 bg-gray-100 text-gray-700 rounded"
+                  title={method}
+                >
+                  {method === 'Bank Transfer' && '🏦'}
+                  {method === 'PayPal' && '💳'}
+                  {method === 'Direct Deposit' && '💵'}
+                  {method === 'Wire Transfer' && '🔄'}
+                  {method === 'Check' && '📝'}
+                  {method === 'Payoneer' && '💰'}
+                  {![
+                    'Bank Transfer',
+                    'PayPal',
+                    'Direct Deposit',
+                    'Wire Transfer',
+                    'Check',
+                    'Payoneer',
+                  ].includes(method) && '💳'}{' '}
+                  {method}
+                </span>
+              ))}
+              {program.paymentMethods.length > 3 && (
+                <span className="px-2 py-1 bg-gray-100 text-gray-500 rounded">
+                  +{program.paymentMethods.length - 3}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
