@@ -47,11 +47,12 @@ model AffiliateProgram {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  network            AffiliateNetwork @relation(fields: [networkId], references: [id], onDelete: Cascade)
+  network            AffiliateNetwork     @relation(fields: [networkId], references: [id], onDelete: Cascade)
   organizationAccess ProgramAccess[]
   favoredBy          Favorite[]
   clicks             ProgramClick[]
   reviews            ProgramReview[]
+  applications       ProgramApplication[]
 
   @@unique([networkId, externalId])
   @@index([networkId])
@@ -85,6 +86,7 @@ model User {
   organizationMembers OrganizationMember[]
   favorites           Favorite[]
   reviews             ProgramReview[]
+  applications        ProgramApplication[]
 }
 
 // Organization/Tenant model
@@ -350,4 +352,46 @@ model ReviewReport {
   @@index([reviewId])
   @@index([userId])
   @@index([status])
+}
+
+// Program Applications - Track user applications to programs
+model ProgramApplication {
+  id        String @id @default(cuid())
+  userId    String
+  programId String
+
+  // Application info
+  status          String   @default("pending") // pending, approved, rejected, withdrawn
+  appliedAt       DateTime @default(now())
+  statusUpdatedAt DateTime @default(now())
+
+  // Application details
+  applicationUrl String? // Link to application if available
+  affiliateId    String? // Assigned affiliate ID after approval
+  notes          String? // User's private notes
+
+  // Follow-up
+  reminderDate DateTime? // When to follow up
+  lastChecked  DateTime? // Last time user checked status
+
+  // Performance tracking (optional, filled after approval)
+  firstSaleDate DateTime? // When first sale was made
+  totalEarnings Float?    @default(0)
+  totalClicks   Int?      @default(0)
+  totalSales    Int?      @default(0)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program AffiliateProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, programId]) // One application per user per program
+  @@index([userId])
+  @@index([programId])
+  @@index([status])
+  @@index([appliedAt(sort: Desc)])
+  @@index([reminderDate])
 }
