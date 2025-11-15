@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
+import { ProgramReviews } from '@/components/ProgramReviews';
+import { ReviewForm } from '@/components/ReviewForm';
 
 async function getProgramDetails(id: string) {
   const program = await prisma.affiliateProgram.findUnique({
@@ -215,6 +217,30 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
                   </span>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Отзывы и рейтинги</h2>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Reviews display (2 columns) */}
+            <div className="lg:col-span-2">
+              <ProgramReviews programId={id} />
+            </div>
+
+            {/* Review form (1 column) */}
+            <div>
+              <ReviewForm
+                programId={id}
+                programName={program.name}
+                onSuccess={() => {
+                  // Refresh page to show new review
+                  window.location.reload();
+                }}
+              />
             </div>
           </div>
         </div>
