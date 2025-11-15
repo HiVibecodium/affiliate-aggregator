@@ -6,9 +6,12 @@ import { createClient } from '@/lib/supabase/server';
  * GET /api/reviews/[programId]
  * Get all approved reviews for a program
  */
-export async function GET(request: NextRequest, { params }: { params: { programId: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ programId: string }> }
+) {
   try {
-    const { programId } = params;
+    const { programId } = await params;
 
     // Get reviews with user info
     const reviews = await prisma.programReview.findMany({
@@ -78,9 +81,12 @@ export async function GET(request: NextRequest, { params }: { params: { programI
  * POST /api/reviews/[programId]
  * Submit a new review for a program
  */
-export async function POST(request: NextRequest, { params }: { params: { programId: string } }) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ programId: string }> }
+) {
   try {
-    const { programId } = params;
+    const { programId } = await params;
     const supabase = await createClient();
 
     // Authenticate user

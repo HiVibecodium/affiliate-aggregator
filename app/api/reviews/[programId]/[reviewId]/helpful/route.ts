@@ -8,10 +8,10 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { programId: string; reviewId: string } }
+  { params }: { params: Promise<{ programId: string; reviewId: string }> }
 ) {
   try {
-    const { reviewId } = params;
+    const { reviewId } = await params;
     const supabase = await createClient();
 
     // Authenticate user

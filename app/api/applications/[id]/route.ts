@@ -6,9 +6,9 @@ import { createClient } from '@/lib/supabase/server';
  * PATCH /api/applications/[id]
  * Update application status or details
  */
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const supabase = await createClient();
 
     const {
@@ -69,9 +69,12 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
  * DELETE /api/applications/[id]
  * Delete application tracking
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const supabase = await createClient();
 
     const {
