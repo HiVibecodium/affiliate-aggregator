@@ -45,7 +45,7 @@ describe('Programs Filters API - GET /api/programs/filters', () => {
   describe('Cascading Filters', () => {
     it('should filter categories based on selected commission type', () => {
       const allCategories = ['Tech', 'Fashion', 'Sports'];
-      const commissionType = 'CPA';
+      const _commissionType = 'CPA';
 
       // Simulate: When CPA is selected, only some categories are available
       const availableCategories = ['Tech', 'Sports']; // Fashion has no CPA programs
@@ -56,7 +56,7 @@ describe('Programs Filters API - GET /api/programs/filters', () => {
 
     it('should filter commission types based on selected category', () => {
       const allTypes = ['CPA', 'CPS', 'CPL'];
-      const category = 'Technology';
+      const _category = 'Technology';
 
       // Simulate: When Technology is selected, only some types are available
       const availableTypes = ['CPA', 'CPS']; // Tech has no CPL programs

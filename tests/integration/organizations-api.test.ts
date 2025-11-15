@@ -22,15 +22,15 @@ describe('Organizations API Integration Tests', () => {
 
     it('should reject invalid slug formats', () => {
       const invalidSlugs = [
-        'Test-Org',     // uppercase
-        'test_org!',    // special chars
-        'test org',     // spaces
-        'test@org',     // special chars
+        'Test-Org', // uppercase
+        'test_org!', // special chars
+        'test org', // spaces
+        'test@org', // special chars
       ];
 
       const slugPattern = /^[a-z0-9_-]+$/;
 
-      invalidSlugs.forEach(slug => {
+      invalidSlugs.forEach((slug) => {
         expect(slug).not.toMatch(slugPattern);
       });
     });
@@ -70,7 +70,7 @@ describe('Organizations API Integration Tests', () => {
       ];
 
       expect(Array.isArray(orgs)).toBe(true);
-      orgs.forEach(org => {
+      orgs.forEach((org) => {
         expect(org.id).toBeDefined();
         expect(org.name).toBeDefined();
         expect(org.role).toBeDefined();
@@ -136,7 +136,7 @@ describe('Organizations API Integration Tests', () => {
         testDataFactories.organization({ name: 'Org 2' }),
       ];
 
-      const memberships = orgs.map(org =>
+      const memberships = orgs.map((org) =>
         testDataFactories.organizationMember({
           userId: user.id,
           organizationId: org.id,
@@ -145,7 +145,7 @@ describe('Organizations API Integration Tests', () => {
       );
 
       expect(memberships).toHaveLength(2);
-      expect(memberships.every(m => m.userId === user.id)).toBe(true);
+      expect(memberships.every((m) => m.userId === user.id)).toBe(true);
     });
 
     it('should handle organization access control', () => {
@@ -174,7 +174,8 @@ describe('Organizations API Integration Tests', () => {
 
     it('should support organization membership status', () => {
       const statuses = ['pending', 'active', 'inactive'];
-      const memberships = statuses.map(status =>
+      const memberships = statuses.map((status) =>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         testDataFactories.organizationMember({ status: status as any })
       );
 
@@ -212,9 +213,7 @@ describe('Organizations API Integration Tests', () => {
 
     it('should support organization subscription tiers', () => {
       const tiers = ['free', 'pro', 'enterprise'];
-      const organizations = tiers.map(tier =>
-        testDataFactories.organization({ tier })
-      );
+      const organizations = tiers.map((tier) => testDataFactories.organization({ tier }));
 
       organizations.forEach((org, i) => {
         expect(org.tier).toBe(tiers[i]);

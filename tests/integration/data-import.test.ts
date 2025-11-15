@@ -19,6 +19,7 @@ jest.mock('@/lib/prisma', () => ({
 }));
 
 describe('Data Import Integration Tests', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let prismaMock: any;
 
   beforeEach(() => {
@@ -327,12 +328,13 @@ describe('Data Import Integration Tests', () => {
         });
         fail('Should have thrown');
       } catch (e) {
-        expect((e as any).message).toBe('Network not found');
+        expect((e as Error).message).toBe('Network not found');
       }
     });
 
     it('should handle database constraint violations', async () => {
       const error = new Error('Unique constraint failed');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (error as any).code = 'P2002';
       prismaMock.affiliateProgram.upsert.mockRejectedValue(error);
 
@@ -349,6 +351,7 @@ describe('Data Import Integration Tests', () => {
         });
         fail('Should have thrown');
       } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         expect((e as any).code).toBe('P2002');
       }
     });
@@ -363,7 +366,7 @@ describe('Data Import Integration Tests', () => {
         });
         fail('Should have thrown');
       } catch (e) {
-        expect((e as any).message).toBe('Batch operation failed');
+        expect((e as Error).message).toBe('Batch operation failed');
       }
     });
   });

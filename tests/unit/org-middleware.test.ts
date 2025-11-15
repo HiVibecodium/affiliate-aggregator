@@ -201,6 +201,7 @@ describe('Organization Middleware', () => {
       expect(org?.id).toBe('org-123');
       expect(org?.name).toBe('Test Org');
       expect(org?.slug).toBe('test-org');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect((org as any)?.extraField).toBeUndefined();
     });
   });
@@ -269,11 +270,7 @@ describe('Organization Middleware', () => {
 
       prismaMock.organizationMember.findUnique.mockResolvedValue(mockMembership);
 
-      const result = await validateUserPermission(
-        'user-123',
-        'org-456',
-        Permission.MANAGE_USERS
-      );
+      const result = await validateUserPermission('user-123', 'org-456', Permission.MANAGE_USERS);
 
       expect(result).toBe(true);
     });
@@ -287,11 +284,7 @@ describe('Organization Middleware', () => {
 
       prismaMock.organizationMember.findUnique.mockResolvedValue(mockMembership);
 
-      const result = await validateUserPermission(
-        'user-123',
-        'org-456',
-        Permission.MANAGE_USERS
-      );
+      const result = await validateUserPermission('user-123', 'org-456', Permission.MANAGE_USERS);
 
       expect(result).toBe(true);
     });
@@ -305,11 +298,7 @@ describe('Organization Middleware', () => {
 
       prismaMock.organizationMember.findUnique.mockResolvedValue(mockMembership);
 
-      const result = await validateUserPermission(
-        'user-123',
-        'org-456',
-        Permission.MANAGE_USERS
-      );
+      const result = await validateUserPermission('user-123', 'org-456', Permission.MANAGE_USERS);
 
       expect(result).toBe(false);
     });
@@ -321,11 +310,7 @@ describe('Organization Middleware', () => {
 
       prismaMock.organizationMember.findUnique.mockResolvedValue(mockMembership);
 
-      const result = await validateUserPermission(
-        'user-123',
-        'org-456',
-        Permission.MANAGE_USERS
-      );
+      const result = await validateUserPermission('user-123', 'org-456', Permission.MANAGE_USERS);
 
       expect(result).toBe(false);
     });
@@ -333,11 +318,7 @@ describe('Organization Middleware', () => {
     it('should return false for non-existent membership', async () => {
       prismaMock.organizationMember.findUnique.mockResolvedValue(null);
 
-      const result = await validateUserPermission(
-        'user-123',
-        'org-456',
-        Permission.MANAGE_USERS
-      );
+      const result = await validateUserPermission('user-123', 'org-456', Permission.MANAGE_USERS);
 
       expect(result).toBe(false);
     });
@@ -351,11 +332,7 @@ describe('Organization Middleware', () => {
 
       prismaMock.organizationMember.findUnique.mockResolvedValue(mockMembership);
 
-      const result = await validateUserPermission(
-        'user-123',
-        'org-456',
-        Permission.EXPORT_DATA
-      );
+      const result = await validateUserPermission('user-123', 'org-456', Permission.EXPORT_DATA);
 
       expect(result).toBe(true);
     });
@@ -363,9 +340,7 @@ describe('Organization Middleware', () => {
 
   describe('Org context creation helpers', () => {
     it('should validate createRBACContext helper', () => {
-      const context = createRBACContext('user-123', 'org-456', 'admin', [
-        Permission.MANAGE_USERS,
-      ]);
+      const context = createRBACContext('user-123', 'org-456', 'admin', [Permission.MANAGE_USERS]);
 
       expect(context.userId).toBe('user-123');
       expect(context.organizationId).toBe('org-456');

@@ -87,12 +87,14 @@ test.describe('Authentication Flow', () => {
     await page.goto('/login');
 
     const forgotLink = page.locator('a:has-text(/forgot|reset/i)');
-    await expect(forgotLink).toBeVisible({ timeout: 5000 }).catch(() => null);
+    await expect(forgotLink)
+      .toBeVisible({ timeout: 5000 })
+      .catch(() => null);
   });
 });
 
 test.describe('Post-Login Flow', () => {
-  test.skip('should redirect to dashboard after login', async ({ page, context }) => {
+  test.skip('should redirect to dashboard after login', async ({ page }) => {
     // This test requires actual authentication setup
     // Skip in CI/CD without proper auth fixtures
 
@@ -107,7 +109,7 @@ test.describe('Post-Login Flow', () => {
     await expect(page.locator('text=Dashboard')).toBeVisible();
   });
 
-  test.skip('should display user menu when logged in', async ({ page, context }) => {
+  test.skip('should display user menu when logged in', async ({ page }) => {
     // This test requires authenticated session
     // Skip without auth fixtures
 
@@ -115,7 +117,7 @@ test.describe('Post-Login Flow', () => {
     await expect(page.locator('[aria-label="User menu"]')).toBeVisible();
   });
 
-  test.skip('should allow logout', async ({ page, context }) => {
+  test.skip('should allow logout', async ({ page }) => {
     // This test requires authenticated session
 
     await page.goto('/dashboard');

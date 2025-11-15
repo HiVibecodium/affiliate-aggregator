@@ -60,14 +60,12 @@ export function sleep(ms: number): Promise<void> {
 /**
  * Create a NextRequest mock for testing API routes
  */
-export function createMockNextRequest(
-  options?: {
-    method?: string;
-    headers?: Record<string, string>;
-    body?: any;
-    url?: string;
-  }
-) {
+export function createMockNextRequest(options?: {
+  method?: string;
+  headers?: Record<string, string>;
+  body?: unknown;
+  url?: string;
+}) {
   const url = options?.url || 'http://localhost:3000/api/test';
 
   return {
@@ -77,6 +75,7 @@ export function createMockNextRequest(
     nextUrl: new URL(url),
     json: async () => options?.body || {},
     text: async () => JSON.stringify(options?.body || {}),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any;
 }
 
@@ -90,6 +89,7 @@ const getUniqueId = (prefix: string) => `${prefix}-${++idCounter}-${Date.now()}`
  * Test data factories for common entities
  */
 export const testDataFactories = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user: (overrides?: any) => ({
     id: overrides?.id || getUniqueId('test-user'),
     email: 'test@example.com',
@@ -99,6 +99,7 @@ export const testDataFactories = {
     ...overrides,
   }),
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   organization: (overrides?: any) => ({
     id: overrides?.id || getUniqueId('test-org'),
     name: 'Test Organization',
@@ -114,6 +115,7 @@ export const testDataFactories = {
     ...overrides,
   }),
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   organizationMember: (overrides?: any) => ({
     id: overrides?.id || getUniqueId('test-member'),
     organizationId: overrides?.organizationId || 'test-org-id',
@@ -128,6 +130,7 @@ export const testDataFactories = {
     ...overrides,
   }),
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   affiliateNetwork: (overrides?: any) => ({
     id: 'test-network-id',
     name: 'Test Network',
@@ -141,6 +144,7 @@ export const testDataFactories = {
     ...overrides,
   }),
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   affiliateProgram: (overrides?: any) => ({
     id: 'test-program-id',
     networkId: 'test-network-id',
@@ -159,6 +163,7 @@ export const testDataFactories = {
     ...overrides,
   }),
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   auditLog: (overrides?: any) => ({
     id: 'test-log-id',
     organizationId: 'test-org-id',
@@ -197,7 +202,7 @@ export const assertions = {
   /**
    * Assert permission result allowed status
    */
-  assertPermissionResult: (result: any, allowed: boolean) => {
+  assertPermissionResult: (result: { allowed: boolean; reason?: string }, allowed: boolean) => {
     expect(result.allowed).toBe(allowed);
     if (!allowed) {
       expect(result.reason).toBeDefined();

@@ -140,7 +140,7 @@ describe('Cache Module', () => {
 
     it('should delete keys matching pattern', async () => {
       const keys = ['programs:filters:1', 'programs:filters:2', 'programs:stats'];
-      const pattern = 'programs:filters*';
+      const _pattern = 'programs:filters*';
 
       const matching = keys.filter((k) => k.startsWith('programs:filters'));
 
