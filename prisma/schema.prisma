@@ -51,6 +51,7 @@ model AffiliateProgram {
   organizationAccess ProgramAccess[]
   favoredBy          Favorite[]
   clicks             ProgramClick[]
+  reviews            ProgramReview[]
 
   @@unique([networkId, externalId])
   @@index([networkId])
@@ -83,6 +84,7 @@ model User {
   // Relations for multi-tenancy
   organizationMembers OrganizationMember[]
   favorites           Favorite[]
+  reviews             ProgramReview[]
 }
 
 // Organization/Tenant model
@@ -258,4 +260,94 @@ model ProgramClick {
   @@index([programId])
   @@index([userId])
   @@index([clickedAt])
+}
+
+// Program Reviews - Community feedback system
+model ProgramReview {
+  id        String @id @default(cuid())
+  programId String
+  userId    String
+
+  // Review content
+  rating  Int // 1-5 stars
+  title   String // Short review title
+  content String // Full review text
+  pros    String[] // Array of pros
+  cons    String[] // Array of cons
+
+  // Verification
+  isVerified Boolean @default(false) // Verified affiliate badge
+  experience String? // beginner, intermediate, advanced
+
+  // Metrics (if user shares their data)
+  monthsUsed    Int? // How long using the program
+  earningsRange String? // e.g., "$100-500/mo", "$500-1000/mo"
+  trafficSource String? // blog, youtube, social, email, etc.
+
+  // Moderation
+  status      String    @default("pending") // pending, approved, rejected, flagged
+  moderatedBy String? // User ID of moderator
+  moderatedAt DateTime?
+  reportCount Int       @default(0)
+
+  // Engagement
+  helpfulCount    Int @default(0) // Upvotes
+  notHelpfulCount Int @default(0) // Downvotes
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  program      AffiliateProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  helpfulVotes ReviewHelpful[]
+  reportedBy   ReviewReport[]
+
+  @@unique([userId, programId]) // One review per user per program
+  @@index([programId])
+  @@index([userId])
+  @@index([rating])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@index([helpfulCount(sort: Desc)]) // For "most helpful" sorting
+}
+
+// Review helpfulness votes
+model ReviewHelpful {
+  id       String  @id @default(cuid())
+  reviewId String
+  userId   String
+  helpful  Boolean // true = helpful, false = not helpful
+
+  createdAt DateTime @default(now())
+
+  review ProgramReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId]) // One vote per user per review
+  @@index([reviewId])
+  @@index([userId])
+}
+
+// Review reports (for moderation)
+model ReviewReport {
+  id       String @id @default(cuid())
+  reviewId String
+  userId   String
+
+  reason  String // spam, inappropriate, fake, offensive, other
+  details String?
+
+  status     String    @default("pending") // pending, resolved, dismissed
+  resolvedBy String?
+  resolvedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  review ProgramReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId]) // One report per user per review
+  @@index([reviewId])
+  @@index([userId])
+  @@index([status])
 }
