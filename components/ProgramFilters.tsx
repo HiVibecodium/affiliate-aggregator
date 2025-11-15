@@ -1,9 +1,18 @@
 'use client';
 
+interface CountryFilter {
+  value: string;
+  code: string;
+  name: string;
+  flag: string;
+  region: string;
+  count: number;
+}
+
 interface Filters {
   categories: { value: string; count: number }[];
   commissionTypes: { value: string; count: number }[];
-  countries: { value: string; count: number }[];
+  countries: CountryFilter[];
   commissionRange: { min: number; max: number };
 }
 
@@ -127,7 +136,12 @@ export function ProgramFilters({
 
         {/* Country filter */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">🌍 Страна сети</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            🌍 Страна сети
+            <span className="text-xs text-gray-500 font-normal ml-2">
+              (по местонахождению партнерской сети)
+            </span>
+          </label>
           <select
             value={selectedCountry}
             onChange={(e) => onCountryChange(e.target.value)}
@@ -136,10 +150,16 @@ export function ProgramFilters({
             <option value="">Все страны</option>
             {filters?.countries.map((country) => (
               <option key={country.value} value={country.value}>
-                {country.value} ({country.count} сетей)
+                {country.flag} {country.name} ({country.count}{' '}
+                {country.count === 1 ? 'сеть' : 'сетей'})
               </option>
             ))}
           </select>
+          {selectedCountry && filters?.countries && (
+            <p className="text-xs text-gray-500 mt-1">
+              {filters.countries.find((c) => c.value === selectedCountry)?.region}
+            </p>
+          )}
         </div>
 
         {/* Commission range */}

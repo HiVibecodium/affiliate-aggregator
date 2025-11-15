@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCached, CacheKeys } from '@/lib/cache';
+import { getCountryInfo } from '@/lib/countries';
 
 /**
  * GET /api/programs/filters
@@ -129,10 +130,19 @@ async function fetchFiltersData(
         value: ct.commissionType,
         count: ct._count.commissionType,
       })),
-      countries: countries.map((c) => ({
-        value: c.country,
-        count: c._count.country,
-      })),
+      countries: countries
+        .map((c) => {
+          const countryInfo = getCountryInfo(c.country!);
+          return {
+            value: c.country,
+            code: c.country,
+            name: countryInfo?.name || c.country,
+            flag: countryInfo?.flag || '',
+            region: countryInfo?.region || 'Unknown',
+            count: c._count.country,
+          };
+        })
+        .filter((c) => c.value), // Filter out any nulls
       commissionRange: {
         min: commissionStats._min.commissionRate || 0,
         max: commissionStats._max.commissionRate || 100,
