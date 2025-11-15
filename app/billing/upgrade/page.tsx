@@ -5,11 +5,26 @@
  */
 
 import { PricingTable } from '@/components/billing/PricingTable'
+import { createClient } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma'
+import { getActiveSubscription } from '@/lib/billing/subscription'
 
 export default async function UpgradePage() {
-  // For demo purposes, show pricing to everyone
-  // TODO: Get actual user from auth when ready
-  const user = null as any
+  // Get authenticated user
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Get current tier if authenticated
+  let currentTier = 'free'
+  if (user) {
+    const dbUser = await prisma.user.findUnique({
+      where: { email: user.email! }
+    })
+    if (dbUser) {
+      const subscription = await getActiveSubscription(dbUser.id)
+      currentTier = subscription?.tier || 'free'
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -27,7 +42,7 @@ export default async function UpgradePage() {
 
       {/* Pricing Table */}
       <PricingTable
-        currentTier={'free'}
+        currentTier={currentTier}
         userId={user?.id}
         userEmail={user?.email}
       />
