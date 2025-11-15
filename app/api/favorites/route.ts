@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createClient } from '@/lib/supabase/server';
 import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit';
+import { checkAndRecordUsage, decrementUsage } from '@/lib/billing/feature-gates';
 
 /**
  * GET /api/favorites
@@ -130,6 +131,20 @@ async function postFavoriteHandler(request: NextRequest) {
       return NextResponse.json({ error: 'Program already in favorites' }, { status: 409 });
     }
 
+    // Check feature access and record usage
+    const access = await checkAndRecordUsage(dbUser.id, 'favorites');
+
+    if (!access.allowed) {
+      return NextResponse.json(
+        {
+          error: access.message,
+          upgradeUrl: access.upgradeUrl,
+          requiresUpgrade: true,
+        },
+        { status: 403 }
+      );
+    }
+
     // Create favorite
     const favorite = await prisma.favorite.create({
       data: {
@@ -212,6 +227,9 @@ async function deleteFavoriteHandler(request: NextRequest) {
         },
       },
     });
+
+    // Decrement usage count
+    await decrementUsage(dbUser.id, 'favorites');
 
     return NextResponse.json({
       success: true,

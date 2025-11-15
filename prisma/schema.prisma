@@ -72,6 +72,11 @@ model AffiliateProgram {
   // Text search optimization
   @@index([name])
   @@index([active, name])
+  // Additional indexes for new filters (2025-11-15 evening)
+  @@index([cookieDuration])
+  @@index([paymentThreshold])
+  @@index([active, cookieDuration])
+  @@index([active, paymentThreshold])
 }
 
 // User tracking and authentication
@@ -87,6 +92,11 @@ model User {
   favorites           Favorite[]
   reviews             ProgramReview[]
   applications        ProgramApplication[]
+
+  // Billing relations
+  subscriptions  Subscription[]
+  paymentMethods PaymentMethod[]
+  invoices       Invoice[]
 }
 
 // Organization/Tenant model
@@ -111,9 +121,10 @@ model Organization {
   deletedAt DateTime?
 
   // Relations
-  members  OrganizationMember[]
-  programs ProgramAccess[]
-  networks NetworkAccess[]
+  members       OrganizationMember[]
+  programs      ProgramAccess[]
+  networks      NetworkAccess[]
+  subscriptions Subscription[]
 
   @@index([slug])
   @@index([tier])
@@ -394,4 +405,363 @@ model ProgramApplication {
   @@index([status])
   @@index([appliedAt(sort: Desc)])
   @@index([reminderDate])
+}
+
+// ============================================================================
+// BILLING & SUBSCRIPTION SYSTEM (Stripe Integration)
+// ============================================================================
+
+// Subscription management - Stripe subscription tracking
+model Subscription {
+  id             String  @id @default(cuid())
+  userId         String
+  organizationId String?
+
+  // Stripe identifiers
+  stripeCustomerId     String  @unique
+  stripeSubscriptionId String? @unique
+  stripePriceId        String?
+  stripeProductId      String?
+
+  // Subscription details
+  tier   String @default("free") // free, pro, business, enterprise
+  status String @default("active") // active, canceled, past_due, trialing, incomplete, incomplete_expired, unpaid
+
+  // Billing period
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean   @default(false)
+  canceledAt         DateTime?
+
+  // Trial information
+  trialStart DateTime?
+  trialEnd   DateTime?
+
+  // Metadata
+  metadata Json? // Additional Stripe metadata
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  invoices     Invoice[]
+
+  @@index([userId])
+  @@index([organizationId])
+  @@index([stripeCustomerId])
+  @@index([status])
+  @@index([tier])
+  @@index([currentPeriodEnd]) // For expiration checks
+}
+
+// Payment methods - Stored Stripe payment methods
+model PaymentMethod {
+  id     String @id @default(cuid())
+  userId String
+
+  // Stripe identifier
+  stripePaymentMethodId String @unique
+
+  // Payment method details
+  type  String // card, bank_account, etc.
+  last4 String
+
+  // Card-specific fields
+  brand       String? // visa, mastercard, amex, etc.
+  expiryMonth Int?
+  expiryYear  Int?
+  country     String?
+
+  // Bank account-specific fields
+  bankName     String?
+  accountType  String? // checking, savings
+  routingLast4 String?
+
+  // Status
+  isDefault Boolean @default(false)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isDefault])
+}
+
+// Invoices - Stripe invoice tracking
+model Invoice {
+  id             String  @id @default(cuid())
+  userId         String
+  subscriptionId String?
+
+  // Stripe identifier
+  stripeInvoiceId String @unique
+
+  // Invoice details
+  amount      Float
+  currency    String  @default("usd")
+  status      String // draft, open, paid, void, uncollectible
+  description String?
+
+  // Invoice URLs
+  hostedInvoiceUrl String?
+  invoicePdf       String?
+
+  // Dates
+  paidAt  DateTime?
+  dueDate DateTime?
+
+  // Period covered
+  periodStart DateTime?
+  periodEnd   DateTime?
+
+  // Metadata
+  metadata Json?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([subscriptionId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@index([dueDate])
+}
+
+// Usage metrics - Track feature usage for tier limits
+model UsageMetric {
+  id     String @id @default(cuid())
+  userId String
+
+  // Metric details
+  metric String // favorites_count, comparisons_daily, api_calls_monthly, etc.
+  value  Int    @default(0)
+
+  // Period tracking
+  period String   @default("daily") // daily, weekly, monthly, lifetime
+  date   DateTime @default(now())
+
+  // Reset information
+  resetAt    DateTime?
+  lastReset  DateTime?
+  resetCount Int       @default(0)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, metric, period, date])
+  @@index([userId])
+  @@index([userId, metric])
+  @@index([date])
+  @@index([resetAt])
+}
+
+// Coupon codes - Discount codes and promotions
+model Coupon {
+  id String @id @default(cuid())
+
+  // Stripe identifier
+  stripeCouponId String? @unique
+
+  // Coupon details
+  code        String  @unique
+  name        String?
+  description String?
+
+  // Discount
+  percentOff Int? // 10 = 10% off
+  amountOff  Float? // Fixed amount off
+  currency   String? @default("usd")
+
+  // Restrictions
+  maxRedemptions  Int?
+  timesRedeemed   Int       @default(0)
+  validFrom       DateTime  @default(now())
+  validUntil      DateTime?
+  firstTimeOnly   Boolean   @default(false)
+  minimumAmount   Float?
+  applicableTiers String[]  @default([]) // Which tiers can use this
+
+  // Status
+  active Boolean @default(true)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  redemptions CouponRedemption[]
+
+  @@index([code])
+  @@index([active])
+  @@index([validUntil])
+}
+
+// Coupon redemptions - Track who used which coupons
+model CouponRedemption {
+  id       String @id @default(cuid())
+  couponId String
+  userId   String
+
+  // Redemption details
+  discountAmount Float
+  appliedTo      String? // subscription, invoice
+
+  // Stripe reference
+  stripePromotionCodeId String?
+
+  // Timestamps
+  redeemedAt DateTime @default(now())
+
+  // Relations
+  coupon Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+  @@index([couponId])
+  @@index([userId])
+  @@index([redeemedAt])
+}
+
+// Billing events - Audit trail for all billing actions
+model BillingEvent {
+  id     String @id @default(cuid())
+  userId String
+
+  // Event details
+  type        String // subscription_created, payment_succeeded, payment_failed, etc.
+  description String?
+  status      String // success, failed, pending
+
+  // Associated resources
+  subscriptionId  String?
+  invoiceId       String?
+  paymentMethodId String?
+
+  // Stripe event
+  stripeEventId String? @unique
+
+  // Event data
+  eventData Json?
+
+  // Error tracking
+  errorMessage String?
+  errorCode    String?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@index([subscriptionId])
+}
+
+// Referrals - Track referral program
+model Referral {
+  id         String  @id @default(cuid())
+  referrerId String // User who referred
+  referredId String? // User who was referred (null until they sign up)
+
+  // Referral details
+  referralCode String  @unique
+  email        String? // Email of referred user (before signup)
+  status       String  @default("pending") // pending, completed, rewarded
+
+  // Rewards
+  referrerReward String? // e.g., "1_month_free", "$10_credit"
+  referredReward String?
+  rewardApplied  Boolean @default(false)
+
+  // Conversion tracking
+  signedUpAt  DateTime?
+  convertedAt DateTime? // When referred user became paid
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([referrerId])
+  @@index([referredId])
+  @@index([referralCode])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+}
+
+// Credits - Account credits/balance system
+model Credit {
+  id     String @id @default(cuid())
+  userId String
+
+  // Credit details
+  amount      Float
+  currency    String  @default("usd")
+  description String?
+  source      String? // referral, promotion, refund, etc.
+
+  // Usage
+  applied   Boolean   @default(false)
+  appliedTo String? // invoice_id or subscription_id
+  appliedAt DateTime?
+
+  // Expiration
+  expiresAt DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([applied])
+  @@index([expiresAt])
+  @@index([createdAt(sort: Desc)])
+}
+
+// ============================================================================
+// SAVED SEARCHES & ALERTS
+// ============================================================================
+
+// Saved searches with email alerts
+model SavedSearch {
+  id     String @id @default(cuid())
+  userId String
+
+  // Search details
+  name        String
+  description String?
+
+  // Filter criteria (JSON)
+  filters Json
+
+  // Alert settings
+  alertsEnabled     Boolean  @default(true)
+  alertFrequency    String   @default("daily") // instant, daily, weekly
+  lastAlertSent     DateTime?
+  lastCheckedAt     DateTime?
+  newMatchesCount   Int      @default(0)
+
+  // Metadata
+  timesExecuted Int      @default(0)
+  lastExecutedAt DateTime?
+
+  // Status
+  active Boolean @default(true)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, active])
+  @@index([alertsEnabled])
+  @@index([lastCheckedAt])
 }

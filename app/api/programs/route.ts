@@ -16,6 +16,9 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search');
     const minCommission = searchParams.get('minCommission');
     const maxCommission = searchParams.get('maxCommission');
+    const paymentMethod = searchParams.get('paymentMethod');
+    const minCookieDuration = searchParams.get('minCookieDuration');
+    const minRating = searchParams.get('minRating');
 
     // Sorting
     const sortBy = searchParams.get('sortBy') || 'createdAt';
@@ -42,10 +45,29 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      where.name = {
-        contains: search,
-        mode: 'insensitive' as Prisma.QueryMode,
-      };
+      // Enhanced search: search in name, description, and network name
+      where.OR = [
+        {
+          name: {
+            contains: search,
+            mode: 'insensitive' as Prisma.QueryMode,
+          },
+        },
+        {
+          description: {
+            contains: search,
+            mode: 'insensitive' as Prisma.QueryMode,
+          },
+        },
+        {
+          network: {
+            name: {
+              contains: search,
+              mode: 'insensitive' as Prisma.QueryMode,
+            },
+          },
+        },
+      ];
     }
 
     if (minCommission || maxCommission) {
@@ -54,6 +76,21 @@ export async function GET(request: NextRequest) {
         ...(maxCommission ? { lte: parseFloat(maxCommission) } : {}),
       };
     }
+
+    // New filters
+    if (paymentMethod) {
+      where.paymentMethods = {
+        has: paymentMethod,
+      };
+    }
+
+    if (minCookieDuration) {
+      where.cookieDuration = {
+        gte: parseInt(minCookieDuration),
+      };
+    }
+
+    // Note: Rating filter requires join with reviews - handled client-side for now
 
     // Build orderBy clause
     const orderBy: Prisma.AffiliateProgramOrderByWithRelationInput = {};

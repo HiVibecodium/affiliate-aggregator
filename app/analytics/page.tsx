@@ -2,6 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { StatsCards } from '@/components/analytics/StatsCards';
+import { CommissionChart } from '@/components/analytics/CommissionChart';
+import { CategoryChart } from '@/components/analytics/CategoryChart';
+import { TrendChart } from '@/components/analytics/TrendChart';
+import { TopProgramsTable } from '@/components/analytics/TopProgramsTable';
 
 interface PopularProgram {
   id: string;
@@ -14,12 +19,26 @@ interface PopularProgram {
 
 export default function AnalyticsPage() {
   const [popularPrograms, setPopularPrograms] = useState<PopularProgram[]>([]);
+  const [advancedData, setAdvancedData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPopularPrograms();
+    fetchAdvancedAnalytics();
   }, []);
+
+  async function fetchAdvancedAnalytics() {
+    try {
+      const response = await fetch('/api/analytics/advanced');
+      if (response.ok) {
+        const data = await response.json();
+        setAdvancedData(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch advanced analytics:', err);
+    }
+  }
 
   async function fetchPopularPrograms() {
     try {
@@ -67,6 +86,24 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
+        {/* Advanced Analytics Charts */}
+        {advancedData && (
+          <>
+            <StatsCards stats={advancedData.overview} />
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <CommissionChart data={advancedData.commissionDistribution} />
+              <CategoryChart data={advancedData.categoryStats} />
+            </div>
+
+            <div className="mb-6">
+              <TrendChart data={advancedData.newProgramsTrend} />
+            </div>
+
+            <TopProgramsTable programs={advancedData.topPrograms} />
+          </>
+        )}
+
         {/* Error State */}
         {error && (
           <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded">
@@ -87,7 +124,7 @@ export default function AnalyticsPage() {
           </div>
         )}
 
-        {/* Popular Programs */}
+        {/* Original Popular Programs (keep as fallback) */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">🔥 Самые популярные программы</h2>
 

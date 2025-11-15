@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useComparison } from '@/contexts/ComparisonContext';
+import { EnhancedProgramCard } from '@/components/EnhancedProgramCard';
 
 interface Program {
   id: string;
@@ -15,6 +16,7 @@ interface Program {
   cookieDuration: number;
   paymentThreshold: number;
   paymentMethods: string[];
+  createdAt: string;
   network: {
     name: string;
     website: string;
@@ -563,119 +565,15 @@ function ProgramsContent() {
               <>
                 <div className="grid gap-6 mb-8">
                   {programs.map((program) => (
-                    <div
+                    <EnhancedProgramCard
                       key={program.id}
-                      className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6"
-                    >
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                            {program.name}
-                          </h3>
-                          <div className="flex items-center gap-2 text-sm text-gray-600 mb-2 flex-wrap">
-                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                              {program.network.name}
-                            </span>
-                            {program.category && (
-                              <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded">
-                                {program.category}
-                              </span>
-                            )}
-                            {program.commissionType && (
-                              <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
-                                {program.commissionType}
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-gray-600 text-sm line-clamp-2">
-                            {program.description}
-                          </p>
-                        </div>
-                        <div className="flex gap-2 ml-4">
-                          <button
-                            onClick={() => toggleComparison(program)}
-                            className={`p-2 rounded-full transition-all ${
-                              isInComparison(program.id)
-                                ? 'text-blue-600 bg-blue-50 hover:bg-blue-100'
-                                : 'text-gray-400 bg-gray-50 hover:bg-gray-100 hover:text-blue-600'
-                            }`}
-                            title={
-                              isInComparison(program.id)
-                                ? 'Убрать из сравнения'
-                                : 'Добавить к сравнению'
-                            }
-                          >
-                            <svg
-                              className="w-6 h-6"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                              />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={() => toggleFavorite(program.id)}
-                            disabled={favoritesLoading}
-                            className={`p-2 rounded-full transition-all ${
-                              favorites.has(program.id)
-                                ? 'text-red-500 bg-red-50 hover:bg-red-100'
-                                : 'text-gray-400 bg-gray-50 hover:bg-gray-100 hover:text-red-500'
-                            } disabled:opacity-50 disabled:cursor-not-allowed`}
-                            title={
-                              favorites.has(program.id)
-                                ? 'Удалить из избранного'
-                                : 'Добавить в избранное'
-                            }
-                          >
-                            <svg
-                              className="w-6 h-6"
-                              fill={favorites.has(program.id) ? 'currentColor' : 'none'}
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
-                        <div>
-                          <div className="text-xs text-gray-500 mb-1">Комиссия</div>
-                          <div className="font-semibold text-green-600">
-                            {program.commissionRate}% {program.commissionType}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500 mb-1">Cookie</div>
-                          <div className="font-semibold">{program.cookieDuration} дней</div>
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500 mb-1">Мин. выплата</div>
-                          <div className="font-semibold">${program.paymentThreshold}</div>
-                        </div>
-                        <div>
-                          <Link
-                            href={`/programs/${program.id}`}
-                            onClick={() => trackClick(program.id)}
-                            className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded transition-colors"
-                          >
-                            Подробнее →
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
+                      program={{
+                        ...program,
+                        createdAt: new Date(program.createdAt || Date.now()),
+                      }}
+                      showFavoriteButton={true}
+                      showCompareButton={true}
+                    />
                   ))}
                 </div>
 

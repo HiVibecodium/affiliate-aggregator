@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { EnhancedProgramCard } from '@/components/EnhancedProgramCard';
 
 interface Program {
   id: string;
@@ -141,64 +142,15 @@ export default function NewProgramsPage() {
 
             <div className="grid gap-4">
               {programs.map((program) => (
-                <div
+                <EnhancedProgramCard
                   key={program.id}
-                  className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      {/* Header */}
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">
-                          NEW
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {getTimeSinceAdded(program.createdAt)}
-                        </span>
-                      </div>
-
-                      <Link
-                        href={`/programs/${program.id}`}
-                        className="text-xl font-bold text-gray-900 hover:text-blue-600 transition"
-                      >
-                        {program.name}
-                      </Link>
-
-                      <p className="mt-2 text-gray-600 line-clamp-2">{program.description}</p>
-
-                      {/* Meta info */}
-                      <div className="mt-4 flex flex-wrap gap-3 text-sm">
-                        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full">
-                          📊 {program.network.name}
-                        </span>
-                        <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full">
-                          🏷️ {program.category}
-                        </span>
-                        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full font-semibold">
-                          💰 {program.commissionRate}% {program.commissionType}
-                        </span>
-                        <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full">
-                          🍪 {program.cookieDuration} дней
-                        </span>
-                        {program.paymentMethods && program.paymentMethods.length > 0 && (
-                          <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full">
-                            💳 {program.paymentMethods.slice(0, 2).join(', ')}
-                            {program.paymentMethods.length > 2 &&
-                              ` +${program.paymentMethods.length - 2}`}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Action button */}
-                    <Link
-                      href={`/programs/${program.id}`}
-                      className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition whitespace-nowrap"
-                    >
-                      Подробнее →
-                    </Link>
-                  </div>
-                </div>
+                  program={{
+                    ...program,
+                    createdAt: new Date(program.createdAt),
+                  }}
+                  showFavoriteButton={true}
+                  showCompareButton={true}
+                />
               ))}
             </div>
           </>
