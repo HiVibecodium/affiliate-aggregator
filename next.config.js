@@ -35,13 +35,6 @@ const nextConfig = {
     return config;
   },
 
-  // Sentry configuration
-  sentry: {
-    // Upload source maps for better error tracking
-    hideSourceMaps: true,
-    widenClientFileUpload: true,
-  },
-
   // Security Headers
   async headers() {
     return [
@@ -64,7 +57,7 @@ const nextConfig = {
               "base-uri 'self'",
               "form-action 'self'",
               "frame-ancestors 'none'",
-              "upgrade-insecure-requests",
+              'upgrade-insecure-requests',
             ].join('; '),
           },
           // Prevent clickjacking attacks
@@ -115,7 +108,7 @@ const nextConfig = {
       },
     ];
   },
-}
+};
 
 // Wrap config with Sentry
 module.exports = withSentryConfig(nextConfig, {
@@ -135,4 +128,4 @@ module.exports = withSentryConfig(nextConfig, {
   widenClientFileUpload: true,
   hideSourceMaps: true,
   disableLogger: true,
-})
+});
