@@ -4,25 +4,26 @@
  * Process Stripe webhook events
  */
 
-import Stripe from 'stripe'
-import { prisma } from '@/lib/prisma'
+import Stripe from 'stripe';
+import { prisma } from '@/lib/prisma';
+import { stripe } from './stripe';
 
 /**
  * Handle checkout session completed
  */
 export async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-  const userId = session.metadata?.userId
-  const tier = session.metadata?.tier as 'pro' | 'business' | 'enterprise'
+  const userId = session.metadata?.userId;
+  const tier = session.metadata?.tier as 'pro' | 'business' | 'enterprise';
 
   if (!userId || !tier) {
-    console.error('Missing metadata in checkout session:', session.id)
-    return
+    console.error('Missing metadata in checkout session:', session.id);
+    return;
   }
 
-  const subscriptionId = session.subscription as string
+  const subscriptionId = session.subscription as string;
   if (!subscriptionId) {
-    console.error('No subscription ID in checkout session:', session.id)
-    return
+    console.error('No subscription ID in checkout session:', session.id);
+    return;
   }
 
   // Session completed, subscription will be handled by subscription.created event
@@ -34,19 +35,19 @@ export async function handleCheckoutCompleted(session: Stripe.Checkout.Session) 
       stripeEventId: session.id,
       eventData: session as any,
     },
-  })
+  });
 }
 
 /**
  * Handle subscription created
  */
 export async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
-  const userId = subscription.metadata?.userId
-  const tier = subscription.metadata?.tier as 'pro' | 'business' | 'enterprise'
+  const userId = subscription.metadata?.userId;
+  const tier = subscription.metadata?.tier as 'pro' | 'business' | 'enterprise';
 
   if (!userId || !tier) {
-    console.error('Missing metadata in subscription:', subscription.id)
-    return
+    console.error('Missing metadata in subscription:', subscription.id);
+    return;
   }
 
   // Create subscription in database
@@ -61,10 +62,14 @@ export async function handleSubscriptionCreated(subscription: Stripe.Subscriptio
       status: subscription.status,
       currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
       currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
-      trialStart: (subscription as any).trial_start ? new Date((subscription as any).trial_start * 1000) : null,
-      trialEnd: (subscription as any).trial_end ? new Date((subscription as any).trial_end * 1000) : null,
+      trialStart: (subscription as any).trial_start
+        ? new Date((subscription as any).trial_start * 1000)
+        : null,
+      trialEnd: (subscription as any).trial_end
+        ? new Date((subscription as any).trial_end * 1000)
+        : null,
     },
-  })
+  });
 
   // Log event
   await prisma.billingEvent.create({
@@ -76,20 +81,36 @@ export async function handleSubscriptionCreated(subscription: Stripe.Subscriptio
       stripeEventId: subscription.id,
       eventData: subscription as any,
     },
-  })
+  });
 }
 
 /**
  * Handle subscription updated
  */
-export async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+export /**
+ * Check if a payment method is the default for a customer
+ */
+async function checkIsDefaultPaymentMethod(
+  customerId: string,
+  paymentMethodId: string
+): Promise<boolean> {
+  try {
+    const customer = (await stripe.customers.retrieve(customerId)) as Stripe.Customer;
+    return customer.invoice_settings?.default_payment_method === paymentMethodId;
+  } catch (error) {
+    console.error('Error checking default payment method:', error);
+    return true; // Default to true on error
+  }
+}
+
+async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   const dbSubscription = await prisma.subscription.findUnique({
     where: { stripeSubscriptionId: subscription.id },
-  })
+  });
 
   if (!dbSubscription) {
-    console.error('Subscription not found in database:', subscription.id)
-    return
+    console.error('Subscription not found in database:', subscription.id);
+    return;
   }
 
   // Update subscription
@@ -100,9 +121,11 @@ export async function handleSubscriptionUpdated(subscription: Stripe.Subscriptio
       currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
       currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
       cancelAtPeriodEnd: (subscription as any).cancel_at_period_end,
-      canceledAt: (subscription as any).canceled_at ? new Date((subscription as any).canceled_at * 1000) : null,
+      canceledAt: (subscription as any).canceled_at
+        ? new Date((subscription as any).canceled_at * 1000)
+        : null,
     },
-  })
+  });
 
   // Log event
   await prisma.billingEvent.create({
@@ -114,7 +137,7 @@ export async function handleSubscriptionUpdated(subscription: Stripe.Subscriptio
       stripeEventId: subscription.id,
       eventData: subscription as any,
     },
-  })
+  });
 }
 
 /**
@@ -123,11 +146,11 @@ export async function handleSubscriptionUpdated(subscription: Stripe.Subscriptio
 export async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   const dbSubscription = await prisma.subscription.findUnique({
     where: { stripeSubscriptionId: subscription.id },
-  })
+  });
 
   if (!dbSubscription) {
-    console.error('Subscription not found in database:', subscription.id)
-    return
+    console.error('Subscription not found in database:', subscription.id);
+    return;
   }
 
   // Update subscription status
@@ -138,7 +161,7 @@ export async function handleSubscriptionDeleted(subscription: Stripe.Subscriptio
       canceledAt: new Date(),
       tier: 'free', // Downgrade to free
     },
-  })
+  });
 
   // Log event
   await prisma.billingEvent.create({
@@ -150,23 +173,23 @@ export async function handleSubscriptionDeleted(subscription: Stripe.Subscriptio
       stripeEventId: subscription.id,
       eventData: subscription as any,
     },
-  })
+  });
 }
 
 /**
  * Handle invoice paid
  */
 export async function handleInvoicePaid(invoice: Stripe.Invoice) {
-  const subscriptionId = (invoice as any).subscription as string
-  if (!subscriptionId) return
+  const subscriptionId = (invoice as any).subscription as string;
+  if (!subscriptionId) return;
 
   const dbSubscription = await prisma.subscription.findUnique({
     where: { stripeSubscriptionId: subscriptionId },
-  })
+  });
 
   if (!dbSubscription) {
-    console.error('Subscription not found for invoice:', invoice.id)
-    return
+    console.error('Subscription not found for invoice:', invoice.id);
+    return;
   }
 
   // Create invoice record
@@ -184,7 +207,7 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
       periodStart: new Date(invoice.period_start * 1000),
       periodEnd: new Date(invoice.period_end * 1000),
     },
-  })
+  });
 
   // Log event
   await prisma.billingEvent.create({
@@ -197,23 +220,23 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
       stripeEventId: invoice.id,
       eventData: invoice as any,
     },
-  })
+  });
 }
 
 /**
  * Handle invoice payment failed
  */
 export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
-  const subscriptionId = (invoice as any).subscription as string
-  if (!subscriptionId) return
+  const subscriptionId = (invoice as any).subscription as string;
+  if (!subscriptionId) return;
 
   const dbSubscription = await prisma.subscription.findUnique({
     where: { stripeSubscriptionId: subscriptionId },
-  })
+  });
 
   if (!dbSubscription) {
-    console.error('Subscription not found for invoice:', invoice.id)
-    return
+    console.error('Subscription not found for invoice:', invoice.id);
+    return;
   }
 
   // Update subscription status
@@ -222,7 +245,7 @@ export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
     data: {
       status: 'past_due',
     },
-  })
+  });
 
   // Log event
   await prisma.billingEvent.create({
@@ -236,7 +259,7 @@ export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
       errorMessage: 'Payment failed',
       eventData: invoice as any,
     },
-  })
+  });
 
   // TODO: Send notification to user about failed payment
 }
@@ -245,18 +268,18 @@ export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
  * Handle payment method attached
  */
 export async function handlePaymentMethodAttached(paymentMethod: Stripe.PaymentMethod) {
-  const customerId = paymentMethod.customer as string
-  if (!customerId) return
+  const customerId = paymentMethod.customer as string;
+  if (!customerId) return;
 
   // Find user by customer ID
   const subscription = await prisma.subscription.findFirst({
     where: { stripeCustomerId: customerId },
     orderBy: { createdAt: 'desc' },
-  })
+  });
 
   if (!subscription) {
-    console.error('User not found for customer:', customerId)
-    return
+    console.error('User not found for customer:', customerId);
+    return;
   }
 
   // Store payment method
@@ -270,9 +293,12 @@ export async function handlePaymentMethodAttached(paymentMethod: Stripe.PaymentM
       expiryMonth: paymentMethod.card?.exp_month,
       expiryYear: paymentMethod.card?.exp_year,
       bankName: paymentMethod.us_bank_account?.bank_name,
-      isDefault: true, // TODO: Check if this is the default payment method
+      isDefault: await checkIsDefaultPaymentMethod(
+        subscription.stripeCustomerId || '',
+        paymentMethod.id
+      ),
     },
-  })
+  });
 }
 
 /**
@@ -282,38 +308,38 @@ export async function handleWebhookEvent(event: Stripe.Event) {
   try {
     switch (event.type) {
       case 'checkout.session.completed':
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session)
-        break
+        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+        break;
 
       case 'customer.subscription.created':
-        await handleSubscriptionCreated(event.data.object as Stripe.Subscription)
-        break
+        await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
+        break;
 
       case 'customer.subscription.updated':
-        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription)
-        break
+        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
+        break;
 
       case 'customer.subscription.deleted':
-        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription)
-        break
+        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
+        break;
 
       case 'invoice.paid':
-        await handleInvoicePaid(event.data.object as Stripe.Invoice)
-        break
+        await handleInvoicePaid(event.data.object as Stripe.Invoice);
+        break;
 
       case 'invoice.payment_failed':
-        await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice)
-        break
+        await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
+        break;
 
       case 'payment_method.attached':
-        await handlePaymentMethodAttached(event.data.object as Stripe.PaymentMethod)
-        break
+        await handlePaymentMethodAttached(event.data.object as Stripe.PaymentMethod);
+        break;
 
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        console.log(`Unhandled event type: ${event.type}`);
     }
   } catch (error) {
-    console.error(`Error handling webhook event ${event.type}:`, error)
-    throw error
+    console.error(`Error handling webhook event ${event.type}:`, error);
+    throw error;
   }
 }

@@ -4,27 +4,58 @@
  * Shows current subscription, usage stats, and billing history
  */
 
-import { UsageStats } from '@/components/billing/UsageStats'
+import { UsageStats } from '@/components/billing/UsageStats';
+import { createClient } from '@/lib/supabase/server';
+import { prisma } from '@/lib/prisma';
+import { getActiveSubscription } from '@/lib/billing/subscription';
+import { getUsageSummary } from '@/lib/billing/feature-gates';
+import { redirect } from 'next/navigation';
 
 export default async function BillingPage() {
-  // Mock data for demo - TODO: Replace with actual auth
-  const subscriptionData = {
-    tier: 'free',
-    status: 'active',
-    subscription: null as any,
-    invoices: [] as any[],
+  // Get authenticated user
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login?redirect=/billing');
   }
 
-  const usageData = {
-    tier: 'free' as const,
-    usage: {
-      favorites: { current: 3, limit: 5, percentage: 60 },
-      comparisons_daily: { current: 1, limit: 3, percentage: 33 },
-      saved_searches: { current: 0, limit: 0 },
-      can_write_reviews: { current: 0, limit: false },
-      can_export: { current: 0, limit: false },
-    },
+  // Get user from database
+  const dbUser = await prisma.user.findUnique({
+    where: { email: user.email! },
+  });
+
+  if (!dbUser) {
+    redirect('/login?redirect=/billing');
   }
+
+  // Get subscription data
+  const subscription = await getActiveSubscription(dbUser.id);
+  const tier = subscription?.tier || 'free';
+
+  // Get invoices
+  const invoices = await prisma.invoice.findMany({
+    where: { userId: dbUser.id },
+    orderBy: { createdAt: 'desc' },
+    take: 10,
+  });
+
+  const subscriptionData = {
+    tier,
+    status: subscription?.status || 'active',
+    subscription: subscription
+      ? {
+          currentPeriodEnd: subscription.currentPeriodEnd,
+          cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
+        }
+      : null,
+    invoices,
+  };
+
+  // Get usage data
+  const usageData = await getUsageSummary(dbUser.id);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -47,10 +78,10 @@ export default async function BillingPage() {
                       subscriptionData.tier === 'enterprise'
                         ? 'text-purple-600'
                         : subscriptionData.tier === 'business'
-                        ? 'text-blue-600'
-                        : subscriptionData.tier === 'pro'
-                        ? 'text-green-600'
-                        : 'text-gray-600'
+                          ? 'text-blue-600'
+                          : subscriptionData.tier === 'pro'
+                            ? 'text-green-600'
+                            : 'text-gray-600'
                     }`}
                   >
                     {subscriptionData.tier.charAt(0).toUpperCase() + subscriptionData.tier.slice(1)}
@@ -60,8 +91,8 @@ export default async function BillingPage() {
                       subscriptionData.status === 'active'
                         ? 'bg-green-100 text-green-700'
                         : subscriptionData.status === 'trialing'
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'bg-gray-100 text-gray-700'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'bg-gray-100 text-gray-700'
                     }`}
                   >
                     {subscriptionData.status}
@@ -84,7 +115,11 @@ export default async function BillingPage() {
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Next billing date:</span>
                   <span className="font-medium text-gray-900">
-                    {new Date(subscriptionData.subscription.currentPeriodEnd).toLocaleDateString()}
+                    {subscriptionData.subscription.currentPeriodEnd
+                      ? new Date(
+                          subscriptionData.subscription.currentPeriodEnd
+                        ).toLocaleDateString()
+                      : 'N/A'}
                   </span>
                 </div>
 
@@ -92,8 +127,12 @@ export default async function BillingPage() {
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                     <p className="text-sm text-yellow-800">
                       Your subscription will cancel on{' '}
-                      {new Date(subscriptionData.subscription.currentPeriodEnd).toLocaleDateString()}.
-                      You can reactivate anytime before then.
+                      {subscriptionData.subscription.currentPeriodEnd
+                        ? new Date(
+                            subscriptionData.subscription.currentPeriodEnd
+                          ).toLocaleDateString()
+                        : 'N/A'}
+                      . You can reactivate anytime before then.
                     </p>
                   </div>
                 )}
@@ -174,8 +213,8 @@ export default async function BillingPage() {
                             invoice.status === 'paid'
                               ? 'bg-green-100 text-green-700'
                               : invoice.status === 'open'
-                              ? 'bg-yellow-100 text-yellow-700'
-                              : 'bg-gray-100 text-gray-700'
+                                ? 'bg-yellow-100 text-yellow-700'
+                                : 'bg-gray-100 text-gray-700'
                           }`}
                         >
                           {invoice.status}
@@ -222,5 +261,5 @@ export default async function BillingPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

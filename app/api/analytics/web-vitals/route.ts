@@ -14,22 +14,27 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
 
-    // TODO: Send to your analytics service (e.g., Google Analytics, Vercel Analytics)
-    // Example for Google Analytics 4:
-    // await fetch('https://www.google-analytics.com/mp/collect', {
-    //   method: 'POST',
-    //   body: JSON.stringify({
-    //     client_id: 'your-client-id',
-    //     events: [{
-    //       name: 'web_vitals',
-    //       params: {
-    //         metric_name: body.name,
-    //         metric_value: body.value,
-    //         metric_rating: body.rating,
-    //       },
-    //     }],
-    //   }),
-    // });
+    // Send to Vercel Analytics if configured
+    if (process.env.NEXT_PUBLIC_VERCEL_ANALYTICS_ID) {
+      try {
+        await fetch('https://vitals.vercel-analytics.com/v1/vitals', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            dsn: process.env.NEXT_PUBLIC_VERCEL_ANALYTICS_ID,
+            id: body.id || 'unknown',
+            page: body.page || '/',
+            href: body.href || '',
+            name: body.name,
+            value: body.value,
+            speed: body.speed || 'unknown',
+          }),
+        });
+      } catch (err) {
+        // Silently fail analytics
+        console.warn('Analytics error:', err);
+      }
+    }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
