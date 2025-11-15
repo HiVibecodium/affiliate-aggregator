@@ -63,6 +63,12 @@ export default async function Home() {
               🆕 Новые программы
             </Link>
             <Link
+              href="/applications"
+              className="inline-block bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+            >
+              📋 Мои заявки
+            </Link>
+            <Link
               href="/favorites"
               className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
             >
