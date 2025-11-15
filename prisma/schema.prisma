@@ -63,6 +63,13 @@ model AffiliateProgram {
   @@index([active, networkId])
   @@index([active, commissionType])
   @@index([createdAt(sort: Desc)])
+  // Additional composite indexes for complex filters (added 2025-11-15)
+  @@index([active, category, commissionRate])
+  @@index([active, networkId, category])
+  @@index([networkId, category, commissionRate])
+  // Text search optimization
+  @@index([name])
+  @@index([active, name])
 }
 
 // User tracking and authentication
