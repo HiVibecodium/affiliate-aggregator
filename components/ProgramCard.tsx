@@ -14,6 +14,8 @@ interface Program {
   paymentThreshold: number;
   paymentMethods: string[];
   createdAt?: string;
+  averageRating?: number | null;
+  reviewCount?: number;
   network: {
     name: string;
     website: string;
@@ -48,6 +50,14 @@ export function ProgramCard({
         {isNew && (
           <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">
             🆕 НОВАЯ
+          </span>
+        )}
+        {program.averageRating && program.averageRating > 0 && (
+          <span className="px-2 py-1 bg-yellow-50 text-yellow-700 text-xs font-semibold rounded flex items-center gap-1">
+            <span>⭐ {program.averageRating.toFixed(1)}</span>
+            {program.reviewCount && program.reviewCount > 0 && (
+              <span className="text-gray-600">({program.reviewCount})</span>
+            )}
           </span>
         )}
         <span className={`px-2 py-1 text-xs font-semibold rounded ${difficulty.color}`}>

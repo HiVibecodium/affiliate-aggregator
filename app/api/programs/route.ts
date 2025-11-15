@@ -75,6 +75,13 @@ export async function GET(request: NextRequest) {
               website: true,
             },
           },
+          _count: {
+            select: {
+              reviews: {
+                where: { status: 'approved' },
+              },
+            },
+          },
         },
         skip,
         take: limit,
@@ -83,8 +90,31 @@ export async function GET(request: NextRequest) {
       prisma.affiliateProgram.count({ where }),
     ]);
 
+    // Get average ratings for programs (in parallel)
+    const programIds = programs.map((p) => p.id);
+    const ratings = await prisma.programReview.groupBy({
+      by: ['programId'],
+      where: {
+        programId: { in: programIds },
+        status: 'approved',
+      },
+      _avg: {
+        rating: true,
+      },
+    });
+
+    // Create rating map
+    const ratingMap = new Map(ratings.map((r) => [r.programId, r._avg.rating || 0]));
+
+    // Add rating to each program
+    const programsWithRatings = programs.map((p) => ({
+      ...p,
+      averageRating: ratingMap.get(p.id) || null,
+      reviewCount: p._count.reviews,
+    }));
+
     return NextResponse.json({
-      programs,
+      programs: programsWithRatings,
       pagination: {
         page,
         limit,
