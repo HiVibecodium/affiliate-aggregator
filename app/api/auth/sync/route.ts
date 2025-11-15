@@ -61,7 +61,7 @@ async function syncHandler(_request: NextRequest) {
       const orgName = `${dbUser.name}'s Organization`;
       const orgSlug = `${user.id.substring(0, 8)}-org`;
 
-      const organization = await prisma.organization.create({
+      await prisma.organization.create({
         data: {
           name: orgName,
           slug: orgSlug,

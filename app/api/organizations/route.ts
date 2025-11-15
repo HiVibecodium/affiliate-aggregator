@@ -8,14 +8,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { getOrgContext, toRBACContext } from '@/lib/auth/org-middleware';
-import { can, Permission } from '@/lib/rbac/utils';
 
 /**
  * GET /api/organizations
  * List all organizations for the authenticated user
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Authenticate user
     const cookieStore = await cookies();
@@ -43,10 +41,7 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get user's organizations
@@ -73,7 +68,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({
-      organizations: memberships.map(m => ({
+      organizations: memberships.map((m) => ({
         ...m.organization,
         role: m.role,
         joinedAt: m.createdAt,
@@ -81,10 +76,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching organizations:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -120,10 +112,7 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse request body
@@ -132,10 +121,7 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!name || !slug) {
-      return NextResponse.json(
-        { error: 'Missing required fields: name, slug' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields: name, slug' }, { status: 400 });
     }
 
     // Validate slug format (alphanumeric, hyphens, underscores)
@@ -221,20 +207,17 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating organization:', error);
 
-    // Handle unique constraint error
-    if (error.code === 'P2002') {
+    // Handle unique constraint error (Prisma error)
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
       return NextResponse.json(
         { error: 'Slug already exists. Please choose a different one.' },
         { status: 409 }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

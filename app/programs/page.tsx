@@ -4,8 +4,6 @@ import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useComparison } from '@/contexts/ComparisonContext';
-import { ProgramFilters } from '@/components/ProgramFilters';
-import { ProgramCard } from '@/components/ProgramCard';
 
 interface Program {
   id: string;
@@ -82,6 +80,7 @@ function ProgramsContent() {
     fetchStats();
     fetchFilters(); // Initial load
     fetchFavorites();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Refetch filters when network, category, or commissionType changes (cascading filters)

@@ -4,17 +4,19 @@
  * Falls back gracefully if Redis is not configured
  */
 
-let redis: any = null;
+import type { Redis } from '@upstash/redis';
+
+let redis: Redis | null = null;
 
 // Initialize Redis only if credentials are provided
 if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
   try {
-    const { Redis } = require('@upstash/redis');
-    redis = new Redis({
+    const { Redis: RedisClient } = require('@upstash/redis');
+    redis = new RedisClient({
       url: process.env.UPSTASH_REDIS_REST_URL,
       token: process.env.UPSTASH_REDIS_REST_TOKEN,
     });
-  } catch (error) {
+  } catch (_error) {
     console.warn('Redis not available, caching disabled');
   }
 }

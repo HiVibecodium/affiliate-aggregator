@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import type { Prisma } from '@prisma/client';
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,16 +24,12 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: any = { active: true };
+    const where: Prisma.AffiliateProgramWhereInput = { active: true };
 
-    if (network) {
-      where.network = { name: network };
-    }
-
-    if (country) {
+    if (network || country) {
       where.network = {
-        ...where.network,
-        country: country,
+        ...(network ? { name: network } : {}),
+        ...(country ? { country: country } : {}),
       };
     }
 
@@ -47,24 +44,25 @@ export async function GET(request: NextRequest) {
     if (search) {
       where.name = {
         contains: search,
-        mode: 'insensitive',
+        mode: 'insensitive' as Prisma.QueryMode,
       };
     }
 
     if (minCommission || maxCommission) {
-      where.commissionRate = {};
-      if (minCommission) where.commissionRate.gte = parseFloat(minCommission);
-      if (maxCommission) where.commissionRate.lte = parseFloat(maxCommission);
+      where.commissionRate = {
+        ...(minCommission ? { gte: parseFloat(minCommission) } : {}),
+        ...(maxCommission ? { lte: parseFloat(maxCommission) } : {}),
+      };
     }
 
     // Build orderBy clause
-    const orderBy: any = {};
+    const orderBy: Prisma.AffiliateProgramOrderByWithRelationInput = {};
     if (sortBy === 'commission') {
-      orderBy.commissionRate = sortOrder;
+      orderBy.commissionRate = sortOrder as Prisma.SortOrder;
     } else if (sortBy === 'name') {
-      orderBy.name = sortOrder;
+      orderBy.name = sortOrder as Prisma.SortOrder;
     } else {
-      orderBy.createdAt = sortOrder;
+      orderBy.createdAt = sortOrder as Prisma.SortOrder;
     }
 
     const [programs, total] = await Promise.all([
