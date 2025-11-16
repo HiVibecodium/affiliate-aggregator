@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
     const maxPaymentThreshold = searchParams.get('maxPaymentThreshold');
     const minRating = searchParams.get('minRating');
     const since = searchParams.get('since'); // Number of days (e.g., "7" for last 7 days)
+    const hasReviews = searchParams.get('hasReviews') === 'true';
 
     // Sorting
     const sortBy = searchParams.get('sortBy') || 'createdAt';
@@ -110,6 +111,15 @@ export async function GET(request: NextRequest) {
 
       where.createdAt = {
         gte: sinceDate,
+      };
+    }
+
+    // Has Reviews filter
+    if (hasReviews) {
+      where.reviews = {
+        some: {
+          status: 'approved',
+        },
       };
     }
 

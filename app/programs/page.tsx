@@ -66,6 +66,7 @@ function ProgramsContent() {
   const [minPaymentThreshold, setMinPaymentThreshold] = useState('');
   const [maxPaymentThreshold, setMaxPaymentThreshold] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string[]>([]);
+  const [hasReviews, setHasReviews] = useState(false);
 
   // Initialize from URL params on client side
   useEffect(() => {
@@ -255,6 +256,7 @@ function ProgramsContent() {
         ...(maxCookieDuration && { maxCookieDuration }),
         ...(minPaymentThreshold && { minPaymentThreshold }),
         ...(maxPaymentThreshold && { maxPaymentThreshold }),
+        ...(hasReviews && { hasReviews: 'true' }),
       });
 
       const response = await fetch(`/api/programs?${params}`);
@@ -338,6 +340,7 @@ function ProgramsContent() {
     setMinPaymentThreshold('');
     setMaxPaymentThreshold('');
     setSelectedDifficulty([]);
+    setHasReviews(false);
     setSortBy('createdAt');
     setSortOrder('desc');
     setCurrentPage(1);
@@ -351,6 +354,7 @@ function ProgramsContent() {
     minCommission,
     maxCommission,
     selectedDifficulty.length > 0,
+    hasReviews,
   ].filter(Boolean).length;
 
   // Client-side difficulty filtering
@@ -697,6 +701,27 @@ function ProgramsContent() {
                     <span className="text-sm">🔴 Высокие требования</span>
                   </label>
                 </div>
+              </div>
+
+              {/* Has Reviews filter */}
+              <div>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={hasReviews}
+                    onChange={(e) => {
+                      setHasReviews(e.target.checked);
+                      setCurrentPage(1);
+                    }}
+                    className="w-4 h-4 text-blue-600 rounded"
+                  />
+                  <div>
+                    <span className="text-sm font-semibold text-gray-700">
+                      ⭐ Только с отзывами
+                    </span>
+                    <p className="text-xs text-gray-500">Программы с рейтингами пользователей</p>
+                  </div>
+                </label>
               </div>
 
               {/* Quick stats */}
