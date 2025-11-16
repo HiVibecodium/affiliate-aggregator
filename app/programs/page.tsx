@@ -139,7 +139,8 @@ function ProgramsContent() {
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [stats, programs, shouldShowTour, startTour]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stats, programs]);
 
   async function fetchStats() {
     try {

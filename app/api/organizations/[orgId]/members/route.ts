@@ -173,11 +173,22 @@ export async function POST(
       // Generate secure invite token
       const inviteToken = generateInviteToken();
 
+      // Create placeholder user for pending invite
+      // Will be updated with real user when invitation is accepted
+      const placeholderUser = await prisma.user.upsert({
+        where: { email: `pending-${email}` },
+        create: {
+          email: `pending-${email}`,
+          name: 'Pending Invitation',
+        },
+        update: {},
+      });
+
       // Create invitation for new user
       const member = await prisma.organizationMember.create({
         data: {
           organizationId: orgId,
-          userId: '', // Temporary, will be set when user accepts invitation
+          userId: placeholderUser.id, // Placeholder, will be updated when user accepts
           role,
           status: 'pending',
           invitedEmail: email,
