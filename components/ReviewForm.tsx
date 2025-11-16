@@ -5,7 +5,7 @@ import { useState } from 'react';
 interface ReviewFormProps {
   programId: string;
   programName: string;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
 export function ReviewForm({ programId, programName, onSuccess }: ReviewFormProps) {
@@ -54,7 +54,7 @@ export function ReviewForm({ programId, programName, onSuccess }: ReviewFormProp
 
       // Success!
       setIsOpen(false);
-      onSuccess();
+      onSuccess?.();
       resetForm();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to submit review');
