@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './tour.css';
 import { ComparisonProvider } from '@/contexts/ComparisonContext';
 import { ComparisonBar } from '@/components/ComparisonBar';
 import { WebVitals } from './web-vitals';

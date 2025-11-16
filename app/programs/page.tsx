@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useComparison } from '@/contexts/ComparisonContext';
 import { EnhancedProgramCard } from '@/components/EnhancedProgramCard';
 import { SearchSuggestions } from '@/components/SearchSuggestions';
+import { TourButton } from '@/components/TourButton';
+import { useTour } from '@/hooks/useTour';
 import { calculateDifficulty } from '@/lib/program-utils';
 
 interface Program {
@@ -50,6 +52,9 @@ function ProgramsContent() {
 
   // Comparison hook
   const { addToComparison, removeFromComparison, isInComparison } = useComparison();
+
+  // Tour hook
+  const { startTour, shouldShowTour } = useTour();
 
   // Filter states - initialized from URL params
   const [search, setSearch] = useState('');
@@ -124,6 +129,17 @@ function ProgramsContent() {
     sortOrder,
     currentPage,
   ]);
+
+  // Auto-start tour for new users
+  useEffect(() => {
+    if (shouldShowTour() && stats && programs.length > 0) {
+      // Delay to ensure UI is ready
+      const timer = setTimeout(() => {
+        startTour();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [stats, programs, shouldShowTour, startTour]);
 
   async function fetchStats() {
     try {
@@ -394,6 +410,7 @@ function ProgramsContent() {
                 {stats?.totalNetworks || '0'} сетей
               </p>
             </div>
+            <TourButton />
           </div>
         </div>
       </div>
@@ -402,7 +419,10 @@ function ProgramsContent() {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Sidebar with filters */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6 sticky top-4 space-y-6">
+            <div
+              className="bg-white rounded-lg shadow p-6 sticky top-4 space-y-6"
+              data-tour="filters"
+            >
               <div className="flex items-center justify-between">
                 <h3 className="font-bold text-lg">Фильтры</h3>
                 {activeFiltersCount > 0 && (

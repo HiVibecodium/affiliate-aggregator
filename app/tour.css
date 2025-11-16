@@ -1,0 +1,186 @@
+/**
+ * Shepherd.js Tour Custom Styles
+ */
+
+/* Import Shepherd default theme */
+@import 'shepherd.js/dist/css/shepherd.css';
+
+/* Custom theme overrides */
+.shepherd-theme-custom {
+  /* Tour container */
+}
+
+.shepherd-element {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 400px;
+  z-index: 9999;
+}
+
+.shepherd-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  border-radius: 12px 12px 0 0;
+}
+
+.shepherd-title {
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.shepherd-text {
+  padding: 20px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.shepherd-text p {
+  margin: 0 0 12px 0;
+}
+
+.shepherd-text p:last-child {
+  margin-bottom: 0;
+}
+
+.shepherd-text ul {
+  margin: 8px 0;
+  color: #6b7280;
+}
+
+.shepherd-text strong {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.shepherd-footer {
+  padding: 16px 20px;
+  background: #f9fafb;
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.shepherd-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.shepherd-button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.shepherd-button.shepherd-button-secondary {
+  background: white;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.shepherd-button.shepherd-button-secondary:hover {
+  background: #f9fafb;
+  color: #374151;
+  border-color: #9ca3af;
+}
+
+.shepherd-cancel-icon {
+  color: white;
+  opacity: 0.8;
+  font-size: 24px;
+  font-weight: 300;
+  transition: opacity 0.2s;
+}
+
+.shepherd-cancel-icon:hover {
+  opacity: 1;
+}
+
+/* Modal overlay */
+.shepherd-modal-overlay-container {
+  opacity: 0.5;
+}
+
+/* Arrow */
+.shepherd-arrow {
+  display: none; /* Cleaner look without arrow */
+}
+
+/* Progress indicator */
+.shepherd-progress {
+  background: rgba(255, 255, 255, 0.3);
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.shepherd-progress-bar {
+  background: white;
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Animations */
+@keyframes shepherdSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.shepherd-element {
+  animation: shepherdSlideIn 0.3s ease-out;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .shepherd-element {
+    max-width: calc(100vw - 32px);
+    margin: 16px;
+  }
+
+  .shepherd-text {
+    font-size: 14px;
+    padding: 16px;
+  }
+
+  .shepherd-header {
+    padding: 16px;
+  }
+
+  .shepherd-title {
+    font-size: 16px;
+  }
+
+  .shepherd-footer {
+    flex-direction: column;
+  }
+
+  .shepherd-button {
+    width: 100%;
+  }
+}
+
+/* Highlight target elements */
+.shepherd-enabled.shepherd-target {
+  outline: 3px solid #3b82f6;
+  outline-offset: 4px;
+  border-radius: 8px;
+  transition: outline 0.3s ease;
+}
