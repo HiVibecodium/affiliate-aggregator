@@ -10,6 +10,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getOrgContext, toRBACContext, OrgAuth } from '@/lib/auth/org-middleware';
 import { can, canManageUser, createAuditLogData, Permission, isValidRole } from '@/lib/rbac/utils';
+import { generateInviteToken, createInviteUrl } from '@/lib/team/invite-tokens';
+import { sendEmail } from '@/lib/email/resend-client';
+import { generateTeamInviteEmail } from '@/lib/email/templates/team-invite';
 
 /**
  * GET /api/organizations/[orgId]/members
@@ -167,6 +170,9 @@ export async function POST(
         { status: 201 }
       );
     } else {
+      // Generate secure invite token
+      const inviteToken = generateInviteToken();
+
       // Create invitation for new user
       const member = await prisma.organizationMember.create({
         data: {
@@ -175,9 +181,43 @@ export async function POST(
           role,
           status: 'pending',
           invitedEmail: email,
+          inviteToken,
           invitedAt: new Date(),
         },
       });
+
+      // Get organization details for email
+      const organization = await prisma.organization.findUnique({
+        where: { id: orgId },
+        select: { name: true },
+      });
+
+      // Get inviter details
+      const inviter = await prisma.user.findUnique({
+        where: { id: orgContext.userId },
+        select: { name: true, email: true },
+      });
+
+      // Create invite URL
+      const acceptUrl = createInviteUrl(member.id, inviteToken);
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
+      // Send invitation email
+      const emailResult = await sendEmail({
+        to: email,
+        ...generateTeamInviteEmail({
+          inviterName: inviter?.name || inviter?.email || 'Team member',
+          organizationName: organization?.name || 'the organization',
+          role,
+          acceptUrl,
+          appUrl,
+        }),
+      });
+
+      if (!emailResult.success && emailResult.reason !== 'not_configured') {
+        console.error('Failed to send invitation email:', emailResult.error);
+        // Continue anyway - user can still be invited manually
+      }
 
       // Log audit entry
       await prisma.auditLog.create({
@@ -189,6 +229,7 @@ export async function POST(
           details: {
             email,
             role,
+            emailSent: emailResult.success,
           },
         },
       });
@@ -202,7 +243,10 @@ export async function POST(
             status: 'pending',
             invitedAt: member.invitedAt,
           },
-          message: `Invitation sent to ${email}. User will need to create an account to join.`,
+          message: emailResult.success
+            ? `Invitation email sent to ${email}`
+            : `Invitation created for ${email}. Email not configured - share invite link manually.`,
+          inviteUrl: acceptUrl,
         },
         { status: 201 }
       );

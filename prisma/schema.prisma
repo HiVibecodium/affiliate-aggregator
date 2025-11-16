@@ -149,6 +149,7 @@ model OrganizationMember {
   // Status and metadata
   status       String    @default("active") // active, pending, inactive
   invitedEmail String? // For pending invites
+  inviteToken  String?   @unique // Secure token for invite acceptance
   invitedAt    DateTime?
   acceptedAt   DateTime?
 
@@ -166,6 +167,7 @@ model OrganizationMember {
   @@index([userId])
   @@index([role])
   @@index([status])
+  @@index([inviteToken])
 }
 
 // Role-Permission mapping
