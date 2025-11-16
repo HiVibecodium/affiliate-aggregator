@@ -70,7 +70,7 @@ export function EnhancedProgramCard({
   const difficulty = calculateDifficulty(program);
   const isNew = isNewProgram(program.createdAt);
   const quality = getQualityBadge(program);
-  const paymentFreq = getPaymentFrequencyDisplay(program.paymentFrequency);
+  // const paymentFreq = getPaymentFrequencyDisplay(program.paymentFrequency); // Disabled until migration
   const inComparison = isInComparison(program.id);
 
   const handleCompareToggle = async (e: React.MouseEvent) => {
@@ -149,11 +149,12 @@ export function EnhancedProgramCard({
             {difficulty.level === 'hard' && '🔴'} {difficulty.label}
           </span>
 
-          {paymentFreq && (
+          {/* Payment Frequency badge - disabled until migration */}
+          {/* {paymentFreq && (
             <span className="px-2 py-1 bg-green-50 text-green-700 text-xs font-medium rounded whitespace-nowrap">
               {paymentFreq.emoji} {paymentFreq.label}
             </span>
-          )}
+          )} */}
         </div>
       </div>
 

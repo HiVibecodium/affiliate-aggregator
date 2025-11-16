@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const member = await prisma.organizationMember.findFirst({
       where: {
         id: memberId,
-        inviteToken: token,
+        // inviteToken: token, // TODO: Uncomment after migration
         status: 'pending',
       },
     });

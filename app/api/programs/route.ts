@@ -124,10 +124,10 @@ export async function GET(request: NextRequest) {
       };
     }
 
-    // Payment Frequency filter
-    if (paymentFrequency) {
-      where.paymentFrequency = paymentFrequency;
-    }
+    // Payment Frequency filter (disabled until migration executed)
+    // if (paymentFrequency) {
+    //   where.paymentFrequency = paymentFrequency;
+    // }
 
     // Note: Rating filter requires join with reviews - handled client-side for now
 

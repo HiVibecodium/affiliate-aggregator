@@ -748,8 +748,8 @@ function ProgramsContent() {
                 </label>
               </div>
 
-              {/* Payment Frequency filter */}
-              <div>
+              {/* Payment Frequency filter - Temporarily disabled until migration */}
+              {/* <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   💵 Частота выплат
                 </label>
@@ -771,7 +771,7 @@ function ProgramsContent() {
                   <option value="quarterly">📆 Quarterly (Квартально)</option>
                 </select>
                 <p className="text-xs text-gray-500 mt-1">Как часто платят комиссии</p>
-              </div>
+              </div> */}
 
               {/* Quick stats */}
               <div className="border-t pt-4">

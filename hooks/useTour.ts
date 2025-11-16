@@ -8,12 +8,13 @@
 
 import { useEffect, useState } from 'react';
 import Shepherd from 'shepherd.js';
+import type { Tour } from 'shepherd.js';
 import { tourSteps, tourOptions } from '@/lib/tour/tour-steps';
 
 const TOUR_COMPLETED_KEY = 'affiliate-aggregator-tour-completed';
 
 export function useTour() {
-  const [tour, setTour] = useState<Shepherd.Tour | null>(null);
+  const [tour, setTour] = useState<Tour | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
