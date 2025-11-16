@@ -18,7 +18,11 @@ export async function GET(request: NextRequest) {
     const maxCommission = searchParams.get('maxCommission');
     const paymentMethod = searchParams.get('paymentMethod');
     const minCookieDuration = searchParams.get('minCookieDuration');
+    const maxCookieDuration = searchParams.get('maxCookieDuration');
+    const minPaymentThreshold = searchParams.get('minPaymentThreshold');
+    const maxPaymentThreshold = searchParams.get('maxPaymentThreshold');
     const minRating = searchParams.get('minRating');
+    const since = searchParams.get('since'); // Number of days (e.g., "7" for last 7 days)
 
     // Sorting
     const sortBy = searchParams.get('sortBy') || 'createdAt';
@@ -87,6 +91,25 @@ export async function GET(request: NextRequest) {
     if (minCookieDuration) {
       where.cookieDuration = {
         gte: parseInt(minCookieDuration),
+      };
+    }
+
+    // Payment threshold filter
+    if (minPaymentThreshold || maxPaymentThreshold) {
+      where.paymentThreshold = {
+        ...(minPaymentThreshold ? { gte: parseFloat(minPaymentThreshold) } : {}),
+        ...(maxPaymentThreshold ? { lte: parseFloat(maxPaymentThreshold) } : {}),
+      };
+    }
+
+    // Date filter for "New Programs" page
+    if (since) {
+      const daysAgo = parseInt(since);
+      const sinceDate = new Date();
+      sinceDate.setDate(sinceDate.getDate() - daysAgo);
+
+      where.createdAt = {
+        gte: sinceDate,
       };
     }
 

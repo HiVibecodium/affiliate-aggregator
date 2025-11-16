@@ -57,11 +57,6 @@ function ProgramsContent() {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [minCommission, setMinCommission] = useState('');
   const [maxCommission, setMaxCommission] = useState('');
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
-  const [minCookieDuration, setMinCookieDuration] = useState('');
-  const [maxCookieDuration, setMaxCookieDuration] = useState('');
-  const [minPaymentThreshold, setMinPaymentThreshold] = useState('');
-  const [maxPaymentThreshold, setMaxPaymentThreshold] = useState('');
 
   // Initialize from URL params on client side
   useEffect(() => {
@@ -72,11 +67,6 @@ function ProgramsContent() {
     setSelectedCountry(searchParams.get('country') || '');
     setMinCommission(searchParams.get('minCommission') || '');
     setMaxCommission(searchParams.get('maxCommission') || '');
-    setSelectedPaymentMethod(searchParams.get('paymentMethod') || '');
-    setMinCookieDuration(searchParams.get('minCookieDuration') || '');
-    setMaxCookieDuration(searchParams.get('maxCookieDuration') || '');
-    setMinPaymentThreshold(searchParams.get('minPaymentThreshold') || '');
-    setMaxPaymentThreshold(searchParams.get('maxPaymentThreshold') || '');
   }, [searchParams]);
 
   // Sorting
@@ -246,11 +236,6 @@ function ProgramsContent() {
         ...(search && { search }),
         ...(minCommission && { minCommission }),
         ...(maxCommission && { maxCommission }),
-        ...(selectedPaymentMethod && { paymentMethod: selectedPaymentMethod }),
-        ...(minCookieDuration && { minCookieDuration }),
-        ...(maxCookieDuration && { maxCookieDuration }),
-        ...(minPaymentThreshold && { minPaymentThreshold }),
-        ...(maxPaymentThreshold && { maxPaymentThreshold }),
       });
 
       const response = await fetch(`/api/programs?${params}`);
@@ -284,11 +269,6 @@ function ProgramsContent() {
     if (selectedCountry) params.set('country', selectedCountry);
     if (minCommission) params.set('minCommission', minCommission);
     if (maxCommission) params.set('maxCommission', maxCommission);
-    if (selectedPaymentMethod) params.set('paymentMethod', selectedPaymentMethod);
-    if (minCookieDuration) params.set('minCookieDuration', minCookieDuration);
-    if (maxCookieDuration) params.set('maxCookieDuration', maxCookieDuration);
-    if (minPaymentThreshold) params.set('minPaymentThreshold', minPaymentThreshold);
-    if (maxPaymentThreshold) params.set('maxPaymentThreshold', maxPaymentThreshold);
     if (sortBy !== 'createdAt') params.set('sortBy', sortBy);
     if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
     if (currentPage > 1) params.set('page', currentPage.toString());
@@ -327,11 +307,6 @@ function ProgramsContent() {
     setSelectedCountry('');
     setMinCommission('');
     setMaxCommission('');
-    setSelectedPaymentMethod('');
-    setMinCookieDuration('');
-    setMaxCookieDuration('');
-    setMinPaymentThreshold('');
-    setMaxPaymentThreshold('');
     setSortBy('createdAt');
     setSortOrder('desc');
     setCurrentPage(1);
@@ -520,95 +495,6 @@ function ProgramsContent() {
                     Доступно: {filters.commissionRange.min}% - {filters.commissionRange.max}%
                   </p>
                 )}
-              </div>
-
-              {/* Payment Method filter */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  💳 Способ оплаты
-                </label>
-                <select
-                  value={selectedPaymentMethod}
-                  onChange={(e) => {
-                    setSelectedPaymentMethod(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Все способы</option>
-                  <option value="PayPal">💳 PayPal</option>
-                  <option value="Wire Transfer">🏦 Банковский перевод</option>
-                  <option value="Direct Deposit">💰 Прямой депозит</option>
-                  <option value="Payoneer">💵 Payoneer</option>
-                  <option value="Check">📝 Чек</option>
-                  <option value="ACH">🏛️ ACH</option>
-                  <option value="Cryptocurrency">₿ Криптовалюта</option>
-                </select>
-                <p className="text-xs text-gray-500 mt-1">Фильтр по доступным методам выплат</p>
-              </div>
-
-              {/* Cookie Duration filter */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  🍪 Длительность Cookie (дни)
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="number"
-                    placeholder="Мин"
-                    value={minCookieDuration}
-                    onChange={(e) => {
-                      setMinCookieDuration(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    min={0}
-                    className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Макс"
-                    value={maxCookieDuration}
-                    onChange={(e) => {
-                      setMaxCookieDuration(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    max={365}
-                    className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <p className="text-xs text-gray-500 mt-1">Популярно: 30, 60, 90, 365 дней</p>
-              </div>
-
-              {/* Payment Threshold filter */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  💵 Минимальная выплата ($)
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="number"
-                    placeholder="От"
-                    value={minPaymentThreshold}
-                    onChange={(e) => {
-                      setMinPaymentThreshold(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    min={0}
-                    className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <input
-                    type="number"
-                    placeholder="До"
-                    value={maxPaymentThreshold}
-                    onChange={(e) => {
-                      setMaxPaymentThreshold(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    max={10000}
-                    className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <p className="text-xs text-gray-500 mt-1">Типично: $50, $100, $500</p>
               </div>
 
               {/* Quick stats */}

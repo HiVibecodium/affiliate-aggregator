@@ -1,0 +1,57 @@
+--- a/app/programs/page.tsx
++++ b/app/programs/page.tsx
+@@ -57,6 +57,7 @@ function ProgramsContent() {
+   const [selectedCountry, setSelectedCountry] = useState('');
+   const [minCommission, setMinCommission] = useState('');
+   const [maxCommission, setMaxCommission] = useState('');
++  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+
+   // Initialize from URL params on client side
+   useEffect(() => {
+@@ -67,6 +68,7 @@ function ProgramsContent() {
+     setSelectedCountry(searchParams.get('country') || '');
+     setMinCommission(searchParams.get('minCommission') || '');
+     setMaxCommission(searchParams.get('maxCommission') || '');
++    setSelectedPaymentMethod(searchParams.get('paymentMethod') || '');
+   }, [searchParams]);
+
+   // Sorting
+@@ -236,6 +238,7 @@ function ProgramsContent() {
+         ...(search && { search }),
+         ...(minCommission && { minCommission }),
+         ...(maxCommission && { maxCommission }),
++        ...(selectedPaymentMethod && { paymentMethod: selectedPaymentMethod }),
+       });
+
+       const response = await fetch(`/api/programs?${params}`);
+@@ -269,6 +272,7 @@ function ProgramsContent() {
+     if (selectedCountry) params.set('country', selectedCountry);
+     if (minCommission) params.set('minCommission', minCommission);
+     if (maxCommission) params.set('maxCommission', maxCommission);
++    if (selectedPaymentMethod) params.set('paymentMethod', selectedPaymentMethod);
+     if (sortBy !== 'createdAt') params.set('sortBy', sortBy);
+     if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
+     if (currentPage > 1) params.set('page', currentPage.toString());
+@@ -290,6 +294,7 @@ function ProgramsContent() {
+     minCommission,
+     maxCommission,
+     sortBy,
+     sortOrder,
+     currentPage,
++    selectedPaymentMethod,
+   ]);
+
+   const handleSearchChange = (value: string) => {
+@@ -306,6 +311,7 @@ function ProgramsContent() {
+     setSelectedCountry('');
+     setMinCommission('');
+     setMaxCommission('');
++    setSelectedPaymentMethod('');
+     setSortBy('createdAt');
+     setSortOrder('desc');
+     setCurrentPage(1);
+@@ -320,6 +326,7 @@ function ProgramsContent() {
+     minCommission,
+     maxCommission,
++    selectedPaymentMethod,
+   ].filter(Boolean).length;

@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 interface CategoryData {
-  category: string
-  count: number
+  category: string;
+  count: number;
 }
 
 interface CategoryChartProps {
-  data: CategoryData[]
+  data: CategoryData[];
 }
 
 const COLORS = [
@@ -22,19 +22,17 @@ const COLORS = [
   '#6366f1', // indigo
   '#84cc16', // lime
   '#f97316', // orange
-]
+];
 
 export function CategoryChart({ data }: CategoryChartProps) {
-  const chartData = data.slice(0, 10).map(item => ({
+  const chartData = data.slice(0, 10).map((item) => ({
     ...item,
-    value: item.count // Add value for recharts
-  }))
+    value: item.count, // Add value for recharts
+  }));
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        🏷️ Топ Категории Программ
-      </h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">🏷️ Топ Категории Программ</h3>
 
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
@@ -71,5 +69,5 @@ export function CategoryChart({ data }: CategoryChartProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

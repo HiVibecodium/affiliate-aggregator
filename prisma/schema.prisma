@@ -43,6 +43,7 @@ model AffiliateProgram {
   cookieDuration   Int? // in days
   paymentThreshold Float?
   paymentMethods   String[] // JSON array of payment methods
+  paymentFrequency String? // Payment schedule: "Daily", "Weekly", "NET-15", "NET-30", "Monthly"
   active           Boolean  @default(true)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -77,6 +78,8 @@ model AffiliateProgram {
   @@index([paymentThreshold])
   @@index([active, cookieDuration])
   @@index([active, paymentThreshold])
+  @@index([paymentFrequency])
+  @@index([active, paymentFrequency])
 }
 
 // User tracking and authentication
