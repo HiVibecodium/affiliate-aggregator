@@ -250,6 +250,8 @@ npm run build
 
 - `docs/STRIPE_SETUP_GUIDE.md` - Stripe integration
 - `docs/BILLING_SCHEMA_GUIDE.md` - Database usage
+- `EMAIL_ALERTS_SETUP.md` - Email notifications setup
+- `SITEMAP_SUBMISSION_GUIDE.md` - SEO & search engine submission
 - `PRODUCTION_LAUNCH_CHECKLIST.md` - Launch checklist
 
 **API Reference:**
@@ -268,16 +270,16 @@ npm run build
 
 ### Immediate (30 минут)
 
-1. Setup Resend для email alerts
-2. Setup Stripe для payments
-3. Start accepting revenue!
+1. **Submit Sitemap:** [SITEMAP_SUBMISSION_GUIDE.md](./SITEMAP_SUBMISSION_GUIDE.md) → Google, Bing, Yandex
+2. **Setup Resend:** [EMAIL_ALERTS_SETUP.md](./EMAIL_ALERTS_SETUP.md) → Email alerts
+3. **Setup Stripe:** `docs/STRIPE_SETUP_GUIDE.md` → Start revenue!
 
 ### Short-term (1-2 недели)
 
-- Submit sitemap to Google
-- Launch marketing campaign
+- Monitor search engine indexing (Google Search Console)
+- Launch marketing campaign (ProductHunt, Reddit, Twitter)
 - Collect user feedback
-- Iterate on features
+- Iterate on features from backlog
 
 ### Long-term
 
