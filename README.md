@@ -14,6 +14,7 @@
 ## ✨ Features
 
 ### Core Platform
+
 - ✅ **80,010+ партнёрских программ** от 6 крупнейших сетей
 - ✅ **Enhanced search** - Multi-field поиск с фильтрами
 - ✅ **Smart filtering** - 10+ фильтров (category, network, commission, payment method, cookie, etc.)
@@ -22,6 +23,7 @@
 - ✅ **Application tracking** - Отслеживание заявок
 
 ### 💰 Monetization (Production Ready)
+
 - ✅ **4 Pricing Tiers** - Free, Pro ($12/mo), Business ($49/mo), Enterprise
 - ✅ **Stripe Integration** - Complete payment processing
 - ✅ **Feature Gating** - Tier-based limits enforcement
@@ -30,6 +32,7 @@
 - ✅ **Coupon System** - Discounts & promotions
 
 ### 🎨 Enhanced UX
+
 - ✅ **Enhanced Program Cards** - Badges (🆕 NEW, ⭐ Quality, 🟢🟡🔴 Difficulty)
 - ✅ **Payment Method Icons** - 💳🏦💰 Visual indicators
 - ✅ **Rich Information** - Cookie, payout, methods на каждой карточке
@@ -37,6 +40,7 @@
 - ✅ **Beautiful UI** - Modern gradients & animations
 
 ### 📧 Retention Features
+
 - ✅ **Saved Searches** - Save filter combinations
 - ✅ **Email Alerts** - Daily notifications для новых программ
 - ✅ **Background Jobs** - Automated checking (Vercel Cron)
@@ -44,6 +48,7 @@
 - ✅ **Application Tracking** - Track your applications
 
 ### 📊 Analytics
+
 - ✅ **Advanced Analytics API** - Comprehensive data
 - ✅ **Chart Components** - Commission, Category, Trend charts
 - ✅ **Stats Dashboard** - Overview metrics
@@ -51,6 +56,7 @@
 - ✅ **Performance Insights** - Data-driven decisions
 
 ### 🔍 SEO Optimized
+
 - ✅ **73+ Landing Pages** - Networks + Categories
 - ✅ **Dynamic Sitemap** - Auto-generated
 - ✅ **Meta Tags** - Open Graph, Twitter Cards
@@ -58,6 +64,7 @@
 - ✅ **robots.txt** - Search engine friendly
 
 ### 🏢 Enterprise Features
+
 - ✅ **RBAC System** - 5 roles (owner, admin, manager, member, viewer)
 - ✅ **Multi-Tenancy** - Organization-based
 - ✅ **Audit Logging** - Track all actions
@@ -69,23 +76,27 @@
 ## 🛠️ Tech Stack
 
 **Frontend:**
+
 - Next.js 15.1.6 (App Router)
 - React 18.3
 - TailwindCSS 3.4
 - Recharts (Analytics)
 
 **Backend:**
+
 - Next.js API Routes
 - Prisma ORM 5.22
 - PostgreSQL (Supabase)
 
 **Services:**
+
 - Stripe (Payments)
 - Resend (Emails)
 - Vercel (Hosting + Cron)
 - Sentry (Error tracking)
 
 **Dev Tools:**
+
 - TypeScript 5.7
 - ESLint 9
 - Jest + Playwright
@@ -118,6 +129,7 @@ Visit: http://localhost:3000
 ### Environment Variables
 
 **Required:**
+
 ```env
 DATABASE_URL=postgresql://...
 DIRECT_URL=postgresql://...
@@ -126,6 +138,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 ```
 
 **Optional (для полного функционала):**
+
 ```env
 # Stripe
 STRIPE_SECRET_KEY=sk_...
@@ -144,11 +157,15 @@ RESEND_FROM_EMAIL=alerts@yourdomain.com
 CRON_SECRET=random-secret-here
 ```
 
+**📧 Email Alerts Setup:**
+Полная инструкция по настройке Resend и email уведомлений → [EMAIL_ALERTS_SETUP.md](./EMAIL_ALERTS_SETUP.md)
+
 ---
 
 ## 📊 Database Schema
 
 **18 Models:**
+
 - Core: AffiliateNetwork, AffiliateProgram, User
 - Multi-tenancy: Organization, OrganizationMember, Role
 - Features: Favorite, ProgramClick, ProgramReview, ProgramApplication
@@ -164,11 +181,13 @@ CRON_SECRET=random-secret-here
 ### Pricing
 
 **Free:**
+
 - 5 favorites
 - 3 comparisons/day
 - Basic features
 
 **Pro - $12/month:**
+
 - Unlimited favorites/comparisons
 - 10 saved searches
 - Email alerts
@@ -177,6 +196,7 @@ CRON_SECRET=random-secret-here
 - Export CSV
 
 **Business - $49/month:**
+
 - Everything in Pro
 - API access (10K calls/mo)
 - 5 team members
@@ -184,6 +204,7 @@ CRON_SECRET=random-secret-here
 - Webhooks
 
 **Enterprise - Custom:**
+
 - Unlimited everything
 - Dedicated support
 - Custom features
@@ -193,6 +214,7 @@ CRON_SECRET=random-secret-here
 ## 📈 Revenue Potential
 
 **Year 1 Projections:**
+
 - Conservative: $341K ARR (10K MAU, 8% paid)
 - Base Case: $1.8M ARR (25K MAU, 9% paid)
 - Optimistic: $4.6M ARR (50K MAU, 12% paid)
@@ -225,15 +247,18 @@ npm run build
 ## 📚 Documentation
 
 **Setup Guides:**
+
 - `docs/STRIPE_SETUP_GUIDE.md` - Stripe integration
 - `docs/BILLING_SCHEMA_GUIDE.md` - Database usage
 - `PRODUCTION_LAUNCH_CHECKLIST.md` - Launch checklist
 
 **API Reference:**
+
 - `docs/BILLING_API_USAGE.md` - Billing API
 - API endpoints документированы в коде
 
 **Planning:**
+
 - `IMPROVEMENT_ROADMAP.md` - 40 enhancement ideas
 - `ULTIMATE_SESSION_REPORT.md` - Development log
 
@@ -242,17 +267,20 @@ npm run build
 ## 🎯 What's Next
 
 ### Immediate (30 минут)
+
 1. Setup Resend для email alerts
 2. Setup Stripe для payments
 3. Start accepting revenue!
 
 ### Short-term (1-2 недели)
+
 - Submit sitemap to Google
 - Launch marketing campaign
 - Collect user feedback
 - Iterate on features
 
 ### Long-term
+
 - 30+ features в roadmap
 - Scale to 10K+ users
 - Expand to more networks
@@ -263,6 +291,7 @@ npm run build
 ## 🤝 Contributing
 
 Интересует development? Check out:
+
 - `IMPROVEMENT_ROADMAP.md` - Feature ideas
 - Issues на GitHub
 - Pull requests welcome!
@@ -278,6 +307,7 @@ MIT License
 ## 🙏 Acknowledgments
 
 **Built with:**
+
 - Claude Code - AI pair programming
 - Next.js - React framework
 - Stripe - Payment processing
