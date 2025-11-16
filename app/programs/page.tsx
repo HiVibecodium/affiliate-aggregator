@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useComparison } from '@/contexts/ComparisonContext';
 import { EnhancedProgramCard } from '@/components/EnhancedProgramCard';
+import { SearchSuggestions } from '@/components/SearchSuggestions';
+import { calculateDifficulty } from '@/lib/program-utils';
 
 interface Program {
   id: string;
@@ -51,6 +53,7 @@ function ProgramsContent() {
 
   // Filter states - initialized from URL params
   const [search, setSearch] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedCommissionType, setSelectedCommissionType] = useState('');
@@ -62,6 +65,7 @@ function ProgramsContent() {
   const [maxCookieDuration, setMaxCookieDuration] = useState('');
   const [minPaymentThreshold, setMinPaymentThreshold] = useState('');
   const [maxPaymentThreshold, setMaxPaymentThreshold] = useState('');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string[]>([]);
 
   // Initialize from URL params on client side
   useEffect(() => {
@@ -316,6 +320,7 @@ function ProgramsContent() {
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
+    setShowSuggestions(value.length >= 2);
     setCurrentPage(1);
   };
 
@@ -332,6 +337,7 @@ function ProgramsContent() {
     setMaxCookieDuration('');
     setMinPaymentThreshold('');
     setMaxPaymentThreshold('');
+    setSelectedDifficulty([]);
     setSortBy('createdAt');
     setSortOrder('desc');
     setCurrentPage(1);
@@ -344,7 +350,22 @@ function ProgramsContent() {
     selectedCommissionType,
     minCommission,
     maxCommission,
+    selectedDifficulty.length > 0,
   ].filter(Boolean).length;
+
+  // Client-side difficulty filtering
+  const filteredPrograms = useMemo(() => {
+    if (selectedDifficulty.length === 0) return programs;
+
+    return programs.filter((program) => {
+      const difficulty = calculateDifficulty({
+        paymentThreshold: program.paymentThreshold,
+        commissionRate: program.commissionRate,
+        cookieDuration: program.cookieDuration,
+      });
+      return selectedDifficulty.includes(difficulty.level);
+    });
+  }, [programs, selectedDifficulty]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -387,7 +408,7 @@ function ProgramsContent() {
               </div>
 
               {/* Search */}
-              <div>
+              <div className="relative">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Поиск по названию
                 </label>
@@ -395,9 +416,19 @@ function ProgramsContent() {
                   type="text"
                   value={search}
                   onChange={(e) => handleSearchChange(e.target.value)}
+                  onFocus={() => search.length >= 2 && setShowSuggestions(true)}
                   placeholder="Введите название..."
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                {showSuggestions && (
+                  <SearchSuggestions
+                    query={search}
+                    onSelect={(suggestion) => {
+                      router.push(`/programs/${suggestion.id}`);
+                    }}
+                    onClose={() => setShowSuggestions(false)}
+                  />
+                )}
               </div>
 
               {/* Network filter */}
@@ -611,6 +642,63 @@ function ProgramsContent() {
                 <p className="text-xs text-gray-500 mt-1">Типично: $50, $100, $500</p>
               </div>
 
+              {/* Difficulty Level filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  🎯 Сложность входа
+                </label>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedDifficulty.includes('easy')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedDifficulty([...selectedDifficulty, 'easy']);
+                        } else {
+                          setSelectedDifficulty(selectedDifficulty.filter((d) => d !== 'easy'));
+                        }
+                        setCurrentPage(1);
+                      }}
+                      className="w-4 h-4 text-green-600 rounded"
+                    />
+                    <span className="text-sm">🟢 Легкий старт</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedDifficulty.includes('medium')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedDifficulty([...selectedDifficulty, 'medium']);
+                        } else {
+                          setSelectedDifficulty(selectedDifficulty.filter((d) => d !== 'medium'));
+                        }
+                        setCurrentPage(1);
+                      }}
+                      className="w-4 h-4 text-yellow-600 rounded"
+                    />
+                    <span className="text-sm">🟡 Средние требования</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedDifficulty.includes('hard')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedDifficulty([...selectedDifficulty, 'hard']);
+                        } else {
+                          setSelectedDifficulty(selectedDifficulty.filter((d) => d !== 'hard'));
+                        }
+                        setCurrentPage(1);
+                      }}
+                      className="w-4 h-4 text-red-600 rounded"
+                    />
+                    <span className="text-sm">🔴 Высокие требования</span>
+                  </label>
+                </div>
+              </div>
+
               {/* Quick stats */}
               <div className="border-t pt-4">
                 <h4 className="font-semibold text-sm text-gray-700 mb-3">Статистика</h4>
@@ -662,7 +750,7 @@ function ProgramsContent() {
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
                 <p className="mt-4 text-gray-600">Загрузка программ...</p>
               </div>
-            ) : programs.length === 0 ? (
+            ) : filteredPrograms.length === 0 ? (
               <div className="bg-white rounded-lg shadow p-12 text-center">
                 <p className="text-gray-500 text-lg">Программы не найдены</p>
                 <p className="text-gray-400 text-sm mt-2">
@@ -678,7 +766,7 @@ function ProgramsContent() {
             ) : (
               <>
                 <div className="grid gap-6 mb-8">
-                  {programs.map((program) => (
+                  {filteredPrograms.map((program) => (
                     <EnhancedProgramCard
                       key={program.id}
                       program={{
