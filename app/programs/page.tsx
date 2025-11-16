@@ -67,6 +67,7 @@ function ProgramsContent() {
   const [maxPaymentThreshold, setMaxPaymentThreshold] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string[]>([]);
   const [hasReviews, setHasReviews] = useState(false);
+  const [paymentFrequency, setPaymentFrequency] = useState('');
 
   // Initialize from URL params on client side
   useEffect(() => {
@@ -257,6 +258,7 @@ function ProgramsContent() {
         ...(minPaymentThreshold && { minPaymentThreshold }),
         ...(maxPaymentThreshold && { maxPaymentThreshold }),
         ...(hasReviews && { hasReviews: 'true' }),
+        ...(paymentFrequency && { paymentFrequency }),
       });
 
       const response = await fetch(`/api/programs?${params}`);
@@ -341,6 +343,7 @@ function ProgramsContent() {
     setMaxPaymentThreshold('');
     setSelectedDifficulty([]);
     setHasReviews(false);
+    setPaymentFrequency('');
     setSortBy('createdAt');
     setSortOrder('desc');
     setCurrentPage(1);
@@ -355,6 +358,7 @@ function ProgramsContent() {
     maxCommission,
     selectedDifficulty.length > 0,
     hasReviews,
+    paymentFrequency,
   ].filter(Boolean).length;
 
   // Client-side difficulty filtering
@@ -722,6 +726,31 @@ function ProgramsContent() {
                     <p className="text-xs text-gray-500">Программы с рейтингами пользователей</p>
                   </div>
                 </label>
+              </div>
+
+              {/* Payment Frequency filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  💵 Частота выплат
+                </label>
+                <select
+                  value={paymentFrequency}
+                  onChange={(e) => {
+                    setPaymentFrequency(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Все</option>
+                  <option value="daily">⚡ Daily (Ежедневно)</option>
+                  <option value="weekly">📅 Weekly (Еженедельно)</option>
+                  <option value="net-15">📆 NET-15 (15 дней)</option>
+                  <option value="net-30">📆 NET-30 (30 дней)</option>
+                  <option value="monthly">📆 Monthly (Ежемесячно)</option>
+                  <option value="net-60">📆 NET-60 (60 дней)</option>
+                  <option value="quarterly">📆 Quarterly (Квартально)</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-1">Как часто платят комиссии</p>
               </div>
 
               {/* Quick stats */}

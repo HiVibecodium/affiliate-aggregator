@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
     const minRating = searchParams.get('minRating');
     const since = searchParams.get('since'); // Number of days (e.g., "7" for last 7 days)
     const hasReviews = searchParams.get('hasReviews') === 'true';
+    const paymentFrequency = searchParams.get('paymentFrequency');
 
     // Sorting
     const sortBy = searchParams.get('sortBy') || 'createdAt';
@@ -121,6 +122,11 @@ export async function GET(request: NextRequest) {
           status: 'approved',
         },
       };
+    }
+
+    // Payment Frequency filter
+    if (paymentFrequency) {
+      where.paymentFrequency = paymentFrequency;
     }
 
     // Note: Rating filter requires join with reviews - handled client-side for now

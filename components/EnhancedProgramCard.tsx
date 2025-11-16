@@ -28,6 +28,7 @@ interface Program {
   cookieDuration: number | null;
   paymentThreshold: number | null;
   paymentMethods: string[];
+  paymentFrequency?: string | null;
   createdAt: Date;
   network: {
     name: string;
@@ -40,6 +41,26 @@ interface EnhancedProgramCardProps {
   showCompareButton?: boolean;
 }
 
+// Helper: Get payment frequency display
+function getPaymentFrequencyDisplay(
+  frequency: string | null | undefined
+): { label: string; emoji: string } | null {
+  if (!frequency) return null;
+
+  const displays: Record<string, { label: string; emoji: string }> = {
+    daily: { label: 'Daily Payouts', emoji: '⚡' },
+    weekly: { label: 'Weekly', emoji: '📅' },
+    'net-15': { label: 'NET-15', emoji: '📆' },
+    'net-30': { label: 'NET-30', emoji: '📆' },
+    monthly: { label: 'Monthly', emoji: '📆' },
+    'net-60': { label: 'NET-60', emoji: '📆' },
+    quarterly: { label: 'Quarterly', emoji: '📆' },
+    annual: { label: 'Annual', emoji: '📆' },
+  };
+
+  return displays[frequency] || null;
+}
+
 export function EnhancedProgramCard({
   program,
   showFavoriteButton = true,
@@ -49,6 +70,7 @@ export function EnhancedProgramCard({
   const difficulty = calculateDifficulty(program);
   const isNew = isNewProgram(program.createdAt);
   const quality = getQualityBadge(program);
+  const paymentFreq = getPaymentFrequencyDisplay(program.paymentFrequency);
   const inComparison = isInComparison(program.id);
 
   const handleCompareToggle = async (e: React.MouseEvent) => {
@@ -126,6 +148,12 @@ export function EnhancedProgramCard({
             {difficulty.level === 'medium' && '🟡'}
             {difficulty.level === 'hard' && '🔴'} {difficulty.label}
           </span>
+
+          {paymentFreq && (
+            <span className="px-2 py-1 bg-green-50 text-green-700 text-xs font-medium rounded whitespace-nowrap">
+              {paymentFreq.emoji} {paymentFreq.label}
+            </span>
+          )}
         </div>
       </div>
 
