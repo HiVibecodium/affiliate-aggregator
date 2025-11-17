@@ -15,8 +15,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         {/* Search Engine Verification - Add your codes here after registering */}
-        {/* TODO: Add Google Search Console verification code */}
-        {/* <meta name="google-site-verification" content="YOUR_GOOGLE_CODE" /> */}
+        {/* Google Search Console Verification */}
+        <meta
+          name="google-site-verification"
+          content="p1cIXuadbLcYL6mD1hJFnRn3ma9r6OkIl9etzF4bY0U"
+        />
 
         {/* TODO: Add Bing Webmaster verification code */}
         {/* <meta name="msvalidate.01" content="YOUR_BING_CODE" /> */}
