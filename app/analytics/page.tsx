@@ -73,15 +73,18 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
         <div className="container mx-auto px-4 py-6">
-          <Link href="/" className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
+          <Link
+            href="/"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm mb-2 inline-block"
+          >
             ← Назад на главную
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Аналитика</h1>
-          <p className="text-gray-600 mt-1">Популярные программы и тренды</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Аналитика</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-1">Популярные программы и тренды</p>
         </div>
       </div>
 

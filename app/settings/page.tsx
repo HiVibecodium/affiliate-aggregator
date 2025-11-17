@@ -19,28 +19,35 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
         <div className="container mx-auto px-4 py-6">
-          <Link href="/" className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
+          <Link
+            href="/"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm mb-2 inline-block"
+          >
             ← Назад на главную
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Настройки</h1>
-          <p className="text-gray-600 mt-1">Управление предпочтениями и уведомлениями</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Настройки</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-1">
+            Управление предпочтениями и уведомлениями
+          </p>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="space-y-6">
           {/* Notifications */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Уведомления</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Уведомления</h2>
             <div className="space-y-4">
-              <label className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+              <label className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg cursor-pointer">
                 <div>
-                  <div className="font-medium text-gray-900">Email уведомления</div>
-                  <div className="text-sm text-gray-500">Получать важные обновления на email</div>
+                  <div className="font-medium text-gray-900 dark:text-white">Email уведомления</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    Получать важные обновления на email
+                  </div>
                 </div>
                 <input
                   type="checkbox"
