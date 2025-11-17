@@ -7,6 +7,7 @@ import { useComparison } from '@/contexts/ComparisonContext';
 import { EnhancedProgramCard } from '@/components/EnhancedProgramCard';
 import { SearchSuggestions } from '@/components/SearchSuggestions';
 import { TourButton } from '@/components/TourButton';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { useTour } from '@/hooks/useTour';
 import { calculateDifficulty } from '@/lib/program-utils';
 
@@ -393,25 +394,30 @@ function ProgramsContent() {
   }, [programs, selectedDifficulty]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
               <Link
                 href="/"
-                className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block"
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm mb-2 inline-block"
               >
                 ← Назад на главную
               </Link>
-              <h1 className="text-3xl font-bold text-gray-900">Партнерские программы</h1>
-              <p className="text-gray-600 mt-1">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Партнерские программы
+              </h1>
+              <p className="text-gray-600 dark:text-gray-300 mt-1">
                 {stats?.totalPrograms.toLocaleString() || '0'} программ от{' '}
                 {stats?.totalNetworks || '0'} сетей
               </p>
             </div>
-            <TourButton />
+            <div className="flex gap-2">
+              <TourButton />
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </div>
@@ -421,11 +427,11 @@ function ProgramsContent() {
           {/* Sidebar with filters */}
           <div className="lg:col-span-1">
             <div
-              className="bg-white rounded-lg shadow p-6 sticky top-4 space-y-6"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 sticky top-4 space-y-6"
               data-tour="filters"
             >
               <div className="flex items-center justify-between">
-                <h3 className="font-bold text-lg">Фильтры</h3>
+                <h3 className="font-bold text-lg text-gray-900 dark:text-white">Фильтры</h3>
                 {activeFiltersCount > 0 && (
                   <button
                     onClick={resetFilters}
@@ -438,7 +444,7 @@ function ProgramsContent() {
 
               {/* Search */}
               <div className="relative">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Поиск по названию
                 </label>
                 <input
@@ -447,7 +453,7 @@ function ProgramsContent() {
                   onChange={(e) => handleSearchChange(e.target.value)}
                   onFocus={() => search.length >= 2 && setShowSuggestions(true)}
                   placeholder="Введите название..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {showSuggestions && (
                   <SearchSuggestions

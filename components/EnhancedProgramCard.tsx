@@ -114,15 +114,15 @@ export function EnhancedProgramCard({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-md transition-all p-6">
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <Link href={`/programs/${program.id}`} className="group">
-            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
               {program.name}
             </h3>
           </Link>
-          <p className="text-sm text-gray-600 mt-1">{program.network.name}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{program.network.name}</p>
         </div>
 
         <div className="flex flex-col gap-1 ml-4">
@@ -159,34 +159,39 @@ export function EnhancedProgramCard({
       </div>
 
       {program.description && (
-        <p className="text-sm text-gray-700 mb-4 line-clamp-2">{program.description}</p>
+        <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 line-clamp-2">
+          {program.description}
+        </p>
       )}
 
-      <div className="grid grid-cols-2 gap-3 mb-4 pb-4 border-b border-gray-100">
+      <div className="grid grid-cols-2 gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-gray-700">
         <div className="flex items-center text-sm">
-          <span className="text-gray-600 mr-2">💰 Commission:</span>
-          <span className="font-semibold text-gray-900">
+          <span className="text-gray-600 dark:text-gray-400 mr-2">💰 Commission:</span>
+          <span className="font-semibold text-gray-900 dark:text-white">
             {formatCommissionRate(program.commissionRate, program.commissionType)}
           </span>
         </div>
 
         <div className="flex items-center text-sm">
-          <span className="text-gray-600 mr-2">🍪 Cookie:</span>
-          <span className="font-semibold text-gray-900">
+          <span className="text-gray-600 dark:text-gray-400 mr-2">🍪 Cookie:</span>
+          <span className="font-semibold text-gray-900 dark:text-white">
             {formatCookieDuration(program.cookieDuration)}
           </span>
         </div>
 
         <div className="flex items-center text-sm">
-          <span className="text-gray-600 mr-2">💵 Min Payout:</span>
-          <span className="font-semibold text-gray-900">
+          <span className="text-gray-600 dark:text-gray-400 mr-2">💵 Min Payout:</span>
+          <span className="font-semibold text-gray-900 dark:text-white">
             {formatPaymentThreshold(program.paymentThreshold)}
           </span>
         </div>
 
         <div className="flex items-center text-sm">
-          <span className="text-gray-600 mr-2">💳 Methods:</span>
-          <span className="font-semibold text-gray-900" title={program.paymentMethods.join(', ')}>
+          <span className="text-gray-600 dark:text-gray-400 mr-2">💳 Methods:</span>
+          <span
+            className="font-semibold text-gray-900 dark:text-white"
+            title={program.paymentMethods.join(', ')}
+          >
             {formatPaymentMethods(program.paymentMethods)}
           </span>
         </div>
@@ -194,7 +199,7 @@ export function EnhancedProgramCard({
 
       {program.category && (
         <div className="mb-4">
-          <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">
+          <span className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-full">
             {program.category}
           </span>
         </div>
@@ -203,7 +208,7 @@ export function EnhancedProgramCard({
       <div className="flex gap-2">
         <Link
           href={`/programs/${program.id}`}
-          className="flex-1 text-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium"
+          className="flex-1 text-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm font-medium"
         >
           View Details
         </Link>
@@ -221,7 +226,7 @@ export function EnhancedProgramCard({
                 if (confirm(data.error)) window.location.href = '/billing/upgrade';
               }
             }}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-sm"
             title="Add to favorites"
           >
             ❤️
@@ -233,8 +238,8 @@ export function EnhancedProgramCard({
             onClick={handleCompareToggle}
             className={`px-4 py-2 border rounded-lg transition-colors text-sm ${
               inComparison
-                ? 'border-blue-500 bg-blue-50 text-blue-700 hover:bg-blue-100'
-                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50'
+                : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'
             }`}
             title={inComparison ? 'Remove from compare' : 'Add to compare'}
           >
