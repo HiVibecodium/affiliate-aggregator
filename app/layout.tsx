@@ -14,6 +14,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        {/* Search Engine Verification - Add your codes here after registering */}
+        {/* TODO: Add Google Search Console verification code */}
+        {/* <meta name="google-site-verification" content="YOUR_GOOGLE_CODE" /> */}
+
+        {/* TODO: Add Bing Webmaster verification code */}
+        {/* <meta name="msvalidate.01" content="YOUR_BING_CODE" /> */}
+
+        {/* TODO: Add Yandex Webmaster verification code (optional) */}
+        {/* <meta name="yandex-verification" content="YOUR_YANDEX_CODE" /> */}
+
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#3b82f6" />
         <meta name="mobile-web-app-capable" content="yes" />
