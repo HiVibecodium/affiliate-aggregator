@@ -3,12 +3,12 @@
  * Генерация meta tags для страниц
  */
 
-import { Metadata } from 'next'
+import { Metadata } from 'next';
 
-const APP_NAME = 'Affiliate Aggregator'
+const APP_NAME = 'Affiliate Aggregator';
 const APP_DESCRIPTION =
-  'Глобальный агрегатор партнёрских программ. 80,000+ программ от 6 крупнейших сетей. Поиск, сравнение, аналитика.'
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://affiliate-aggregator-five.vercel.app'
+  'Глобальный агрегатор партнёрских программ. 80,000+ программ от 6 крупнейших сетей. Поиск, сравнение, аналитика.';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://affiliate-aggregator-five.vercel.app';
 
 /**
  * Default metadata для всего сайта
@@ -35,6 +35,9 @@ export const defaultMetadata: Metadata = {
   authors: [{ name: 'Affiliate Aggregator Team' }],
   creator: 'Affiliate Aggregator',
   publisher: 'Affiliate Aggregator',
+  verification: {
+    google: 'p1cIXuadbLcYL6mD1hJFnRn3ma9r6OkIl9etzF4bY0U',
+  },
   openGraph: {
     type: 'website',
     locale: 'ru_RU',
@@ -68,23 +71,23 @@ export const defaultMetadata: Metadata = {
       'max-snippet': -1,
     },
   },
-}
+};
 
 /**
  * Генерация metadata для программы
  */
 export function generateProgramMetadata(program: {
-  name: string
-  description: string | null
-  network: { name: string }
-  commissionRate: number | null
-  commissionType: string | null
-  category: string | null
+  name: string;
+  description: string | null;
+  network: { name: string };
+  commissionRate: number | null;
+  commissionType: string | null;
+  category: string | null;
 }): Metadata {
-  const title = `${program.name} - ${program.network.name}`
+  const title = `${program.name} - ${program.network.name}`;
   const description =
     program.description ||
-    `${program.name} партнёрская программа от ${program.network.name}. Комиссия: ${program.commissionRate}% ${program.commissionType || ''}.`
+    `${program.name} партнёрская программа от ${program.network.name}. Комиссия: ${program.commissionRate}% ${program.commissionType || ''}.`;
 
   return {
     title,
@@ -100,20 +103,20 @@ export function generateProgramMetadata(program: {
       title,
       description,
     },
-  }
+  };
 }
 
 /**
  * Генерация JSON-LD structured data для программы
  */
 export function generateProgramStructuredData(program: {
-  id: string
-  name: string
-  description: string | null
-  network: { name: string; website: string | null }
-  commissionRate: number | null
-  commissionType: string | null
-  category: string | null
+  id: string;
+  name: string;
+  description: string | null;
+  network: { name: string; website: string | null };
+  commissionRate: number | null;
+  commissionType: string | null;
+  category: string | null;
 }) {
   return {
     '@context': 'https://schema.org',
@@ -134,5 +137,5 @@ export function generateProgramStructuredData(program: {
       description: `Commission: ${program.commissionRate}% ${program.commissionType || ''}`,
     },
     url: `${APP_URL}/programs/${program.id}`,
-  }
+  };
 }
