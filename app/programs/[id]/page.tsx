@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma';
 import { ProgramReviews } from '@/components/ProgramReviews';
 import { ReviewForm } from '@/components/ReviewForm';
 import { TrackApplicationButton } from '@/components/TrackApplicationButton';
+import { generateProgramMetadata, generateProgramStructuredData } from '@/lib/seo/metadata';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 async function getProgramDetails(id: string) {
   const program = await prisma.affiliateProgram.findUnique({
@@ -42,6 +44,18 @@ async function getProgramDetails(id: string) {
   return { program, relatedPrograms };
 }
 
+// Generate metadata for SEO
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const data = await getProgramDetails(id);
+
+  if (!data) {
+    return {};
+  }
+
+  return generateProgramMetadata(data.program);
+}
+
 export default async function ProgramDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const data = await getProgramDetails(id);
@@ -51,19 +65,35 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
   }
 
   const { program, relatedPrograms } = data;
+  const structuredData = generateProgramStructuredData(program);
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* JSON-LD Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-4 py-6">
-          <Link
-            href="/programs"
-            className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block"
-          >
-            ← Назад к программам
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">{program.name}</h1>
+          <Breadcrumbs
+            items={[
+              { label: 'Home', href: '/' },
+              { label: 'Programs', href: '/programs' },
+              ...(program.category
+                ? [
+                    {
+                      label: program.category,
+                      href: `/programs?category=${encodeURIComponent(program.category)}`,
+                    },
+                  ]
+                : []),
+              { label: program.name },
+            ]}
+          />
+          <h1 className="text-3xl font-bold text-gray-900 mt-2">{program.name}</h1>
           <p className="text-gray-600 mt-1">{program.network.name}</p>
         </div>
       </div>

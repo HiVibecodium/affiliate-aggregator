@@ -77,6 +77,7 @@ export const defaultMetadata: Metadata = {
  * Генерация metadata для программы
  */
 export function generateProgramMetadata(program: {
+  id: string;
   name: string;
   description: string | null;
   network: { name: string };
@@ -89,6 +90,17 @@ export function generateProgramMetadata(program: {
     program.description ||
     `${program.name} партнёрская программа от ${program.network.name}. Комиссия: ${program.commissionRate}% ${program.commissionType || ''}.`;
 
+  // Generate dynamic OG image URL
+  const ogImageParams = new URLSearchParams({
+    title: program.name,
+    network: program.network.name,
+    ...(program.commissionRate && {
+      commission: `${program.commissionRate}%`,
+    }),
+    ...(program.category && { category: program.category }),
+  });
+  const ogImageUrl = `${APP_URL}/api/og?${ogImageParams.toString()}`;
+
   return {
     title,
     description,
@@ -96,12 +108,21 @@ export function generateProgramMetadata(program: {
       title,
       description,
       type: 'article',
-      url: `${APP_URL}/programs/${program.name}`,
+      url: `${APP_URL}/programs/${program.id}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
       title,
       description,
+      images: [ogImageUrl],
     },
   };
 }

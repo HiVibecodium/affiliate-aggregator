@@ -3,6 +3,7 @@ import './globals.css';
 import './tour.css';
 import { ComparisonProvider } from '@/contexts/ComparisonContext';
 import { ComparisonBar } from '@/components/ComparisonBar';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import { WebVitals } from './web-vitals';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
@@ -36,10 +37,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <WebVitals />
-        <ComparisonProvider>
-          {children}
-          <ComparisonBar />
-        </ComparisonProvider>
+        <ThemeProvider>
+          <ComparisonProvider>
+            {children}
+            <ComparisonBar />
+          </ComparisonProvider>
+        </ThemeProvider>
         <SpeedInsights />
         <Analytics />
       </body>
