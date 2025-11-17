@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useOrganization } from '@/contexts/OrganizationContext';
 
 interface Organization {
   id: string;
@@ -16,6 +17,7 @@ interface Organization {
 
 export default function OrganizationSettingsPage() {
   const router = useRouter();
+  const { currentOrgId } = useOrganization();
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -27,16 +29,18 @@ export default function OrganizationSettingsPage() {
   const [description, setDescription] = useState('');
   const [website, setWebsite] = useState('');
 
-  // Get org ID from localStorage or default
-  const orgId = 'default'; // TODO: Get from OrganizationContext
-
   useEffect(() => {
-    fetchOrganization();
-  }, []);
+    if (currentOrgId) {
+      fetchOrganization();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentOrgId]);
 
   const fetchOrganization = async () => {
+    if (!currentOrgId) return;
+
     try {
-      const response = await fetch(`/api/organizations/${orgId}`);
+      const response = await fetch(`/api/organizations/${currentOrgId}`);
       if (response.ok) {
         const data = await response.json();
         setOrganization(data);
@@ -54,10 +58,12 @@ export default function OrganizationSettingsPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!currentOrgId) return;
+
     setSaving(true);
 
     try {
-      const response = await fetch(`/api/organizations/${orgId}`, {
+      const response = await fetch(`/api/organizations/${currentOrgId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -93,10 +99,12 @@ export default function OrganizationSettingsPage() {
       return;
     }
 
+    if (!currentOrgId) return;
+
     setDeleting(true);
 
     try {
-      const response = await fetch(`/api/organizations/${orgId}`, {
+      const response = await fetch(`/api/organizations/${currentOrgId}`, {
         method: 'DELETE',
       });
 

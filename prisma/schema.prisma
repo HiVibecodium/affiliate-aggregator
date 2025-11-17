@@ -54,6 +54,8 @@ model AffiliateProgram {
   clicks             ProgramClick[]
   reviews            ProgramReview[]
   applications       ProgramApplication[]
+  // @@index([paymentFrequency]) // TODO: Add after migration
+  // @@index([active, paymentFrequency]) // TODO: Add after migration
 
   @@unique([networkId, externalId])
   @@index([networkId])
@@ -78,8 +80,6 @@ model AffiliateProgram {
   @@index([paymentThreshold])
   @@index([active, cookieDuration])
   @@index([active, paymentThreshold])
-  // @@index([paymentFrequency]) // TODO: Add after migration
-  // @@index([active, paymentFrequency]) // TODO: Add after migration
 }
 
 // User tracking and authentication
@@ -160,6 +160,7 @@ model OrganizationMember {
   // Relations
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // @@index([inviteToken]) // TODO: Add after migration
 
   @@unique([organizationId, userId])
   @@unique([organizationId, invitedEmail])
@@ -167,7 +168,6 @@ model OrganizationMember {
   @@index([userId])
   @@index([role])
   @@index([status])
-  // @@index([inviteToken]) // TODO: Add after migration
 }
 
 // Role-Permission mapping
@@ -748,14 +748,14 @@ model SavedSearch {
   filters Json
 
   // Alert settings
-  alertsEnabled     Boolean  @default(true)
-  alertFrequency    String   @default("daily") // instant, daily, weekly
-  lastAlertSent     DateTime?
-  lastCheckedAt     DateTime?
-  newMatchesCount   Int      @default(0)
+  alertsEnabled   Boolean   @default(true)
+  alertFrequency  String    @default("daily") // instant, daily, weekly
+  lastAlertSent   DateTime?
+  lastCheckedAt   DateTime?
+  newMatchesCount Int       @default(0)
 
   // Metadata
-  timesExecuted Int      @default(0)
+  timesExecuted  Int       @default(0)
   lastExecutedAt DateTime?
 
   // Status

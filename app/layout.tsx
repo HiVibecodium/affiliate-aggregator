@@ -4,6 +4,7 @@ import './tour.css';
 import { ComparisonProvider } from '@/contexts/ComparisonContext';
 import { ComparisonBar } from '@/components/ComparisonBar';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { OrganizationProvider } from '@/contexts/OrganizationContext';
 import { WebVitals } from './web-vitals';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
@@ -38,10 +39,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <WebVitals />
         <ThemeProvider>
-          <ComparisonProvider>
-            {children}
-            <ComparisonBar />
-          </ComparisonProvider>
+          <OrganizationProvider>
+            <ComparisonProvider>
+              {children}
+              <ComparisonBar />
+            </ComparisonProvider>
+          </OrganizationProvider>
         </ThemeProvider>
         <SpeedInsights />
         <Analytics />

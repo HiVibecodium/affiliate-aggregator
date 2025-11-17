@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useOrganization } from '@/contexts/OrganizationContext';
 
 interface Member {
   id: string;
@@ -25,6 +26,7 @@ interface Organization {
 }
 
 export default function TeamManagementPage() {
+  const { currentOrgId } = useOrganization();
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [loading, setLoading] = useState(true);
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -32,16 +34,18 @@ export default function TeamManagementPage() {
   const [inviteRole, setInviteRole] = useState('member');
   const [inviting, setInviting] = useState(false);
 
-  // Get org ID from localStorage or default org
-  const orgId = 'default'; // TODO: Get from OrganizationContext
-
   useEffect(() => {
-    fetchOrganization();
-  }, []);
+    if (currentOrgId) {
+      fetchOrganization();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentOrgId]);
 
   const fetchOrganization = async () => {
+    if (!currentOrgId) return;
+
     try {
-      const response = await fetch(`/api/organizations/${orgId}`);
+      const response = await fetch(`/api/organizations/${currentOrgId}`);
       if (response.ok) {
         const data = await response.json();
         setOrganization(data);
@@ -55,10 +59,12 @@ export default function TeamManagementPage() {
 
   const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!currentOrgId) return;
+
     setInviting(true);
 
     try {
-      const response = await fetch(`/api/organizations/${orgId}/members`, {
+      const response = await fetch(`/api/organizations/${currentOrgId}/members`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -86,9 +92,10 @@ export default function TeamManagementPage() {
 
   const handleRemoveMember = async (memberId: string) => {
     if (!confirm('Remove this team member?')) return;
+    if (!currentOrgId) return;
 
     try {
-      const response = await fetch(`/api/organizations/${orgId}/members/${memberId}`, {
+      const response = await fetch(`/api/organizations/${currentOrgId}/members/${memberId}`, {
         method: 'DELETE',
       });
 
@@ -104,8 +111,10 @@ export default function TeamManagementPage() {
   };
 
   const handleChangeRole = async (memberId: string, newRole: string) => {
+    if (!currentOrgId) return;
+
     try {
-      const response = await fetch(`/api/organizations/${orgId}/members/${memberId}`, {
+      const response = await fetch(`/api/organizations/${currentOrgId}/members/${memberId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role: newRole }),

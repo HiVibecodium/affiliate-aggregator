@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Update membership
-    const updatedMember = await prisma.organizationMember.update({
+    await prisma.organizationMember.update({
       where: { id: memberId },
       data: {
         userId: user.id,

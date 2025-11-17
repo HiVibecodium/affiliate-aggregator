@@ -38,6 +38,7 @@ export function ProgramReviews({ programId }: ProgramReviewsProps) {
 
   useEffect(() => {
     fetchReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programId]);
 
   const fetchReviews = async () => {

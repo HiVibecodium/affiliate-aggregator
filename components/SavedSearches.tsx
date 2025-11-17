@@ -1,55 +1,56 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 interface SavedSearch {
-  id: string
-  name: string
-  description: string | null
-  filters: any
-  alertsEnabled: boolean
-  alertFrequency: string
-  newMatchesCount: number
-  createdAt: string
+  id: string;
+  name: string;
+  description: string | null;
+  filters: any;
+  alertsEnabled: boolean;
+  alertFrequency: string;
+  newMatchesCount: number;
+  createdAt: string;
 }
 
 interface SavedSearchesProps {
-  userId: string
-  onApplySearch: (filters: any) => void
+  userId: string;
+  onApplySearch: (filters: any) => void;
 }
 
 export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
-  const [searches, setSearches] = useState<SavedSearch[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showSaveDialog, setShowSaveDialog] = useState(false)
-  const [saveName, setSaveName] = useState('')
-  const [currentFilters, setCurrentFilters] = useState<any>(null)
+  const [searches, setSearches] = useState<SavedSearch[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [saveName, setSaveName] = useState('');
+  const [currentFilters, setCurrentFilters] = useState<any>(null);
 
   useEffect(() => {
-    fetchSearches()
-  }, [])
+    fetchSearches();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchSearches = async () => {
     try {
-      const response = await fetch(`/api/saved-searches?userId=${userId}`)
-      const data = await response.json()
-      setSearches(data.searches || [])
+      const response = await fetch(`/api/saved-searches?userId=${userId}`);
+      const data = await response.json();
+      setSearches(data.searches || []);
     } catch (error) {
-      console.error('Failed to fetch saved searches:', error)
+      console.error('Failed to fetch saved searches:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleSaveSearch = async (filters: any) => {
-    setCurrentFilters(filters)
-    setShowSaveDialog(true)
-  }
+    setCurrentFilters(filters);
+    setShowSaveDialog(true);
+  };
 
   const confirmSaveSearch = async () => {
     if (!saveName.trim()) {
-      alert('Please enter a name for this search')
-      return
+      alert('Please enter a name for this search');
+      return;
     }
 
     try {
@@ -63,41 +64,41 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
           alertsEnabled: true,
           alertFrequency: 'daily',
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (response.status === 403) {
-        alert(data.error + '\n\nUpgrade to Pro to save more searches!')
-        window.location.href = data.upgradeUrl
-        return
+        alert(data.error + '\n\nUpgrade to Pro to save more searches!');
+        window.location.href = data.upgradeUrl;
+        return;
       }
 
       if (data.success) {
-        setSearches([data.savedSearch, ...searches])
-        setShowSaveDialog(false)
-        setSaveName('')
-        alert('Search saved! You&apos;ll receive email alerts when new programs match.')
+        setSearches([data.savedSearch, ...searches]);
+        setShowSaveDialog(false);
+        setSaveName('');
+        alert('Search saved! You&apos;ll receive email alerts when new programs match.');
       }
     } catch (error) {
-      console.error('Failed to save search:', error)
-      alert('Failed to save search')
+      console.error('Failed to save search:', error);
+      alert('Failed to save search');
     }
-  }
+  };
 
   const handleDeleteSearch = async (id: string) => {
-    if (!confirm('Delete this saved search?')) return
+    if (!confirm('Delete this saved search?')) return;
 
     try {
       await fetch(`/api/saved-searches?id=${id}&userId=${userId}`, {
         method: 'DELETE',
-      })
+      });
 
-      setSearches(searches.filter((s) => s.id !== id))
+      setSearches(searches.filter((s) => s.id !== id));
     } catch (error) {
-      console.error('Failed to delete search:', error)
+      console.error('Failed to delete search:', error);
     }
-  }
+  };
 
   const handleToggleAlerts = async (id: string, currentlyEnabled: boolean) => {
     try {
@@ -109,20 +110,18 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
           userId,
           alertsEnabled: !currentlyEnabled,
         }),
-      })
+      });
 
       setSearches(
-        searches.map((s) =>
-          s.id === id ? { ...s, alertsEnabled: !currentlyEnabled } : s
-        )
-      )
+        searches.map((s) => (s.id === id ? { ...s, alertsEnabled: !currentlyEnabled } : s))
+      );
     } catch (error) {
-      console.error('Failed to toggle alerts:', error)
+      console.error('Failed to toggle alerts:', error);
     }
-  }
+  };
 
   if (loading) {
-    return <div className="text-center py-4 text-gray-600">Loading saved searches...</div>
+    return <div className="text-center py-4 text-gray-600">Loading saved searches...</div>;
   }
 
   return (
@@ -217,9 +216,7 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Save Search</h3>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Search Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Search Name</label>
               <input
                 type="text"
                 value={saveName}
@@ -232,16 +229,16 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
               <p className="text-sm text-blue-900">
-                <strong>Email Alerts:</strong> You&apos;ll receive daily emails when new programs match
-                this search.
+                <strong>Email Alerts:</strong> You&apos;ll receive daily emails when new programs
+                match this search.
               </p>
             </div>
 
             <div className="flex gap-3">
               <button
                 onClick={() => {
-                  setShowSaveDialog(false)
-                  setSaveName('')
+                  setShowSaveDialog(false);
+                  setSaveName('');
                 }}
                 className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
               >
@@ -258,5 +255,5 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

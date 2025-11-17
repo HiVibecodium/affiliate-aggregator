@@ -4,9 +4,9 @@
  * Handle subscription creation, updates, and cancellations
  */
 
-import { stripe } from './stripe'
-import { prisma } from '@/lib/prisma'
-import Stripe from 'stripe'
+import { stripe } from './stripe';
+import { prisma } from '@/lib/prisma';
+import Stripe from 'stripe';
 
 /**
  * Get or create Stripe customer for user
@@ -16,10 +16,10 @@ export async function getOrCreateCustomer(userId: string, email: string): Promis
   const existing = await prisma.subscription.findFirst({
     where: { userId },
     orderBy: { createdAt: 'desc' },
-  })
+  });
 
   if (existing?.stripeCustomerId) {
-    return existing.stripeCustomerId
+    return existing.stripeCustomerId;
   }
 
   // Create new Stripe customer
@@ -28,9 +28,9 @@ export async function getOrCreateCustomer(userId: string, email: string): Promis
     metadata: {
       userId,
     },
-  })
+  });
 
-  return customer.id
+  return customer.id;
 }
 
 /**
@@ -46,16 +46,16 @@ export async function createCheckoutSession({
   trialDays,
   couponId,
 }: {
-  userId: string
-  email: string
-  priceId: string
-  tier: 'pro' | 'business'
-  successUrl: string
-  cancelUrl: string
-  trialDays?: number
-  couponId?: string
+  userId: string;
+  email: string;
+  priceId: string;
+  tier: 'pro' | 'business';
+  successUrl: string;
+  cancelUrl: string;
+  trialDays?: number;
+  couponId?: string;
 }): Promise<Stripe.Checkout.Session> {
-  const customerId = await getOrCreateCustomer(userId, email)
+  const customerId = await getOrCreateCustomer(userId, email);
 
   const sessionParams: Stripe.Checkout.SessionCreateParams = {
     customer: customerId,
@@ -79,24 +79,24 @@ export async function createCheckoutSession({
         tier,
       },
     },
-  }
+  };
 
   // Add trial period if specified
   if (trialDays && trialDays > 0) {
     sessionParams.subscription_data = {
       ...sessionParams.subscription_data,
       trial_period_days: trialDays,
-    }
+    };
   }
 
   // Add coupon if specified
   if (couponId) {
-    sessionParams.discounts = [{ coupon: couponId }]
+    sessionParams.discounts = [{ coupon: couponId }];
   }
 
-  const session = await stripe.checkout.sessions.create(sessionParams)
+  const session = await stripe.checkout.sessions.create(sessionParams);
 
-  return session
+  return session;
 }
 
 /**
@@ -116,18 +116,18 @@ export async function createSubscription({
   trialEnd,
   organizationId,
 }: {
-  userId: string
-  stripeCustomerId: string
-  stripeSubscriptionId: string
-  stripePriceId: string
-  stripeProductId: string
-  tier: 'free' | 'pro' | 'business' | 'enterprise'
-  status: string
-  currentPeriodStart: Date
-  currentPeriodEnd: Date
-  trialStart?: Date
-  trialEnd?: Date
-  organizationId?: string
+  userId: string;
+  stripeCustomerId: string;
+  stripeSubscriptionId: string;
+  stripePriceId: string;
+  stripeProductId: string;
+  tier: 'free' | 'pro' | 'business' | 'enterprise';
+  status: string;
+  currentPeriodStart: Date;
+  currentPeriodEnd: Date;
+  trialStart?: Date;
+  trialEnd?: Date;
+  organizationId?: string;
 }) {
   return await prisma.subscription.create({
     data: {
@@ -144,7 +144,7 @@ export async function createSubscription({
       trialStart,
       trialEnd,
     },
-  })
+  });
 }
 
 /**
@@ -153,18 +153,18 @@ export async function createSubscription({
 export async function updateSubscription(
   subscriptionId: string,
   data: {
-    tier?: 'free' | 'pro' | 'business' | 'enterprise'
-    status?: string
-    currentPeriodStart?: Date
-    currentPeriodEnd?: Date
-    cancelAtPeriodEnd?: boolean
-    canceledAt?: Date
+    tier?: 'free' | 'pro' | 'business' | 'enterprise';
+    status?: string;
+    currentPeriodStart?: Date;
+    currentPeriodEnd?: Date;
+    cancelAtPeriodEnd?: boolean;
+    canceledAt?: Date;
   }
 ) {
   return await prisma.subscription.update({
     where: { id: subscriptionId },
     data,
-  })
+  });
 }
 
 /**
@@ -179,15 +179,17 @@ export async function getActiveSubscription(userId: string) {
       },
     },
     orderBy: { createdAt: 'desc' },
-  })
+  });
 }
 
 /**
  * Get user's current tier
  */
-export async function getUserTier(userId: string): Promise<'free' | 'pro' | 'business' | 'enterprise'> {
-  const subscription = await getActiveSubscription(userId)
-  return (subscription?.tier as 'free' | 'pro' | 'business' | 'enterprise') || 'free'
+export async function getUserTier(
+  userId: string
+): Promise<'free' | 'pro' | 'business' | 'enterprise'> {
+  const subscription = await getActiveSubscription(userId);
+  return (subscription?.tier as 'free' | 'pro' | 'business' | 'enterprise') || 'free';
 }
 
 /**
@@ -196,16 +198,16 @@ export async function getUserTier(userId: string): Promise<'free' | 'pro' | 'bus
 export async function cancelSubscription(subscriptionId: string, cancelImmediately = false) {
   const subscription = await prisma.subscription.findUnique({
     where: { id: subscriptionId },
-  })
+  });
 
   if (!subscription?.stripeSubscriptionId) {
-    throw new Error('Subscription not found')
+    throw new Error('Subscription not found');
   }
 
   // Cancel in Stripe
-  const updated = await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+  await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
     cancel_at_period_end: !cancelImmediately,
-  })
+  });
 
   // Update in database
   return await prisma.subscription.update({
@@ -215,7 +217,7 @@ export async function cancelSubscription(subscriptionId: string, cancelImmediate
       canceledAt: cancelImmediately ? new Date() : null,
       status: cancelImmediately ? 'canceled' : (subscription.status as string),
     },
-  })
+  });
 }
 
 /**
@@ -224,16 +226,16 @@ export async function cancelSubscription(subscriptionId: string, cancelImmediate
 export async function reactivateSubscription(subscriptionId: string) {
   const subscription = await prisma.subscription.findUnique({
     where: { id: subscriptionId },
-  })
+  });
 
   if (!subscription?.stripeSubscriptionId) {
-    throw new Error('Subscription not found')
+    throw new Error('Subscription not found');
   }
 
   // Reactivate in Stripe
   await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
     cancel_at_period_end: false,
-  })
+  });
 
   // Update in database
   return await prisma.subscription.update({
@@ -242,7 +244,7 @@ export async function reactivateSubscription(subscriptionId: string) {
       cancelAtPeriodEnd: false,
       canceledAt: null,
     },
-  })
+  });
 }
 
 /**
@@ -252,26 +254,30 @@ export async function createPortalSession(customerId: string, returnUrl: string)
   return await stripe.billingPortal.sessions.create({
     customer: customerId,
     return_url: returnUrl,
-  })
+  });
 }
 
 /**
  * Upgrade/downgrade subscription
  */
-export async function changeSubscriptionPlan(subscriptionId: string, newPriceId: string, newTier: 'pro' | 'business') {
+export async function changeSubscriptionPlan(
+  subscriptionId: string,
+  newPriceId: string,
+  newTier: 'pro' | 'business'
+) {
   const subscription = await prisma.subscription.findUnique({
     where: { id: subscriptionId },
-  })
+  });
 
   if (!subscription?.stripeSubscriptionId) {
-    throw new Error('Subscription not found')
+    throw new Error('Subscription not found');
   }
 
   // Get current subscription from Stripe
-  const stripeSubscription = await stripe.subscriptions.retrieve(subscription.stripeSubscriptionId)
+  const stripeSubscription = await stripe.subscriptions.retrieve(subscription.stripeSubscriptionId);
 
   // Update subscription in Stripe
-  const updated = await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+  await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
     items: [
       {
         id: stripeSubscription.items.data[0].id,
@@ -279,7 +285,7 @@ export async function changeSubscriptionPlan(subscriptionId: string, newPriceId:
       },
     ],
     proration_behavior: 'create_prorations', // Prorate charges
-  })
+  });
 
   // Update in database
   return await prisma.subscription.update({
@@ -288,5 +294,5 @@ export async function changeSubscriptionPlan(subscriptionId: string, newPriceId:
       tier: newTier as 'pro' | 'business' | 'free' | 'enterprise',
       stripePriceId: newPriceId,
     },
-  })
+  });
 }

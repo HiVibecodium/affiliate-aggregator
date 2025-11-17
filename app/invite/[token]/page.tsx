@@ -29,6 +29,7 @@ export default function InviteAcceptPage() {
     if (token && memberId) {
       verifyInvite();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, memberId]);
 
   const verifyInvite = async () => {
@@ -42,7 +43,9 @@ export default function InviteAcceptPage() {
         setError(data.error || 'Invalid invitation');
       }
     } catch (err) {
-      setError('Failed to verify invitation');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to verify invitation';
+      setError(errorMessage);
+      console.error('Invite verification error:', err);
     } finally {
       setLoading(false);
     }
@@ -67,7 +70,9 @@ export default function InviteAcceptPage() {
         setError(data.error || 'Failed to accept invitation');
       }
     } catch (err) {
-      setError('Failed to accept invitation');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to accept invitation';
+      setError(errorMessage);
+      console.error('Invite acceptance error:', err);
     } finally {
       setAccepting(false);
     }
@@ -86,7 +91,9 @@ export default function InviteAcceptPage() {
       alert('Приглашение отклонено');
       router.push('/');
     } catch (err) {
-      setError('Failed to decline invitation');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to decline invitation';
+      setError(errorMessage);
+      console.error('Invite decline error:', err);
     }
   };
 

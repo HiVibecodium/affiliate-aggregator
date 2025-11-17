@@ -18,13 +18,11 @@ export async function GET(request: NextRequest) {
     const maxCommission = searchParams.get('maxCommission');
     const paymentMethod = searchParams.get('paymentMethod');
     const minCookieDuration = searchParams.get('minCookieDuration');
-    const maxCookieDuration = searchParams.get('maxCookieDuration');
-    const minPaymentThreshold = searchParams.get('minPaymentThreshold');
-    const maxPaymentThreshold = searchParams.get('maxPaymentThreshold');
-    const minRating = searchParams.get('minRating');
     const since = searchParams.get('since'); // Number of days (e.g., "7" for last 7 days)
     const hasReviews = searchParams.get('hasReviews') === 'true';
-    const paymentFrequency = searchParams.get('paymentFrequency');
+    const minPaymentThreshold = searchParams.get('minPaymentThreshold');
+    const maxPaymentThreshold = searchParams.get('maxPaymentThreshold');
+    // Note: maxCookieDuration, minRating, paymentFrequency filters are disabled until database migration
 
     // Sorting
     const sortBy = searchParams.get('sortBy') || 'createdAt';

@@ -117,16 +117,20 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
                 <div className="p-4 bg-green-50 rounded-lg">
                   <div className="text-sm text-gray-600 mb-1">Комиссия</div>
                   <div className="font-semibold text-green-600 text-xl">
-                    {program.commissionRate}% {program.commissionType}
+                    {program.commissionRate ?? 'N/A'}% {program.commissionType ?? ''}
                   </div>
                 </div>
                 <div className="p-4 bg-purple-50 rounded-lg">
                   <div className="text-sm text-gray-600 mb-1">Cookie Duration</div>
-                  <div className="font-semibold text-gray-900">{program.cookieDuration} дней</div>
+                  <div className="font-semibold text-gray-900">
+                    {program.cookieDuration ?? 'N/A'} {program.cookieDuration ? 'дней' : ''}
+                  </div>
                 </div>
                 <div className="p-4 bg-orange-50 rounded-lg">
                   <div className="text-sm text-gray-600 mb-1">Минимальная выплата</div>
-                  <div className="font-semibold text-gray-900">${program.paymentThreshold}</div>
+                  <div className="font-semibold text-gray-900">
+                    ${program.paymentThreshold ?? 'N/A'}
+                  </div>
                 </div>
               </div>
             </div>
@@ -164,7 +168,9 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
                           <div className="font-semibold text-gray-900">{rp.name}</div>
                           <div className="text-sm text-gray-500">{rp.network.name}</div>
                         </div>
-                        <div className="text-green-600 font-bold">{rp.commissionRate}%</div>
+                        <div className="text-green-600 font-bold">
+                          {rp.commissionRate ?? 'N/A'}%
+                        </div>
                       </div>
                     </Link>
                   ))}
@@ -265,14 +271,7 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
 
             {/* Review form (1 column) */}
             <div>
-              <ReviewForm
-                programId={id}
-                programName={program.name}
-                onSuccess={() => {
-                  // Refresh page to show new review
-                  window.location.reload();
-                }}
-              />
+              <ReviewForm programId={id} programName={program.name} />
             </div>
           </div>
         </div>

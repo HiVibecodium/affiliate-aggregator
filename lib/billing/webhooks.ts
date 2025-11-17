@@ -7,6 +7,7 @@
 import Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
 import { stripe } from './stripe';
+import type { Prisma } from '@prisma/client';
 
 /**
  * Handle checkout session completed
@@ -33,7 +34,7 @@ export async function handleCheckoutCompleted(session: Stripe.Checkout.Session) 
       type: 'checkout_completed',
       status: 'success',
       stripeEventId: session.id,
-      eventData: session as any,
+      eventData: session as unknown as Prisma.JsonObject,
     },
   });
 }

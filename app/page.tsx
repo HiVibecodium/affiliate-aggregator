@@ -37,54 +37,54 @@ export default async function Home() {
     <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative">
       <HomeHeader />
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+      <div className="container mx-auto px-4 py-8 md:py-16">
+        <div className="text-center mb-8 md:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             🌐 Global Affiliate Networks Aggregator
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 md:mb-8 px-4">
             Откройте для себя 80,000+ партнерских программ со всего мира
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div className="flex gap-2 sm:gap-4 justify-center flex-wrap px-2">
             <Link
               href="/programs"
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 sm:px-8 py-3 sm:py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl text-sm sm:text-base"
             >
               Посмотреть все программы →
             </Link>
             <Link
               href="/programs/top-rated"
-              className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+              className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 sm:px-8 py-3 sm:py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl text-sm sm:text-base"
             >
               🏆 Лучшие программы
             </Link>
             <Link
               href="/programs/new"
-              className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+              className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-4 sm:px-8 py-3 sm:py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl text-sm sm:text-base"
             >
               🆕 Новые программы
             </Link>
             <Link
               href="/applications"
-              className="inline-block bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+              className="inline-block bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 sm:px-8 py-3 sm:py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl text-sm sm:text-base"
             >
               📋 Мои заявки
             </Link>
             <Link
               href="/favorites"
-              className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+              className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-4 sm:px-8 py-3 sm:py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl text-sm sm:text-base"
             >
               ❤️ Избранное
             </Link>
             <Link
               href="/dashboard"
-              className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+              className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 sm:px-8 py-3 sm:py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl text-sm sm:text-base"
             >
               Dashboard →
             </Link>
             <Link
               href="/analytics"
-              className="inline-block bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+              className="inline-block bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 sm:px-8 py-3 sm:py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl text-sm sm:text-base"
             >
               📊 Аналитика
             </Link>
