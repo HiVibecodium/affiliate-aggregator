@@ -1,22 +1,16 @@
-@import "tailwindcss";
-
-/* Tailwind v4 theme configuration */
-@theme {
-  --color-background: #ffffff;
-  --color-foreground: #171717;
-  --color-background-dark: #0a0a0a;
-  --color-foreground-dark: #ededed;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: var(--color-background);
-  --foreground: var(--color-foreground);
+  --background: #ffffff;
+  --foreground: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: var(--color-background-dark);
-    --foreground: var(--color-foreground-dark);
+    --background: #0a0a0a;
+    --foreground: #ededed;
   }
 }
 

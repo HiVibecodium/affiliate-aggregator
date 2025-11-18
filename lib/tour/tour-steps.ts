@@ -4,7 +4,9 @@
  * Guided tour for new users using Shepherd.js
  */
 
-export const tourSteps: any[] = [
+import type { StepOptions } from 'shepherd.js';
+
+export const tourSteps: StepOptions[] = [
   // Step 1: Welcome
   {
     id: 'welcome',
@@ -17,14 +19,14 @@ export const tourSteps: any[] = [
     buttons: [
       {
         text: 'Пропустить',
-        action: function (this: any) {
+        action: function () {
           return this.complete();
         },
         secondary: true,
       },
       {
         text: 'Начать тур →',
-        action: function (this: any) {
+        action: function () {
           return this.next();
         },
       },
@@ -49,14 +51,14 @@ export const tourSteps: any[] = [
     buttons: [
       {
         text: '← Назад',
-        action: function (this: any) {
+        action: function () {
           return this.back();
         },
         secondary: true,
       },
       {
         text: 'Далее →',
-        action: function (this: any) {
+        action: function () {
           return this.next();
         },
       },
@@ -81,14 +83,14 @@ export const tourSteps: any[] = [
     buttons: [
       {
         text: '← Назад',
-        action: function (this: any) {
+        action: function () {
           return this.back();
         },
         secondary: true,
       },
       {
         text: 'Далее →',
-        action: function (this: any) {
+        action: function () {
           return this.next();
         },
       },
@@ -113,14 +115,14 @@ export const tourSteps: any[] = [
     buttons: [
       {
         text: '← Назад',
-        action: function (this: any) {
+        action: function () {
           return this.back();
         },
         secondary: true,
       },
       {
         text: 'Далее →',
-        action: function (this: any) {
+        action: function () {
           return this.next();
         },
       },
@@ -145,14 +147,14 @@ export const tourSteps: any[] = [
     buttons: [
       {
         text: '← Назад',
-        action: function (this: any) {
+        action: function () {
           return this.back();
         },
         secondary: true,
       },
       {
         text: 'Далее →',
-        action: function (this: any) {
+        action: function () {
           return this.next();
         },
       },
@@ -178,14 +180,14 @@ export const tourSteps: any[] = [
     buttons: [
       {
         text: '← Назад',
-        action: function (this: any) {
+        action: function () {
           return this.back();
         },
         secondary: true,
       },
       {
         text: 'Далее →',
-        action: function (this: any) {
+        action: function () {
           return this.next();
         },
       },
@@ -212,14 +214,14 @@ export const tourSteps: any[] = [
     buttons: [
       {
         text: '← Назад',
-        action: function (this: any) {
+        action: function () {
           return this.back();
         },
         secondary: true,
       },
       {
         text: 'Завершить тур ✅',
-        action: function (this: any) {
+        action: function () {
           return this.complete();
         },
       },
