@@ -8,11 +8,15 @@ interface BaseFieldProps {
   className?: string;
 }
 
-interface InputFieldProps extends BaseFieldProps, InputHTMLAttributes<HTMLInputElement> {
+interface InputFieldProps
+  extends BaseFieldProps,
+    Omit<InputHTMLAttributes<HTMLInputElement>, 'className'> {
   icon?: React.ReactNode;
 }
 
-interface TextAreaFieldProps extends BaseFieldProps, TextareaHTMLAttributes<HTMLTextAreaElement> {}
+interface TextAreaFieldProps
+  extends BaseFieldProps,
+    Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'className'> {}
 
 export function InputField({
   label,
@@ -58,7 +62,6 @@ export function InputField({
             focus:outline-none focus:ring-2 focus:ring-opacity-50
             disabled:bg-gray-100 disabled:cursor-not-allowed
             dark:bg-gray-800 dark:border-gray-600 dark:text-white
-            ${props.className || ''}
           `}
         />
       </div>
@@ -116,7 +119,6 @@ export function TextAreaField({
           focus:outline-none focus:ring-2 focus:ring-opacity-50
           disabled:bg-gray-100 disabled:cursor-not-allowed
           dark:bg-gray-800 dark:border-gray-600 dark:text-white
-          ${props.className || ''}
         `}
       />
       {error && (
