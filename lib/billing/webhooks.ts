@@ -62,6 +62,7 @@ export async function handleSubscriptionCreated(subscription: Stripe.Subscriptio
       stripeProductId: subscription.items.data[0].price.product as string,
       tier,
       status: subscription.status,
+      // Note: Stripe SDK types don't include all webhook properties
       currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
       currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
       trialStart: (subscription as any).trial_start
@@ -81,7 +82,7 @@ export async function handleSubscriptionCreated(subscription: Stripe.Subscriptio
       status: 'success',
       subscriptionId: subscription.id,
       stripeEventId: subscription.id,
-      eventData: subscription as any,
+      eventData: subscription as unknown as Prisma.JsonObject,
     },
   });
 }
@@ -120,6 +121,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     where: { stripeSubscriptionId: subscription.id },
     data: {
       status: subscription.status,
+      // Note: Stripe SDK types don't include all webhook properties
       currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
       currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
       cancelAtPeriodEnd: (subscription as any).cancel_at_period_end,
@@ -137,7 +139,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       status: 'success',
       subscriptionId: subscription.id,
       stripeEventId: subscription.id,
-      eventData: subscription as any,
+      eventData: subscription as unknown as Prisma.JsonObject,
     },
   });
 }
@@ -173,7 +175,7 @@ export async function handleSubscriptionDeleted(subscription: Stripe.Subscriptio
       status: 'success',
       subscriptionId: subscription.id,
       stripeEventId: subscription.id,
-      eventData: subscription as any,
+      eventData: subscription as unknown as Prisma.JsonObject,
     },
   });
 }
@@ -182,6 +184,7 @@ export async function handleSubscriptionDeleted(subscription: Stripe.Subscriptio
  * Handle invoice paid
  */
 export async function handleInvoicePaid(invoice: Stripe.Invoice) {
+  // Note: Stripe SDK types don't include all webhook properties
   const subscriptionId = (invoice as any).subscription as string;
   if (!subscriptionId) return;
 
@@ -220,7 +223,7 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
       invoiceId: invoice.id,
       subscriptionId,
       stripeEventId: invoice.id,
-      eventData: invoice as any,
+      eventData: invoice as unknown as Prisma.JsonObject,
     },
   });
 }
@@ -229,6 +232,7 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
  * Handle invoice payment failed
  */
 export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
+  // Note: Stripe SDK types don't include all webhook properties
   const subscriptionId = (invoice as any).subscription as string;
   if (!subscriptionId) return;
 
@@ -259,7 +263,7 @@ export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
       subscriptionId,
       stripeEventId: invoice.id,
       errorMessage: 'Payment failed',
-      eventData: invoice as any,
+      eventData: invoice as unknown as Prisma.JsonObject,
     },
   });
 
