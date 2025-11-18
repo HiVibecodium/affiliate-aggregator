@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export class PrismaClient {
   constructor() {}
-  $queryRaw = jest.fn();
-  $disconnect = jest.fn();
+  $queryRaw: any = () => Promise.resolve();
+  $disconnect: any = () => Promise.resolve();
 }
