@@ -15,6 +15,7 @@ const customJestConfig = {
   },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
+    '@sentry/nextjs': '<rootDir>/__mocks__/@sentry/nextjs.js',
   },
   testPathIgnorePatterns: [
     '<rootDir>/.next/',

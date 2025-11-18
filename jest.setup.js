@@ -1,5 +1,12 @@
 require('@testing-library/jest-dom');
 
+// Mock Sentry globally
+jest.mock('@sentry/nextjs', () => ({
+  captureException: jest.fn(),
+  captureMessage: jest.fn(),
+  init: jest.fn(),
+}));
+
 // Mock Next.js globals (Request, Response, etc.)
 global.Request = class Request {};
 global.Response = class Response {};
@@ -7,9 +14,11 @@ global.Headers = class Headers {};
 global.FormData = class FormData {};
 
 // Set test environment variables
-process.env.NEXT_PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:3000';
+process.env.NEXT_PUBLIC_SUPABASE_URL =
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:3000';
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'test-key';
-process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://test:test@localhost:5432/affiliate_aggregator_test';
+process.env.DATABASE_URL =
+  process.env.DATABASE_URL || 'postgresql://test:test@localhost:5432/affiliate_aggregator_test';
 
 // Global test timeout
 jest.setTimeout(30000);
@@ -32,8 +41,7 @@ beforeAll(() => {
   console.warn = (...args) => {
     if (
       typeof args[0] === 'string' &&
-      (args[0].includes('Warning:') ||
-        args[0].includes('Deprecated:'))
+      (args[0].includes('Warning:') || args[0].includes('Deprecated:'))
     ) {
       return;
     }
