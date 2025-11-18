@@ -56,6 +56,7 @@ export default function NewProgramsPage() {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getTimeSinceAdded = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();

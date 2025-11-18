@@ -1,12 +1,13 @@
 'use client';
 
 import { useReportWebVitals } from 'next/web-vitals';
+import { logger } from '@/lib/logger';
 
 export function WebVitals() {
   useReportWebVitals((metric) => {
     // Log to console in development
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[Web Vitals] ${metric.name}:`, metric.value);
+      logger.log(`[Web Vitals] ${metric.name}:`, metric.value);
     }
 
     // Send to analytics in production
@@ -34,7 +35,7 @@ export function WebVitals() {
           keepalive: true,
         }).catch((error) => {
           // Silently fail - don't want to impact user experience
-          console.error('Failed to send web vitals:', error);
+          logger.error('Failed to send web vitals:', error);
         });
       }
     }

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCached, CacheKeys } from '@/lib/cache';
+import { logger } from '@/lib/logger';
 
 /**
  * GET /api/analytics/popular
@@ -36,7 +37,7 @@ export async function GET() {
           });
         } catch (dbError) {
           // ProgramClick table doesn't exist yet - return empty gracefully
-          console.warn('Click tracking not initialized:', dbError);
+          logger.warn('Click tracking not initialized:', dbError);
           return NextResponse.json({
             popular: [],
             info: 'Click tracking table not initialized. Run prisma migrate to enable analytics.',
@@ -56,7 +57,7 @@ export async function GET() {
 
         return NextResponse.json(result);
       } catch (error) {
-        console.error('Failed to fetch popular programs:', error);
+        logger.error('Failed to fetch popular programs:', error);
         // Return empty array instead of error to prevent page crash
         return NextResponse.json({
           popular: [],

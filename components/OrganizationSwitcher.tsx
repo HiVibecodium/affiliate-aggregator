@@ -8,7 +8,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+// import { createClient } from '@/lib/supabase/client'; // TODO: Use when implementing org switching
 
 interface Organization {
   id: string;
@@ -24,10 +24,7 @@ interface OrganizationSwitcherProps {
   className?: string;
 }
 
-export function OrganizationSwitcher({
-  currentOrg,
-  className = '',
-}: OrganizationSwitcherProps) {
+export function OrganizationSwitcher({ currentOrg, className = '' }: OrganizationSwitcherProps) {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -66,9 +63,7 @@ export function OrganizationSwitcher({
     router.push('/organizations/new');
   }
 
-  const otherOrgs = organizations.filter(
-    org => !currentOrg || org.id !== currentOrg.id
-  );
+  const otherOrgs = organizations.filter((org) => !currentOrg || org.id !== currentOrg.id);
 
   return (
     <div className={`relative ${className}`}>
@@ -89,21 +84,15 @@ export function OrganizationSwitcher({
                 <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                   {currentOrg.name}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  {currentOrg.role}
-                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">{currentOrg.role}</div>
               </div>
             </>
           ) : (
-            <span className="text-sm text-gray-600 dark:text-gray-400">
-              Select Organization
-            </span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">Select Organization</span>
           )}
         </div>
         <svg
-          className={`w-4 h-4 transition-transform ${
-            isOpen ? 'transform rotate-180' : ''
-          }`}
+          className={`w-4 h-4 transition-transform ${isOpen ? 'transform rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -134,9 +123,7 @@ export function OrganizationSwitcher({
                   <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {currentOrg.name}
                   </div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">
-                    {currentOrg.role}
-                  </div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">{currentOrg.role}</div>
                 </div>
               </div>
             </div>
@@ -149,7 +136,7 @@ export function OrganizationSwitcher({
                 Other Organizations
               </div>
               <div className="space-y-1">
-                {otherOrgs.map(org => (
+                {otherOrgs.map((org) => (
                   <button
                     key={org.id}
                     onClick={() => handleOrgSwitch(org)}
@@ -162,9 +149,7 @@ export function OrganizationSwitcher({
                       <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                         {org.name}
                       </div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400">
-                        {org.role}
-                      </div>
+                      <div className="text-xs text-gray-600 dark:text-gray-400">{org.role}</div>
                     </div>
                   </button>
                 ))}
@@ -178,12 +163,7 @@ export function OrganizationSwitcher({
               onClick={handleCreateOrg}
               className="w-full px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -206,11 +186,7 @@ export function OrganizationSwitcher({
 
       {/* Overlay to close menu */}
       {isOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsOpen(false)}
-          aria-hidden="true"
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} aria-hidden="true" />
       )}
     </div>
   );

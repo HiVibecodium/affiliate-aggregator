@@ -4,7 +4,13 @@
 import { PrismaClient } from '@prisma/client';
 import { parse } from 'csv-parse/sync';
 import * as fs from 'fs';
-import type { NetworkImportConfig, ImportResult, BulkImportSummary, NetworkProgramData } from './types';
+import type {
+  NetworkImportConfig,
+  ImportResult,
+  BulkImportSummary,
+  NetworkProgramData,
+} from './types';
+import { logger } from '@/lib/logger';
 
 const prisma = new PrismaClient();
 
@@ -55,7 +61,7 @@ export class AffiliateProgramImporter {
         } catch (error) {
           const errorMsg = `Batch ${i / batchSize + 1} failed: ${error instanceof Error ? error.message : String(error)}`;
           result.errors.push(errorMsg);
-          console.error(errorMsg);
+          logger.error(errorMsg);
         }
       }
 
@@ -64,7 +70,9 @@ export class AffiliateProgramImporter {
 
       return result;
     } catch (error) {
-      result.errors.push(`Network import failed: ${error instanceof Error ? error.message : String(error)}`);
+      result.errors.push(
+        `Network import failed: ${error instanceof Error ? error.message : String(error)}`
+      );
       result.duration = Date.now() - startTime;
       return result;
     }
@@ -128,7 +136,9 @@ export class AffiliateProgramImporter {
         }
       } catch (error) {
         result.programsSkipped++;
-        result.errors.push(`Program '${programData.name}' failed: ${error instanceof Error ? error.message : String(error)}`);
+        result.errors.push(
+          `Program '${programData.name}' failed: ${error instanceof Error ? error.message : String(error)}`
+        );
       }
     }
   }
@@ -143,7 +153,7 @@ export class AffiliateProgramImporter {
     let successfulImports = 0;
 
     for (const config of configs) {
-      console.log(`Importing network: ${config.networkName} (${config.programs.length} programs)`);
+      logger.log(`Importing network: ${config.networkName} (${config.programs.length} programs)`);
       const result = await this.importNetwork(config);
       results.push(result);
       totalPrograms += config.programs.length;
@@ -193,9 +203,11 @@ export class AffiliateProgramImporter {
         trim: true,
         cast: (value, context) => {
           // Auto-cast numeric values
-          if (context.column === 'commissionRate' ||
-              context.column === 'cookieDuration' ||
-              context.column === 'paymentThreshold') {
+          if (
+            context.column === 'commissionRate' ||
+            context.column === 'cookieDuration' ||
+            context.column === 'paymentThreshold'
+          ) {
             const num = parseFloat(value);
             return isNaN(num) ? null : num;
           }
@@ -237,12 +249,15 @@ export class AffiliateProgramImporter {
           name: record.name,
           description: record.description || undefined,
           category: record.category || undefined,
-          commissionRate: typeof record.commissionRate === 'number' ? record.commissionRate : undefined,
+          commissionRate:
+            typeof record.commissionRate === 'number' ? record.commissionRate : undefined,
           commissionType: record.commissionType || undefined,
-          cookieDuration: typeof record.cookieDuration === 'number' ? record.cookieDuration : undefined,
-          paymentThreshold: typeof record.paymentThreshold === 'number' ? record.paymentThreshold : undefined,
+          cookieDuration:
+            typeof record.cookieDuration === 'number' ? record.cookieDuration : undefined,
+          paymentThreshold:
+            typeof record.paymentThreshold === 'number' ? record.paymentThreshold : undefined,
           paymentMethods: record.paymentMethods
-            ? record.paymentMethods.split(',').map(m => m.trim())
+            ? record.paymentMethods.split(',').map((m) => m.trim())
             : undefined,
         };
 
@@ -277,7 +292,9 @@ export class AffiliateProgramImporter {
 
       return result;
     } catch (error) {
-      result.errors.push(`CSV import failed: ${error instanceof Error ? error.message : String(error)}`);
+      result.errors.push(
+        `CSV import failed: ${error instanceof Error ? error.message : String(error)}`
+      );
       result.duration = Date.now() - startTime;
       return result;
     }

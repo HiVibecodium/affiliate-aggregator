@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 
 export const runtime = 'edge'; // Use edge runtime for better performance
 
@@ -7,7 +8,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Log web vitals (in production, you'd send to your analytics service)
-    console.log('[Web Vitals]', {
+    logger.log('[Web Vitals]', {
       name: body.name,
       value: body.value,
       rating: body.rating,
@@ -32,13 +33,13 @@ export async function POST(request: NextRequest) {
         });
       } catch (err) {
         // Silently fail analytics
-        console.warn('Analytics error:', err);
+        logger.warn('Analytics error:', err);
       }
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error('Web Vitals error:', error);
+    logger.error('Web Vitals error:', error);
     return NextResponse.json({ error: 'Failed to record web vitals' }, { status: 500 });
   }
 }

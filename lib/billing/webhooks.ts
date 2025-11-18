@@ -8,6 +8,7 @@ import Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
 import { stripe } from './stripe';
 import type { Prisma } from '@prisma/client';
+import { logger } from '@/lib/logger';
 
 /**
  * Handle checkout session completed
@@ -17,13 +18,13 @@ export async function handleCheckoutCompleted(session: Stripe.Checkout.Session) 
   const tier = session.metadata?.tier as 'pro' | 'business' | 'enterprise';
 
   if (!userId || !tier) {
-    console.error('Missing metadata in checkout session:', session.id);
+    logger.error('Missing metadata in checkout session:', session.id);
     return;
   }
 
   const subscriptionId = session.subscription as string;
   if (!subscriptionId) {
-    console.error('No subscription ID in checkout session:', session.id);
+    logger.error('No subscription ID in checkout session:', session.id);
     return;
   }
 
@@ -47,7 +48,7 @@ export async function handleSubscriptionCreated(subscription: Stripe.Subscriptio
   const tier = subscription.metadata?.tier as 'pro' | 'business' | 'enterprise';
 
   if (!userId || !tier) {
-    console.error('Missing metadata in subscription:', subscription.id);
+    logger.error('Missing metadata in subscription:', subscription.id);
     return;
   }
 
@@ -99,7 +100,7 @@ async function checkIsDefaultPaymentMethod(
     const customer = (await stripe.customers.retrieve(customerId)) as Stripe.Customer;
     return customer.invoice_settings?.default_payment_method === paymentMethodId;
   } catch (error) {
-    console.error('Error checking default payment method:', error);
+    logger.error('Error checking default payment method:', error);
     return true; // Default to true on error
   }
 }
@@ -110,7 +111,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   });
 
   if (!dbSubscription) {
-    console.error('Subscription not found in database:', subscription.id);
+    logger.error('Subscription not found in database:', subscription.id);
     return;
   }
 
@@ -150,7 +151,7 @@ export async function handleSubscriptionDeleted(subscription: Stripe.Subscriptio
   });
 
   if (!dbSubscription) {
-    console.error('Subscription not found in database:', subscription.id);
+    logger.error('Subscription not found in database:', subscription.id);
     return;
   }
 
@@ -189,7 +190,7 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
   });
 
   if (!dbSubscription) {
-    console.error('Subscription not found for invoice:', invoice.id);
+    logger.error('Subscription not found for invoice:', invoice.id);
     return;
   }
 
@@ -236,7 +237,7 @@ export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
   });
 
   if (!dbSubscription) {
-    console.error('Subscription not found for invoice:', invoice.id);
+    logger.error('Subscription not found for invoice:', invoice.id);
     return;
   }
 
@@ -279,7 +280,7 @@ export async function handlePaymentMethodAttached(paymentMethod: Stripe.PaymentM
   });
 
   if (!subscription) {
-    console.error('User not found for customer:', customerId);
+    logger.error('User not found for customer:', customerId);
     return;
   }
 
@@ -337,10 +338,10 @@ export async function handleWebhookEvent(event: Stripe.Event) {
         break;
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        logger.log(`Unhandled event type: ${event.type}`);
     }
   } catch (error) {
-    console.error(`Error handling webhook event ${event.type}:`, error);
+    logger.error(`Error handling webhook event ${event.type}:`, error);
     throw error;
   }
 }

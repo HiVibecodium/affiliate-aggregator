@@ -6,13 +6,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { executeBulkImport } from '@/lib/data-import/bulk-import';
 import type { BulkImportOptions } from '@/lib/data-import/bulk-import';
 import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit';
+import { logger } from '@/lib/logger';
 
 async function bulkImportHandler(request: NextRequest) {
   try {
-    const body = await request.json().catch(() => ({})) as BulkImportOptions;
+    const body = (await request.json().catch(() => ({}))) as BulkImportOptions;
 
-    console.log('Bulk import API triggered');
-    console.log('Options:', body);
+    logger.log('Bulk import API triggered');
+    logger.log('Options:', body);
 
     const summary = await executeBulkImport(body);
 
@@ -22,7 +23,7 @@ async function bulkImportHandler(request: NextRequest) {
       message: `Successfully imported ${summary.totalPrograms} programs across ${summary.successfulImports} networks`,
     });
   } catch (error) {
-    console.error('Bulk import API error:', error);
+    logger.error('Bulk import API error:', error);
     return NextResponse.json(
       {
         success: false,
@@ -43,7 +44,7 @@ async function getStatsHandler() {
       stats,
     });
   } catch (error) {
-    console.error('Get import stats error:', error);
+    logger.error('Get import stats error:', error);
     return NextResponse.json(
       {
         success: false,

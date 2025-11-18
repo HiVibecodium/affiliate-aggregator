@@ -4,18 +4,18 @@
  * Centralized email sending with Resend
  */
 
-import { Resend } from 'resend'
+import { Resend } from 'resend';
 
 // Allow build without Resend key
-const resendKey = process.env.RESEND_API_KEY || 'placeholder'
+const resendKey = process.env.RESEND_API_KEY || 'placeholder';
 
-export const resend = new Resend(resendKey)
+export const resend = new Resend(resendKey);
 
 /**
  * Check if email system is configured
  */
 export function isEmailConfigured(): boolean {
-  return !!(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL)
+  return !!(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL);
 }
 
 /**
@@ -27,14 +27,16 @@ export async function sendEmail({
   html,
   from,
 }: {
-  to: string
-  subject: string
-  html: string
-  from?: string
+  to: string;
+  subject: string;
+  html: string;
+  from?: string;
 }) {
   if (!isEmailConfigured()) {
-    console.warn('Email not configured, skipping send')
-    return { success: false, reason: 'not_configured' }
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Email not configured, skipping send');
+    }
+    return { success: false, reason: 'not_configured' };
   }
 
   try {
@@ -43,11 +45,13 @@ export async function sendEmail({
       to,
       subject,
       html,
-    })
+    });
 
-    return { success: true, result }
+    return { success: true, result };
   } catch (error) {
-    console.error('Failed to send email:', error)
-    return { success: false, error }
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Failed to send email:', error);
+    }
+    return { success: false, error };
   }
 }

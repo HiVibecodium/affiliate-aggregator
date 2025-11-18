@@ -186,6 +186,7 @@ function ProgramsContent() {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function toggleFavorite(programId: string) {
     if (favoritesLoading) return;
 
@@ -234,6 +235,7 @@ function ProgramsContent() {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function toggleComparison(program: Program) {
     if (isInComparison(program.id)) {
       removeFromComparison(program.id);
@@ -242,6 +244,7 @@ function ProgramsContent() {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function trackClick(programId: string) {
     try {
       await fetch('/api/track/click', {

@@ -57,3 +57,14 @@ next-env.d.ts
 
 .vercel
 .env*.local
+
+# Backup files
+*.backup
+*.bundle
+backup-*.txt
+backup-*.json
+backup-*.prisma
+backup-*.env
+backup-*.md
+*BACKUP*.md
+*SESSION_SUMMARY*.md

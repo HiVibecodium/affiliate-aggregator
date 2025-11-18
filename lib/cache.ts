@@ -17,7 +17,10 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
       token: process.env.UPSTASH_REDIS_REST_TOKEN,
     });
   } catch (_error) {
-    console.warn('Redis not available, caching disabled');
+    // Redis not available, caching disabled
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Redis not available, caching disabled');
+    }
   }
 }
 
@@ -46,7 +49,9 @@ export async function getCached<T>(
     return data;
   } catch (error) {
     // Redis error - fall back to direct fetch
-    console.error('Redis error, falling back:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Redis error, falling back:', error);
+    }
     return fetcher();
   }
 }
@@ -60,7 +65,9 @@ export async function invalidateCache(pattern: string): Promise<void> {
       await redis.del(...keys);
     }
   } catch (error) {
-    console.error('Cache invalidation error:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Cache invalidation error:', error);
+    }
   }
 }
 

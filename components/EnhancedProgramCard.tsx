@@ -42,6 +42,7 @@ interface EnhancedProgramCardProps {
 }
 
 // Helper: Get payment frequency display
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPaymentFrequencyDisplay(
   frequency: string | null | undefined
 ): { label: string; emoji: string } | null {
