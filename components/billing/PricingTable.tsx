@@ -160,7 +160,7 @@ export function PricingTable({ currentTier = 'free', userId, userEmail }: Pricin
       }
     } catch (error: unknown) {
       console.error('Upgrade error:', error);
-      alert(error.message || 'Failed to start checkout');
+      alert(error instanceof Error ? error.message : 'Failed to start checkout');
       setLoading(null);
     }
   };

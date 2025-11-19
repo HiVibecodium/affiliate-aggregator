@@ -13,10 +13,10 @@ import { logger } from '@/lib/logger';
 interface StripeSubscriptionWithPeriods extends Stripe.Subscription {
   current_period_start: number;
   current_period_end: number;
-  trial_start?: number;
-  trial_end?: number;
+  trial_start: number | null;
+  trial_end: number | null;
   cancel_at_period_end: boolean;
-  canceled_at?: number;
+  canceled_at: number | null;
 }
 
 /**
@@ -79,10 +79,10 @@ export async function handleSubscriptionCreated(subscription: Stripe.Subscriptio
         (subscription as StripeSubscriptionWithPeriods).current_period_end * 1000
       ),
       trialStart: (subscription as StripeSubscriptionWithPeriods).trial_start
-        ? new Date((subscription as StripeSubscriptionWithPeriods).trial_start * 1000)
+        ? new Date((subscription as StripeSubscriptionWithPeriods).trial_start! * 1000)
         : null,
       trialEnd: (subscription as StripeSubscriptionWithPeriods).trial_end
-        ? new Date((subscription as StripeSubscriptionWithPeriods).trial_end * 1000)
+        ? new Date((subscription as StripeSubscriptionWithPeriods).trial_end! * 1000)
         : null,
     },
   });
@@ -143,7 +143,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       ),
       cancelAtPeriodEnd: (subscription as StripeSubscriptionWithPeriods).cancel_at_period_end,
       canceledAt: (subscription as StripeSubscriptionWithPeriods).canceled_at
-        ? new Date((subscription as StripeSubscriptionWithPeriods).canceled_at * 1000)
+        ? new Date((subscription as StripeSubscriptionWithPeriods).canceled_at! * 1000)
         : null,
     },
   });
