@@ -2,9 +2,6 @@
  * Tests for KeyboardShortcuts component
  */
 
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-
 describe('KeyboardShortcuts', () => {
   it('should define keyboard shortcuts', () => {
     const shortcuts = [

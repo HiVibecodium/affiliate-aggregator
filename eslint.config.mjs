@@ -16,7 +16,14 @@ const eslintConfig = [
   {
     rules: {
       // Custom rules
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-require-imports': 'off', // Allow require in tests and config
       '@typescript-eslint/triple-slash-reference': 'off', // Allow in next-env.d.ts
@@ -36,6 +43,15 @@ const eslintConfig = [
       'next-env.d.ts', // Generated file
       '.lighthouseci/**',
       '.husky/**',
+      // Service Worker (generated files)
+      'public/sw.js',
+      'public/sw.js.map',
+      'public/workbox-*.js',
+      // Environment files
+      '.env',
+      '.env.local',
+      '.env.production',
+      '.env.test',
     ],
   },
 ];
