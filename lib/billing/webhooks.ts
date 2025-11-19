@@ -9,6 +9,15 @@ import { prisma } from '@/lib/prisma';
 import { stripe } from './stripe';
 import type { Prisma } from '@prisma/client';
 import { logger } from '@/lib/logger';
+// Extended Stripe types for webhook events
+interface StripeSubscriptionWithPeriods extends Stripe.Subscription {
+  current_period_start: number;
+  current_period_end: number;
+  trial_start?: number;
+  trial_end?: number;
+  cancel_at_period_end: boolean;
+  canceled_at?: number;
+}
 
 /**
  * Handle checkout session completed
@@ -63,13 +72,17 @@ export async function handleSubscriptionCreated(subscription: Stripe.Subscriptio
       tier,
       status: subscription.status,
       // Note: Stripe SDK types don't include all webhook properties
-      currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
-      currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
-      trialStart: (subscription as any).trial_start
-        ? new Date((subscription as any).trial_start * 1000)
+      currentPeriodStart: new Date(
+        (subscription as StripeSubscriptionWithPeriods).current_period_start * 1000
+      ),
+      currentPeriodEnd: new Date(
+        (subscription as StripeSubscriptionWithPeriods).current_period_end * 1000
+      ),
+      trialStart: (subscription as StripeSubscriptionWithPeriods).trial_start
+        ? new Date((subscription as StripeSubscriptionWithPeriods).trial_start * 1000)
         : null,
-      trialEnd: (subscription as any).trial_end
-        ? new Date((subscription as any).trial_end * 1000)
+      trialEnd: (subscription as StripeSubscriptionWithPeriods).trial_end
+        ? new Date((subscription as StripeSubscriptionWithPeriods).trial_end * 1000)
         : null,
     },
   });
@@ -122,11 +135,15 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     data: {
       status: subscription.status,
       // Note: Stripe SDK types don't include all webhook properties
-      currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
-      currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
-      cancelAtPeriodEnd: (subscription as any).cancel_at_period_end,
-      canceledAt: (subscription as any).canceled_at
-        ? new Date((subscription as any).canceled_at * 1000)
+      currentPeriodStart: new Date(
+        (subscription as StripeSubscriptionWithPeriods).current_period_start * 1000
+      ),
+      currentPeriodEnd: new Date(
+        (subscription as StripeSubscriptionWithPeriods).current_period_end * 1000
+      ),
+      cancelAtPeriodEnd: (subscription as StripeSubscriptionWithPeriods).cancel_at_period_end,
+      canceledAt: (subscription as StripeSubscriptionWithPeriods).canceled_at
+        ? new Date((subscription as StripeSubscriptionWithPeriods).canceled_at * 1000)
         : null,
     },
   });
