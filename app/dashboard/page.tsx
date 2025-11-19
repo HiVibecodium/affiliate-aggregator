@@ -62,7 +62,7 @@ export default async function DashboardPage() {
                   {analytics.overview.totalPrograms.toLocaleString()}
                 </p>
                 <p className="text-xs text-blue-600 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  → Browse all programs
+                  → Смотреть все программы
                 </p>
               </div>
               <div className="text-4xl group-hover:scale-110 transition-transform">📦</div>
@@ -82,10 +82,10 @@ export default async function DashboardPage() {
                   {analytics.overview.totalNetworks}
                 </p>
                 <p className="text-xs text-green-600 mt-1">
-                  {analytics.overview.activeNetworks} active
+                  {analytics.overview.activeNetworks} активных
                 </p>
                 <p className="text-xs text-purple-600 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  → View by network
+                  → Просмотр по сетям
                 </p>
               </div>
               <div className="text-4xl group-hover:scale-110 transition-transform">🌐</div>
@@ -105,7 +105,7 @@ export default async function DashboardPage() {
                   {analytics.overview.avgCommission}%
                 </p>
                 <p className="text-xs text-green-600 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  → Highest paying programs
+                  → Программы с высокими выплатами
                 </p>
               </div>
               <div className="text-4xl group-hover:scale-110 transition-transform">💰</div>
@@ -125,7 +125,7 @@ export default async function DashboardPage() {
                   {analytics.programsByCategory.length}
                 </p>
                 <p className="text-xs text-orange-600 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  → Browse by category
+                  → Просмотр по категориям
                 </p>
               </div>
               <div className="text-4xl group-hover:scale-110 transition-transform">🏷️</div>
@@ -137,7 +137,7 @@ export default async function DashboardPage() {
           {/* Top Networks */}
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">📊 Programs by Network</h2>
+              <h2 className="text-xl font-bold text-gray-900">📊 Программы по сетям</h2>
               <Link
                 href="/programs"
                 className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
@@ -173,10 +173,10 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          {/* Top Categories */}
+          {/* Топ категорий */}
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">🏷️ Top Categories</h2>
+              <h2 className="text-xl font-bold text-gray-900">🏷️ Топ категорий</h2>
               <Link
                 href="/programs"
                 className="text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center gap-1"
@@ -217,7 +217,7 @@ export default async function DashboardPage() {
           {/* Top Commissions */}
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">💎 Highest Commissions</h2>
+              <h2 className="text-xl font-bold text-gray-900">💎 Высокие комиссии</h2>
               <Link
                 href="/programs?sortBy=commission&sortOrder=desc"
                 className="text-sm text-green-600 hover:text-green-800 font-medium flex items-center gap-1"
@@ -257,7 +257,7 @@ export default async function DashboardPage() {
           {/* Recent Programs */}
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">🆕 Recently Added</h2>
+              <h2 className="text-xl font-bold text-gray-900">🆕 Недавно добавленные</h2>
               <Link
                 href="/programs?sortBy=createdAt&sortOrder=desc"
                 className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
@@ -297,9 +297,9 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Quick Actions Panel */}
+        {/* Быстрые действия Panel */}
         <div className="mt-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg p-6 text-white">
-          <h2 className="text-2xl font-bold mb-4">⚡ Quick Actions</h2>
+          <h2 className="text-2xl font-bold mb-4">⚡ Быстрые действия</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link
               href="/programs"
@@ -307,7 +307,7 @@ export default async function DashboardPage() {
             >
               <div className="text-3xl mb-2">🔍</div>
               <h3 className="font-semibold mb-1">Обзор программ</h3>
-              <p className="text-sm text-white/80">Explore 80,000+ affiliate programs</p>
+              <p className="text-sm text-white/80">Изучите 80,000+ партнерских программ</p>
             </Link>
 
             <Link
@@ -315,8 +315,8 @@ export default async function DashboardPage() {
               className="bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-4 transition-all hover:scale-105"
             >
               <div className="text-3xl mb-2">⭐</div>
-              <h3 className="font-semibold mb-1">My Favorites</h3>
-              <p className="text-sm text-white/80">View your saved programs</p>
+              <h3 className="font-semibold mb-1">Избранное</h3>
+              <p className="text-sm text-white/80">Просмотр сохраненных программ</p>
             </Link>
 
             <Link
@@ -324,8 +324,8 @@ export default async function DashboardPage() {
               className="bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-4 transition-all hover:scale-105"
             >
               <div className="text-3xl mb-2">⚖️</div>
-              <h3 className="font-semibold mb-1">Compare</h3>
-              <p className="text-sm text-white/80">Side-by-side comparison</p>
+              <h3 className="font-semibold mb-1">Сравнение</h3>
+              <p className="text-sm text-white/80">Сравнение программ</p>
             </Link>
 
             <Link
@@ -333,32 +333,32 @@ export default async function DashboardPage() {
               className="bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-4 transition-all hover:scale-105"
             >
               <div className="text-3xl mb-2">📈</div>
-              <h3 className="font-semibold mb-1">Analytics</h3>
-              <p className="text-sm text-white/80">Track performance metrics</p>
+              <h3 className="font-semibold mb-1">Аналитика</h3>
+              <p className="text-sm text-white/80">Отслеживание показателей</p>
             </Link>
           </div>
         </div>
 
         {/* Additional Stats */}
         <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">📌 Platform Statistics</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">📌 Статистика платформы</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center p-4 bg-gray-50 rounded-lg">
               <div className="text-4xl mb-2">🎯</div>
               <p className="text-2xl font-bold text-gray-900">
                 {analytics.programsByCategory.length}
               </p>
-              <p className="text-sm text-gray-600 mt-1">Active Categories</p>
+              <p className="text-sm text-gray-600 mt-1">Активных категорий</p>
             </div>
             <div className="text-center p-4 bg-gray-50 rounded-lg">
               <div className="text-4xl mb-2">💼</div>
               <p className="text-2xl font-bold text-gray-900">{analytics.overview.totalNetworks}</p>
-              <p className="text-sm text-gray-600 mt-1">Partner Networks</p>
+              <p className="text-sm text-gray-600 mt-1">Партнерских сетей</p>
             </div>
             <div className="text-center p-4 bg-gray-50 rounded-lg">
               <div className="text-4xl mb-2">🌍</div>
-              <p className="text-2xl font-bold text-gray-900">Global</p>
-              <p className="text-sm text-gray-600 mt-1">Worldwide Coverage</p>
+              <p className="text-2xl font-bold text-gray-900">Глобально</p>
+              <p className="text-sm text-gray-600 mt-1">Мировое покрытие</p>
             </div>
           </div>
         </div>
