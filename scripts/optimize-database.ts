@@ -30,7 +30,8 @@ const QUALITY_CRITERIA = {
     'Rakuten Advertising',
     'Amazon Associates',
   ],
-  maxPrograms: 500, // Оставить максимум 500 лучших программ
+  maxPrograms: 700, // Оставить максимум 700 лучших программ
+  minProgramsPerCategory: 10, // Минимум программ в каждой категории
 };
 
 async function analyzeCurrentDatabase() {
@@ -82,7 +83,7 @@ async function analyzeCurrentDatabase() {
 }
 
 async function selectTopPrograms() {
-  console.log('\n\n🎯 Отбор топовых программ...\n');
+  console.log('\n\n🎯 Отбор топовых программ с балансом категорий...\n');
 
   // Получаем все сети
   const networks = await prisma.affiliateNetwork.findMany({
@@ -92,39 +93,106 @@ async function selectTopPrograms() {
 
   const networkIds = networks.map((n) => n.id);
 
-  // Отбираем лучшие программы по критериям
-  const topPrograms = await prisma.affiliateProgram.findMany({
+  // Шаг 1: Получаем все уникальные категории
+  const categoriesData = await prisma.affiliateProgram.groupBy({
+    by: ['category'],
     where: {
       active: true,
-      OR: [
-        // Высокая комиссия
-        {
-          commissionRate: { gte: QUALITY_CRITERIA.minCommissionRate },
-        },
-        // Популярные сети
-        {
-          networkId: { in: networkIds },
-          commissionRate: { gte: 10 },
-        },
-        // Длинный cookie
-        {
-          cookieDuration: { gte: QUALITY_CRITERIA.minCookieDuration },
-          commissionRate: { gte: 10 },
-        },
-        // Популярные категории
-        {
-          category: { in: QUALITY_CRITERIA.topCategories },
-          commissionRate: { gte: 10 },
-        },
-      ],
+      category: { not: null },
     },
-    orderBy: [{ commissionRate: 'desc' }, { cookieDuration: 'desc' }],
-    take: QUALITY_CRITERIA.maxPrograms,
-    select: { id: true },
+    _count: true,
+    orderBy: { _count: { category: 'desc' } },
   });
 
-  console.log(`✅ Отобрано ${topPrograms.length} топовых программ`);
-  return topPrograms.map((p) => p.id);
+  console.log(`Найдено ${categoriesData.length} уникальных категорий`);
+
+  // Шаг 2: Из каждой категории выбираем топ программ
+  const selectedIds = new Set<string>();
+  const categoryStats: Record<string, number> = {};
+
+  for (const catData of categoriesData) {
+    const category = catData.category;
+    if (!category) continue;
+
+    const topInCategory = await prisma.affiliateProgram.findMany({
+      where: {
+        active: true,
+        category: category,
+        OR: [
+          { commissionRate: { gte: QUALITY_CRITERIA.minCommissionRate } },
+          {
+            networkId: { in: networkIds },
+            commissionRate: { gte: 10 },
+          },
+          {
+            cookieDuration: { gte: QUALITY_CRITERIA.minCookieDuration },
+            commissionRate: { gte: 10 },
+          },
+        ],
+      },
+      orderBy: [{ commissionRate: 'desc' }, { cookieDuration: 'desc' }],
+      take: QUALITY_CRITERIA.minProgramsPerCategory,
+      select: { id: true },
+    });
+
+    topInCategory.forEach((p) => selectedIds.add(p.id));
+    categoryStats[category] = topInCategory.length;
+  }
+
+  console.log(`✅ Отобрано ${selectedIds.size} программ с балансом категорий`);
+
+  // Шаг 3: Добираем до maxPrograms лучшими программами
+  if (selectedIds.size < QUALITY_CRITERIA.maxPrograms) {
+    const remaining = QUALITY_CRITERIA.maxPrograms - selectedIds.size;
+    console.log(`\nДобираем еще ${remaining} лучших программ...`);
+
+    const additionalPrograms = await prisma.affiliateProgram.findMany({
+      where: {
+        active: true,
+        id: { notIn: Array.from(selectedIds) },
+        OR: [
+          { commissionRate: { gte: QUALITY_CRITERIA.minCommissionRate } },
+          {
+            networkId: { in: networkIds },
+            commissionRate: { gte: 10 },
+          },
+          {
+            cookieDuration: { gte: QUALITY_CRITERIA.minCookieDuration },
+            commissionRate: { gte: 10 },
+          },
+          {
+            category: { in: QUALITY_CRITERIA.topCategories },
+            commissionRate: { gte: 10 },
+          },
+        ],
+      },
+      orderBy: [{ commissionRate: 'desc' }, { cookieDuration: 'desc' }],
+      take: remaining,
+      select: { id: true, category: true },
+    });
+
+    additionalPrograms.forEach((p) => {
+      selectedIds.add(p.id);
+      if (p.category) {
+        categoryStats[p.category] = (categoryStats[p.category] || 0) + 1;
+      }
+    });
+
+    console.log(`✅ Добавлено еще ${additionalPrograms.length} программ`);
+  }
+
+  // Выводим статистику по категориям
+  console.log('\n📊 Распределение по категориям:');
+  const sortedCategories = Object.entries(categoryStats)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 15);
+
+  for (const [cat, count] of sortedCategories) {
+    console.log(`  ${cat}: ${count}`);
+  }
+
+  console.log(`\n✅ Итого отобрано: ${selectedIds.size} программ`);
+  return Array.from(selectedIds);
 }
 
 async function cleanupDatabase(keepIds: string[], dryRun: boolean = true) {
@@ -207,6 +275,28 @@ async function generateReport(beforeStats: any, keepIds: string[]) {
   console.log(`  Средняя длина cookie: ${topProgramsStats._avg.cookieDuration?.toFixed(0)} дней`);
   console.log(`  Максимальная комиссия: ${topProgramsStats._max.commissionRate}%`);
 
+  // Статистика по категориям
+  const categoryDistribution = await prisma.affiliateProgram.groupBy({
+    by: ['category'],
+    where: {
+      id: { in: keepIds },
+      category: { not: null },
+    },
+    _count: true,
+    orderBy: { _count: { category: 'desc' } },
+  });
+
+  console.log('\n📂 Распределение по категориям (топ-10):');
+  const topCategories = categoryDistribution.slice(0, 10);
+  for (const cat of topCategories) {
+    console.log(`  ${cat.category}: ${cat._count}`);
+  }
+
+  const totalWithCategories = categoryDistribution.reduce((sum, cat) => sum + cat._count, 0);
+  console.log(`\nВсего категорий: ${categoryDistribution.length}`);
+  console.log(`Программ с категориями: ${totalWithCategories}`);
+  console.log(`Минимум программ в категории: ${QUALITY_CRITERIA.minProgramsPerCategory}`);
+
   console.log('\n✨ Оптимизация завершена!');
   console.log('='.repeat(50));
 }
@@ -218,6 +308,7 @@ async function main() {
     console.log(`  - Минимальная комиссия: ${QUALITY_CRITERIA.minCommissionRate}%`);
     console.log(`  - Минимальная длина cookie: ${QUALITY_CRITERIA.minCookieDuration} дней`);
     console.log(`  - Максимум программ: ${QUALITY_CRITERIA.maxPrograms}`);
+    console.log(`  - Минимум программ в категории: ${QUALITY_CRITERIA.minProgramsPerCategory}`);
     console.log(`  - Топовые сети: ${QUALITY_CRITERIA.topNetworks.length}`);
     console.log(`  - Топовые категории: ${QUALITY_CRITERIA.topCategories.length}`);
     console.log('\n' + '='.repeat(50) + '\n');

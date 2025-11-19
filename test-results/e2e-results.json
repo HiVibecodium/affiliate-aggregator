@@ -1,0 +1,5327 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\playwright.config.ts",
+    "rootDir": "C:/Users/siniy/WebstormProjects/base/affiliate-aggregator/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      ["html", null],
+      [
+        "json",
+        {
+          "outputFile": "test-results/e2e-results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "test-results/e2e-junit.xml"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/siniy/WebstormProjects/base/affiliate-aggregator/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/siniy/WebstormProjects/base/affiliate-aggregator/tests/e2e",
+        "testIgnore": [],
+        "testMatch": ["**/*.e2e.ts"],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/siniy/WebstormProjects/base/affiliate-aggregator/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/siniy/WebstormProjects/base/affiliate-aggregator/tests/e2e",
+        "testIgnore": [],
+        "testMatch": ["**/*.e2e.ts"],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/siniy/WebstormProjects/base/affiliate-aggregator/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/siniy/WebstormProjects/base/affiliate-aggregator/tests/e2e",
+        "testIgnore": [],
+        "testMatch": ["**/*.e2e.ts"],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/siniy/WebstormProjects/base/affiliate-aggregator/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "C:/Users/siniy/WebstormProjects/base/affiliate-aggregator/tests/e2e",
+        "testIgnore": [],
+        "testMatch": ["**/*.e2e.ts"],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 10,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "analytics-page.e2e.ts",
+      "file": "analytics-page.e2e.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Analytics Page",
+          "file": "analytics-page.e2e.ts",
+          "line": 7,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load analytics page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-29598e4bc044594194e8",
+              "file": "analytics-page.e2e.ts",
+              "line": 8,
+              "column": 7
+            },
+            {
+              "title": "should display analytics widgets",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-93aff7994ebf28a5b0d2",
+              "file": "analytics-page.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should show loading states initially",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-b9a4e98a2ccfcf68f0aa",
+              "file": "analytics-page.e2e.ts",
+              "line": 26,
+              "column": 7
+            },
+            {
+              "title": "should display numbers and metrics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-8b20930b335436f586d4",
+              "file": "analytics-page.e2e.ts",
+              "line": 37,
+              "column": 7
+            },
+            {
+              "title": "should have charts or visualizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-1aa9ec437af627ec110b",
+              "file": "analytics-page.e2e.ts",
+              "line": 49,
+              "column": 7
+            },
+            {
+              "title": "should update in real-time",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-ba7637e4c8dda19fe3a4",
+              "file": "analytics-page.e2e.ts",
+              "line": 61,
+              "column": 7
+            },
+            {
+              "title": "should load analytics page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-a60c1e52a55889733caa",
+              "file": "analytics-page.e2e.ts",
+              "line": 8,
+              "column": 7
+            },
+            {
+              "title": "should display analytics widgets",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-508a273ece3eb5447baa",
+              "file": "analytics-page.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should show loading states initially",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-49dfec9f4aaf10a1f484",
+              "file": "analytics-page.e2e.ts",
+              "line": 26,
+              "column": 7
+            },
+            {
+              "title": "should display numbers and metrics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-a74252709884c576773c",
+              "file": "analytics-page.e2e.ts",
+              "line": 37,
+              "column": 7
+            },
+            {
+              "title": "should have charts or visualizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-6970097ab2ec42ea5bdc",
+              "file": "analytics-page.e2e.ts",
+              "line": 49,
+              "column": 7
+            },
+            {
+              "title": "should update in real-time",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-7f2f40e19bc82aae9b40",
+              "file": "analytics-page.e2e.ts",
+              "line": 61,
+              "column": 7
+            },
+            {
+              "title": "should load analytics page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-3e84808ed83c765f4ac3",
+              "file": "analytics-page.e2e.ts",
+              "line": 8,
+              "column": 7
+            },
+            {
+              "title": "should display analytics widgets",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-70ee68adc73f71005de1",
+              "file": "analytics-page.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should show loading states initially",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-4ebc4d84d33c8b2848ff",
+              "file": "analytics-page.e2e.ts",
+              "line": 26,
+              "column": 7
+            },
+            {
+              "title": "should display numbers and metrics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-bcec48f1f16d6d8025c8",
+              "file": "analytics-page.e2e.ts",
+              "line": 37,
+              "column": 7
+            },
+            {
+              "title": "should have charts or visualizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-97284ae9708c492420b4",
+              "file": "analytics-page.e2e.ts",
+              "line": 49,
+              "column": 7
+            },
+            {
+              "title": "should update in real-time",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-febbaeab41088933c511",
+              "file": "analytics-page.e2e.ts",
+              "line": 61,
+              "column": 7
+            },
+            {
+              "title": "should load analytics page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-2bd55feae54303d7828a",
+              "file": "analytics-page.e2e.ts",
+              "line": 8,
+              "column": 7
+            },
+            {
+              "title": "should display analytics widgets",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-1b94195c9eadd2706b6e",
+              "file": "analytics-page.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should show loading states initially",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-962fa3a7a8dcbefb41c5",
+              "file": "analytics-page.e2e.ts",
+              "line": 26,
+              "column": 7
+            },
+            {
+              "title": "should display numbers and metrics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-6d6e9e7d80417b5c490e",
+              "file": "analytics-page.e2e.ts",
+              "line": 37,
+              "column": 7
+            },
+            {
+              "title": "should have charts or visualizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-d282571824d0be37d4b2",
+              "file": "analytics-page.e2e.ts",
+              "line": 49,
+              "column": 7
+            },
+            {
+              "title": "should update in real-time",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a25cfd6d27581600f45c-02c8921eb8f19570a553",
+              "file": "analytics-page.e2e.ts",
+              "line": 61,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "auth-flow.e2e.ts",
+      "file": "auth-flow.e2e.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Authentication Flow",
+          "file": "auth-flow.e2e.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display home page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-7ad720c4a38f2b5ef5f7",
+              "file": "auth-flow.e2e.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "should navigate to login page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-692ef1e4263117f55678",
+              "file": "auth-flow.e2e.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should navigate to signup page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-70583d8e29ba162214c9",
+              "file": "auth-flow.e2e.ts",
+              "line": 22,
+              "column": 7
+            },
+            {
+              "title": "should validate signup form fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-f4fc424849e49f0fa943",
+              "file": "auth-flow.e2e.ts",
+              "line": 29,
+              "column": 7
+            },
+            {
+              "title": "should display error for invalid email",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-ffdb299c2aeb0c92c090",
+              "file": "auth-flow.e2e.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "should display password requirements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-0ac0133d3268f9005528",
+              "file": "auth-flow.e2e.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "should have login link on signup page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-02eb6aa5d518318ef1d8",
+              "file": "auth-flow.e2e.ts",
+              "line": 66,
+              "column": 7
+            },
+            {
+              "title": "should have signup link on login page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-c67c4a3e991d29eef8ac",
+              "file": "auth-flow.e2e.ts",
+              "line": 76,
+              "column": 7
+            },
+            {
+              "title": "should display forgot password option",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-2c7b9479d981ef3c43d4",
+              "file": "auth-flow.e2e.ts",
+              "line": 86,
+              "column": 7
+            },
+            {
+              "title": "should display home page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-279d91effb5bed9da89e",
+              "file": "auth-flow.e2e.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "should navigate to login page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-aed7cfefed8e02c6e946",
+              "file": "auth-flow.e2e.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should navigate to signup page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-74627b098ae154bfac51",
+              "file": "auth-flow.e2e.ts",
+              "line": 22,
+              "column": 7
+            },
+            {
+              "title": "should validate signup form fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-fddf092e22d1ddc5d61e",
+              "file": "auth-flow.e2e.ts",
+              "line": 29,
+              "column": 7
+            },
+            {
+              "title": "should display error for invalid email",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-c5cc9d2a16a8e7ab1fcb",
+              "file": "auth-flow.e2e.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "should display password requirements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-1d3575965999ea1b6054",
+              "file": "auth-flow.e2e.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "should have login link on signup page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-33435366f64c5a089a82",
+              "file": "auth-flow.e2e.ts",
+              "line": 66,
+              "column": 7
+            },
+            {
+              "title": "should have signup link on login page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-1add9a0d80107d83be82",
+              "file": "auth-flow.e2e.ts",
+              "line": 76,
+              "column": 7
+            },
+            {
+              "title": "should display forgot password option",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-c7986e318a769da76177",
+              "file": "auth-flow.e2e.ts",
+              "line": 86,
+              "column": 7
+            },
+            {
+              "title": "should display home page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-61470419a4937731415a",
+              "file": "auth-flow.e2e.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "should navigate to login page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-c24f1067f9b8a0cf54b1",
+              "file": "auth-flow.e2e.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should navigate to signup page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-7adaa7bc0328d18d065e",
+              "file": "auth-flow.e2e.ts",
+              "line": 22,
+              "column": 7
+            },
+            {
+              "title": "should validate signup form fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-01d32c7eb275672aece8",
+              "file": "auth-flow.e2e.ts",
+              "line": 29,
+              "column": 7
+            },
+            {
+              "title": "should display error for invalid email",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-c701956234d8bf8ffc84",
+              "file": "auth-flow.e2e.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "should display password requirements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-9954152974a03cdcba88",
+              "file": "auth-flow.e2e.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "should have login link on signup page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-1948e7f8b3f13a7965ba",
+              "file": "auth-flow.e2e.ts",
+              "line": 66,
+              "column": 7
+            },
+            {
+              "title": "should have signup link on login page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-f3a712a721d985ed52bf",
+              "file": "auth-flow.e2e.ts",
+              "line": 76,
+              "column": 7
+            },
+            {
+              "title": "should display forgot password option",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-9971493c20f44faa72b6",
+              "file": "auth-flow.e2e.ts",
+              "line": 86,
+              "column": 7
+            },
+            {
+              "title": "should display home page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-eb8c41376f59d18da84e",
+              "file": "auth-flow.e2e.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "should navigate to login page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-0dc2b8e01ced18c85936",
+              "file": "auth-flow.e2e.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should navigate to signup page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-09a7caca1c8e5730e60c",
+              "file": "auth-flow.e2e.ts",
+              "line": 22,
+              "column": 7
+            },
+            {
+              "title": "should validate signup form fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-e0a7e99c27dfb51e4576",
+              "file": "auth-flow.e2e.ts",
+              "line": 29,
+              "column": 7
+            },
+            {
+              "title": "should display error for invalid email",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-23c8fb6a0b8f0e2b8f14",
+              "file": "auth-flow.e2e.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "should display password requirements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-f977f83edba9b7bb830d",
+              "file": "auth-flow.e2e.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "should have login link on signup page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-cd66fe7994684327dac1",
+              "file": "auth-flow.e2e.ts",
+              "line": 66,
+              "column": 7
+            },
+            {
+              "title": "should have signup link on login page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-93d28c03b83009dbd8f0",
+              "file": "auth-flow.e2e.ts",
+              "line": 76,
+              "column": 7
+            },
+            {
+              "title": "should display forgot password option",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-69dc1123bf228c49518e",
+              "file": "auth-flow.e2e.ts",
+              "line": 86,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Post-Login Flow",
+          "file": "auth-flow.e2e.ts",
+          "line": 96,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should redirect to dashboard after login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 97,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-65cb3b38626023d0e1c7",
+              "file": "auth-flow.e2e.ts",
+              "line": 97,
+              "column": 8
+            },
+            {
+              "title": "should display user menu when logged in",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 112,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-012831fd0dc7a7336775",
+              "file": "auth-flow.e2e.ts",
+              "line": 112,
+              "column": 8
+            },
+            {
+              "title": "should allow logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 120,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-54b4bb7637da7f150c7c",
+              "file": "auth-flow.e2e.ts",
+              "line": 120,
+              "column": 8
+            },
+            {
+              "title": "should redirect to dashboard after login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 97,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-99dc35ac118b3e9e2325",
+              "file": "auth-flow.e2e.ts",
+              "line": 97,
+              "column": 8
+            },
+            {
+              "title": "should display user menu when logged in",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 112,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-3f298eec2b4dcaa2258d",
+              "file": "auth-flow.e2e.ts",
+              "line": 112,
+              "column": 8
+            },
+            {
+              "title": "should allow logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 120,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-c67a42581ca5aeed91d0",
+              "file": "auth-flow.e2e.ts",
+              "line": 120,
+              "column": 8
+            },
+            {
+              "title": "should redirect to dashboard after login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 97,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-d1084515281487ba652e",
+              "file": "auth-flow.e2e.ts",
+              "line": 97,
+              "column": 8
+            },
+            {
+              "title": "should display user menu when logged in",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 112,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-f6209ce506788b442fb8",
+              "file": "auth-flow.e2e.ts",
+              "line": 112,
+              "column": 8
+            },
+            {
+              "title": "should allow logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 120,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-22ad2c42bbbe727428c3",
+              "file": "auth-flow.e2e.ts",
+              "line": 120,
+              "column": 8
+            },
+            {
+              "title": "should redirect to dashboard after login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 97,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-84f1aecfae4b46825c97",
+              "file": "auth-flow.e2e.ts",
+              "line": 97,
+              "column": 8
+            },
+            {
+              "title": "should display user menu when logged in",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 112,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-d609bad433a6619ca6d0",
+              "file": "auth-flow.e2e.ts",
+              "line": 112,
+              "column": 8
+            },
+            {
+              "title": "should allow logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "C:\\Users\\siniy\\WebstormProjects\\base\\affiliate-aggregator\\tests\\e2e\\auth-flow.e2e.ts",
+                        "line": 120,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "696eff52a24a3e206f6c-1488d4ec5349b7e8cc5a",
+              "file": "auth-flow.e2e.ts",
+              "line": 120,
+              "column": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "comparison-tool.e2e.ts",
+      "file": "comparison-tool.e2e.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Comparison Tool",
+          "file": "comparison-tool.e2e.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should add programs to comparison from programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-9687dd9702c833f103cf",
+              "file": "comparison-tool.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should add multiple programs to comparison",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-889a108222030d768d5f",
+              "file": "comparison-tool.e2e.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "should remove program from comparison bar",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-91453b6de246854ed5f7",
+              "file": "comparison-tool.e2e.ts",
+              "line": 54,
+              "column": 7
+            },
+            {
+              "title": "should clear all programs from comparison",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-7d4e3a8ac6150e3a0fe8",
+              "file": "comparison-tool.e2e.ts",
+              "line": 76,
+              "column": 7
+            },
+            {
+              "title": "should navigate to comparison page and show programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-97bb919ae30ad15b8e10",
+              "file": "comparison-tool.e2e.ts",
+              "line": 94,
+              "column": 7
+            },
+            {
+              "title": "should enforce maximum of 5 programs limit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-ec808654bf9e30738687",
+              "file": "comparison-tool.e2e.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "should persist comparison across page navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-bd72916e6e5c679c0bfc",
+              "file": "comparison-tool.e2e.ts",
+              "line": 145,
+              "column": 7
+            },
+            {
+              "title": "should add programs to comparison from programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-0a6e7c1f55945afc9729",
+              "file": "comparison-tool.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should add multiple programs to comparison",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-80584139264ac3c78475",
+              "file": "comparison-tool.e2e.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "should remove program from comparison bar",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-41eb5385006c14b636d0",
+              "file": "comparison-tool.e2e.ts",
+              "line": 54,
+              "column": 7
+            },
+            {
+              "title": "should clear all programs from comparison",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-74934ce79c0cc54567d4",
+              "file": "comparison-tool.e2e.ts",
+              "line": 76,
+              "column": 7
+            },
+            {
+              "title": "should navigate to comparison page and show programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-fa36de49d0692ee609de",
+              "file": "comparison-tool.e2e.ts",
+              "line": 94,
+              "column": 7
+            },
+            {
+              "title": "should enforce maximum of 5 programs limit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-bc1fd400775ddce36e82",
+              "file": "comparison-tool.e2e.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "should persist comparison across page navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-a962aaed5778f8b981c2",
+              "file": "comparison-tool.e2e.ts",
+              "line": 145,
+              "column": 7
+            },
+            {
+              "title": "should add programs to comparison from programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-e09470c7fc97b01c40ca",
+              "file": "comparison-tool.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should add multiple programs to comparison",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-88df6d53479fc9a02007",
+              "file": "comparison-tool.e2e.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "should remove program from comparison bar",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-5b0233f85aee10c1ac4f",
+              "file": "comparison-tool.e2e.ts",
+              "line": 54,
+              "column": 7
+            },
+            {
+              "title": "should clear all programs from comparison",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-8d769e6b83dcc3eaea7f",
+              "file": "comparison-tool.e2e.ts",
+              "line": 76,
+              "column": 7
+            },
+            {
+              "title": "should navigate to comparison page and show programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-088fc156e4c3d5441f9f",
+              "file": "comparison-tool.e2e.ts",
+              "line": 94,
+              "column": 7
+            },
+            {
+              "title": "should enforce maximum of 5 programs limit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-7ed52dd0fc4e506ca8e6",
+              "file": "comparison-tool.e2e.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "should persist comparison across page navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-716716d94979c3c9ed13",
+              "file": "comparison-tool.e2e.ts",
+              "line": 145,
+              "column": 7
+            },
+            {
+              "title": "should add programs to comparison from programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-3202a9f036f1a179cead",
+              "file": "comparison-tool.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should add multiple programs to comparison",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-aeceb51d2d06b55f4873",
+              "file": "comparison-tool.e2e.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "should remove program from comparison bar",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-8aa1549913304e8b7577",
+              "file": "comparison-tool.e2e.ts",
+              "line": 54,
+              "column": 7
+            },
+            {
+              "title": "should clear all programs from comparison",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-e88a80b6ae5dde8f0e35",
+              "file": "comparison-tool.e2e.ts",
+              "line": 76,
+              "column": 7
+            },
+            {
+              "title": "should navigate to comparison page and show programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-747880ad2bad6305b844",
+              "file": "comparison-tool.e2e.ts",
+              "line": 94,
+              "column": 7
+            },
+            {
+              "title": "should enforce maximum of 5 programs limit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-8971b2e8b4485e07fefe",
+              "file": "comparison-tool.e2e.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "should persist comparison across page navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "24e4e0f6f1004604b54f-99474d4fe846f866661c",
+              "file": "comparison-tool.e2e.ts",
+              "line": 145,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "dashboard.e2e.ts",
+      "file": "dashboard.e2e.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Dashboard",
+          "file": "dashboard.e2e.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display main dashboard layout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-e3fd9eb72ff75de79db8",
+              "file": "dashboard.e2e.ts",
+              "line": 21,
+              "column": 7
+            },
+            {
+              "title": "should display user information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-b4e9d2a59332508735ec",
+              "file": "dashboard.e2e.ts",
+              "line": 31,
+              "column": 7
+            },
+            {
+              "title": "should have organization switcher",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-6a5c0d56d0713b3e8c7f",
+              "file": "dashboard.e2e.ts",
+              "line": 37,
+              "column": 7
+            },
+            {
+              "title": "should display navigation menu items",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-c14917c9a9a566f13190",
+              "file": "dashboard.e2e.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "should display main dashboard layout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-e7c60dba0935fb5c076c",
+              "file": "dashboard.e2e.ts",
+              "line": 21,
+              "column": 7
+            },
+            {
+              "title": "should display user information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-9a6c614f08d05412aa15",
+              "file": "dashboard.e2e.ts",
+              "line": 31,
+              "column": 7
+            },
+            {
+              "title": "should have organization switcher",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-4cdebfa37d61bfb9aa7d",
+              "file": "dashboard.e2e.ts",
+              "line": 37,
+              "column": 7
+            },
+            {
+              "title": "should display navigation menu items",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-15867ad7683fba733c9b",
+              "file": "dashboard.e2e.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "should display main dashboard layout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-e767e09326265760c3e7",
+              "file": "dashboard.e2e.ts",
+              "line": 21,
+              "column": 7
+            },
+            {
+              "title": "should display user information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-5bc8c4ecf3b4ceb1cea9",
+              "file": "dashboard.e2e.ts",
+              "line": 31,
+              "column": 7
+            },
+            {
+              "title": "should have organization switcher",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-5d622bde298a5e4d896e",
+              "file": "dashboard.e2e.ts",
+              "line": 37,
+              "column": 7
+            },
+            {
+              "title": "should display navigation menu items",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-d1aebeff3cdf71165430",
+              "file": "dashboard.e2e.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "should display main dashboard layout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-39f10c6d203f978c6b05",
+              "file": "dashboard.e2e.ts",
+              "line": 21,
+              "column": 7
+            },
+            {
+              "title": "should display user information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-b753d4fc2b5055d20f61",
+              "file": "dashboard.e2e.ts",
+              "line": 31,
+              "column": 7
+            },
+            {
+              "title": "should have organization switcher",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-e93bf30736463274b84d",
+              "file": "dashboard.e2e.ts",
+              "line": 37,
+              "column": 7
+            },
+            {
+              "title": "should display navigation menu items",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-58a2c35e46f221a9dbe7",
+              "file": "dashboard.e2e.ts",
+              "line": 42,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Organization Switcher",
+          "file": "dashboard.e2e.ts",
+          "line": 51,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should open organization switcher menu",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-a4ea29e851c470d67be6",
+              "file": "dashboard.e2e.ts",
+              "line": 63,
+              "column": 7
+            },
+            {
+              "title": "should list user organizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-77241678e6441fe19091",
+              "file": "dashboard.e2e.ts",
+              "line": 75,
+              "column": 7
+            },
+            {
+              "title": "should allow switching organizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-dfe9366e9898305b5e2e",
+              "file": "dashboard.e2e.ts",
+              "line": 91,
+              "column": 7
+            },
+            {
+              "title": "should open organization switcher menu",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-f413a929c366548a35ad",
+              "file": "dashboard.e2e.ts",
+              "line": 63,
+              "column": 7
+            },
+            {
+              "title": "should list user organizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-7c17a6c34f7f8ad80965",
+              "file": "dashboard.e2e.ts",
+              "line": 75,
+              "column": 7
+            },
+            {
+              "title": "should allow switching organizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-6c2c0cfafab03da0ab3e",
+              "file": "dashboard.e2e.ts",
+              "line": 91,
+              "column": 7
+            },
+            {
+              "title": "should open organization switcher menu",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-36a320245bfc50b18276",
+              "file": "dashboard.e2e.ts",
+              "line": 63,
+              "column": 7
+            },
+            {
+              "title": "should list user organizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-2cbced6cd9788a62c922",
+              "file": "dashboard.e2e.ts",
+              "line": 75,
+              "column": 7
+            },
+            {
+              "title": "should allow switching organizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-46451c76c0099ce69dbe",
+              "file": "dashboard.e2e.ts",
+              "line": 91,
+              "column": 7
+            },
+            {
+              "title": "should open organization switcher menu",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-8c6a808366a0e42b97f7",
+              "file": "dashboard.e2e.ts",
+              "line": 63,
+              "column": 7
+            },
+            {
+              "title": "should list user organizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-39321fe6a5c24604cc59",
+              "file": "dashboard.e2e.ts",
+              "line": 75,
+              "column": 7
+            },
+            {
+              "title": "should allow switching organizations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-54d4240cc0309c0b5222",
+              "file": "dashboard.e2e.ts",
+              "line": 91,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Program Browsing",
+          "file": "dashboard.e2e.ts",
+          "line": 117,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display programs section",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-19d4e58d7b3d9fb0b542",
+              "file": "dashboard.e2e.ts",
+              "line": 129,
+              "column": 7
+            },
+            {
+              "title": "should load program list",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-82e706528c11774615d2",
+              "file": "dashboard.e2e.ts",
+              "line": 134,
+              "column": 7
+            },
+            {
+              "title": "should display program details",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-1556d100785d2c7b95ca",
+              "file": "dashboard.e2e.ts",
+              "line": 145,
+              "column": 7
+            },
+            {
+              "title": "should allow filtering programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-37e641110c224d8c478b",
+              "file": "dashboard.e2e.ts",
+              "line": 158,
+              "column": 7
+            },
+            {
+              "title": "should allow sorting programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-9ab41362cfbdfbf75c25",
+              "file": "dashboard.e2e.ts",
+              "line": 174,
+              "column": 7
+            },
+            {
+              "title": "should display programs section",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-7c165ce2d9d7973d42c5",
+              "file": "dashboard.e2e.ts",
+              "line": 129,
+              "column": 7
+            },
+            {
+              "title": "should load program list",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-ef08ebd3a3c1c0506461",
+              "file": "dashboard.e2e.ts",
+              "line": 134,
+              "column": 7
+            },
+            {
+              "title": "should display program details",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-ba6ed971916c0101de49",
+              "file": "dashboard.e2e.ts",
+              "line": 145,
+              "column": 7
+            },
+            {
+              "title": "should allow filtering programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-04d7d2f7f937cce66451",
+              "file": "dashboard.e2e.ts",
+              "line": 158,
+              "column": 7
+            },
+            {
+              "title": "should allow sorting programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-7d59be4b4db6049bebd9",
+              "file": "dashboard.e2e.ts",
+              "line": 174,
+              "column": 7
+            },
+            {
+              "title": "should display programs section",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-671ae0e5ff9442783046",
+              "file": "dashboard.e2e.ts",
+              "line": 129,
+              "column": 7
+            },
+            {
+              "title": "should load program list",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-10bc70c4ff2e84662d9e",
+              "file": "dashboard.e2e.ts",
+              "line": 134,
+              "column": 7
+            },
+            {
+              "title": "should display program details",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-95bac20268ebe5662f82",
+              "file": "dashboard.e2e.ts",
+              "line": 145,
+              "column": 7
+            },
+            {
+              "title": "should allow filtering programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-fe19abca7a7ff2e1c967",
+              "file": "dashboard.e2e.ts",
+              "line": 158,
+              "column": 7
+            },
+            {
+              "title": "should allow sorting programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-de98b074585fb5acd6d7",
+              "file": "dashboard.e2e.ts",
+              "line": 174,
+              "column": 7
+            },
+            {
+              "title": "should display programs section",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-f97c4f9ede4cb76fdec2",
+              "file": "dashboard.e2e.ts",
+              "line": 129,
+              "column": 7
+            },
+            {
+              "title": "should load program list",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-0901b3631166fede8f99",
+              "file": "dashboard.e2e.ts",
+              "line": 134,
+              "column": 7
+            },
+            {
+              "title": "should display program details",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-6527cd2f5901922064b3",
+              "file": "dashboard.e2e.ts",
+              "line": 145,
+              "column": 7
+            },
+            {
+              "title": "should allow filtering programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-aaeaa62e655faa057d71",
+              "file": "dashboard.e2e.ts",
+              "line": 158,
+              "column": 7
+            },
+            {
+              "title": "should allow sorting programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-fa3536eabdc4c72570ec",
+              "file": "dashboard.e2e.ts",
+              "line": 174,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Responsive Design",
+          "file": "dashboard.e2e.ts",
+          "line": 188,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should work on mobile viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-a6ace03ceb5f9dfed65a",
+              "file": "dashboard.e2e.ts",
+              "line": 189,
+              "column": 7
+            },
+            {
+              "title": "should work on tablet viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-6439a705a5d6492ccf4e",
+              "file": "dashboard.e2e.ts",
+              "line": 199,
+              "column": 7
+            },
+            {
+              "title": "should work on desktop viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-ddcdc456cd7bd360ee49",
+              "file": "dashboard.e2e.ts",
+              "line": 208,
+              "column": 7
+            },
+            {
+              "title": "should work on mobile viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-71447aa5d0476f5b7fc5",
+              "file": "dashboard.e2e.ts",
+              "line": 189,
+              "column": 7
+            },
+            {
+              "title": "should work on tablet viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-18e18f7e9fc4aedb01c1",
+              "file": "dashboard.e2e.ts",
+              "line": 199,
+              "column": 7
+            },
+            {
+              "title": "should work on desktop viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-dd11ababaf55108dbfc4",
+              "file": "dashboard.e2e.ts",
+              "line": 208,
+              "column": 7
+            },
+            {
+              "title": "should work on mobile viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-6d13b9b3e599a7c125cb",
+              "file": "dashboard.e2e.ts",
+              "line": 189,
+              "column": 7
+            },
+            {
+              "title": "should work on tablet viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-07c3896277fc6e214d46",
+              "file": "dashboard.e2e.ts",
+              "line": 199,
+              "column": 7
+            },
+            {
+              "title": "should work on desktop viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-8c1191b682748c3ff210",
+              "file": "dashboard.e2e.ts",
+              "line": 208,
+              "column": 7
+            },
+            {
+              "title": "should work on mobile viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-fe87aaf12ef15f9ce48b",
+              "file": "dashboard.e2e.ts",
+              "line": 189,
+              "column": 7
+            },
+            {
+              "title": "should work on tablet viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-689dd0c19abd5a96fa98",
+              "file": "dashboard.e2e.ts",
+              "line": 199,
+              "column": 7
+            },
+            {
+              "title": "should work on desktop viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a0db60fc20293746878e-837a801e86bb64b4cf3d",
+              "file": "dashboard.e2e.ts",
+              "line": 208,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "favorites.e2e.ts",
+      "file": "favorites.e2e.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Favorites Feature",
+          "file": "favorites.e2e.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should add program to favorites from programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-300bcd6827d3f2472763",
+              "file": "favorites.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should navigate to favorites page and display saved programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-30c0c3481771380b08e5",
+              "file": "favorites.e2e.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "should remove program from favorites",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-97ff658e68b96b02844f",
+              "file": "favorites.e2e.ts",
+              "line": 65,
+              "column": 7
+            },
+            {
+              "title": "should show empty state when no favorites",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-815005cc166b13e1a8b7",
+              "file": "favorites.e2e.ts",
+              "line": 97,
+              "column": 7
+            },
+            {
+              "title": "should toggle favorite status on programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-649664848dcb317fc818",
+              "file": "favorites.e2e.ts",
+              "line": 121,
+              "column": 7
+            },
+            {
+              "title": "should show favorite count in navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-0c6f70fe61eae8d8a645",
+              "file": "favorites.e2e.ts",
+              "line": 144,
+              "column": 7
+            },
+            {
+              "title": "should add program to favorites from programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-7de5f782a46af901de61",
+              "file": "favorites.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should navigate to favorites page and display saved programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-dbee3fda083ece75fe9c",
+              "file": "favorites.e2e.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "should remove program from favorites",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-82f045457e63f0fb1003",
+              "file": "favorites.e2e.ts",
+              "line": 65,
+              "column": 7
+            },
+            {
+              "title": "should show empty state when no favorites",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-c2bb6de4139fa8caaa4c",
+              "file": "favorites.e2e.ts",
+              "line": 97,
+              "column": 7
+            },
+            {
+              "title": "should toggle favorite status on programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-9dd890d537c58608c717",
+              "file": "favorites.e2e.ts",
+              "line": 121,
+              "column": 7
+            },
+            {
+              "title": "should show favorite count in navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-71e98db2dfe9e3bf7f03",
+              "file": "favorites.e2e.ts",
+              "line": 144,
+              "column": 7
+            },
+            {
+              "title": "should add program to favorites from programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-5c4b3ad7fd99582595de",
+              "file": "favorites.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should navigate to favorites page and display saved programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-f550780bda6fc5733475",
+              "file": "favorites.e2e.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "should remove program from favorites",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-f7333aa0ed25839f13cf",
+              "file": "favorites.e2e.ts",
+              "line": 65,
+              "column": 7
+            },
+            {
+              "title": "should show empty state when no favorites",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-ce7a708c1442a4c97cdc",
+              "file": "favorites.e2e.ts",
+              "line": 97,
+              "column": 7
+            },
+            {
+              "title": "should toggle favorite status on programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-542877b3cb093cf246e7",
+              "file": "favorites.e2e.ts",
+              "line": 121,
+              "column": 7
+            },
+            {
+              "title": "should show favorite count in navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-0dea0ba06cdcc5b8c379",
+              "file": "favorites.e2e.ts",
+              "line": 144,
+              "column": 7
+            },
+            {
+              "title": "should add program to favorites from programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-8bac92b6cd649627d0b7",
+              "file": "favorites.e2e.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "should navigate to favorites page and display saved programs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-8f6139acd88df3b1f82e",
+              "file": "favorites.e2e.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "should remove program from favorites",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-62c99fdbf71632e0edf4",
+              "file": "favorites.e2e.ts",
+              "line": 65,
+              "column": 7
+            },
+            {
+              "title": "should show empty state when no favorites",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-83fd9f7e7f518ac856c3",
+              "file": "favorites.e2e.ts",
+              "line": 97,
+              "column": 7
+            },
+            {
+              "title": "should toggle favorite status on programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-70198dbef63e0dca3c33",
+              "file": "favorites.e2e.ts",
+              "line": 121,
+              "column": 7
+            },
+            {
+              "title": "should show favorite count in navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "da269ff3bae0d77d67b2-424f3480d8cb921dbe77",
+              "file": "favorites.e2e.ts",
+              "line": 144,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "programs-browsing.e2e.ts",
+      "file": "programs-browsing.e2e.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Programs Browsing",
+          "file": "programs-browsing.e2e.ts",
+          "line": 7,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-0349bb74e133a6f04033",
+              "file": "programs-browsing.e2e.ts",
+              "line": 8,
+              "column": 7
+            },
+            {
+              "title": "should display program cards",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-1e54d8f4237acf004427",
+              "file": "programs-browsing.e2e.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "should have search functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-b72ae10a55cd537d191e",
+              "file": "programs-browsing.e2e.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "should have filter sidebar",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-bd87671375567d88b2df",
+              "file": "programs-browsing.e2e.ts",
+              "line": 48,
+              "column": 7
+            },
+            {
+              "title": "should handle pagination",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-0fa635d2a0f2e6776b8d",
+              "file": "programs-browsing.e2e.ts",
+              "line": 63,
+              "column": 7
+            },
+            {
+              "title": "should click on program card to view details",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-f0d4c17fc5a5d64a31d7",
+              "file": "programs-browsing.e2e.ts",
+              "line": 80,
+              "column": 7
+            },
+            {
+              "title": "should reset filters",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-bc635f5f8502be15be62",
+              "file": "programs-browsing.e2e.ts",
+              "line": 95,
+              "column": 7
+            },
+            {
+              "title": "should load programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-cb21f0a4eaf2659b96cb",
+              "file": "programs-browsing.e2e.ts",
+              "line": 8,
+              "column": 7
+            },
+            {
+              "title": "should display program cards",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-3d834d0e7f11b2301548",
+              "file": "programs-browsing.e2e.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "should have search functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-0f35d58ca25f47bcc8af",
+              "file": "programs-browsing.e2e.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "should have filter sidebar",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-89e1218caae425c9410b",
+              "file": "programs-browsing.e2e.ts",
+              "line": 48,
+              "column": 7
+            },
+            {
+              "title": "should handle pagination",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-df9d093ccf13dd237630",
+              "file": "programs-browsing.e2e.ts",
+              "line": 63,
+              "column": 7
+            },
+            {
+              "title": "should click on program card to view details",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-f09fefe5cd42a6f40b4b",
+              "file": "programs-browsing.e2e.ts",
+              "line": 80,
+              "column": 7
+            },
+            {
+              "title": "should reset filters",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-55e2d557ee45d8bfacbe",
+              "file": "programs-browsing.e2e.ts",
+              "line": 95,
+              "column": 7
+            },
+            {
+              "title": "should load programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-88ff7bb92949d1c27e21",
+              "file": "programs-browsing.e2e.ts",
+              "line": 8,
+              "column": 7
+            },
+            {
+              "title": "should display program cards",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-2cc53ebb46c39a27731f",
+              "file": "programs-browsing.e2e.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "should have search functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-644c45440f7b9cd1035a",
+              "file": "programs-browsing.e2e.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "should have filter sidebar",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-07bcde2dc01be20bfa84",
+              "file": "programs-browsing.e2e.ts",
+              "line": 48,
+              "column": 7
+            },
+            {
+              "title": "should handle pagination",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-26281ea9010835c69bf9",
+              "file": "programs-browsing.e2e.ts",
+              "line": 63,
+              "column": 7
+            },
+            {
+              "title": "should click on program card to view details",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-9ce18aa6d73b63a514fc",
+              "file": "programs-browsing.e2e.ts",
+              "line": 80,
+              "column": 7
+            },
+            {
+              "title": "should reset filters",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-9ff24f95f2a385215334",
+              "file": "programs-browsing.e2e.ts",
+              "line": 95,
+              "column": 7
+            },
+            {
+              "title": "should load programs page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-abf39810f88254ad27b2",
+              "file": "programs-browsing.e2e.ts",
+              "line": 8,
+              "column": 7
+            },
+            {
+              "title": "should display program cards",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-50877bc4ed0373606e47",
+              "file": "programs-browsing.e2e.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "should have search functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-6e748004169aa1b27dcc",
+              "file": "programs-browsing.e2e.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "should have filter sidebar",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-0d6370c5145c7b4b1161",
+              "file": "programs-browsing.e2e.ts",
+              "line": 48,
+              "column": 7
+            },
+            {
+              "title": "should handle pagination",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-d21a2da07ceaf15ddb25",
+              "file": "programs-browsing.e2e.ts",
+              "line": 63,
+              "column": 7
+            },
+            {
+              "title": "should click on program card to view details",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-8f3d549f0faa6ff008ff",
+              "file": "programs-browsing.e2e.ts",
+              "line": 80,
+              "column": 7
+            },
+            {
+              "title": "should reset filters",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28f3d29322dec1e66adf-3a705f80670dccfa4b51",
+              "file": "programs-browsing.e2e.ts",
+              "line": 95,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "search-filter.e2e.ts",
+      "file": "search-filter.e2e.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Advanced Search and Filtering",
+          "file": "search-filter.e2e.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should search programs by keyword",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-1a587a59a572cad5defc",
+              "file": "search-filter.e2e.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should filter by category",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-c3033f18d4a2c631a13c",
+              "file": "search-filter.e2e.ts",
+              "line": 44,
+              "column": 7
+            },
+            {
+              "title": "should filter by network",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-bef396d29c37e843320a",
+              "file": "search-filter.e2e.ts",
+              "line": 62,
+              "column": 7
+            },
+            {
+              "title": "should filter by commission rate range",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-99865d45850f717836f9",
+              "file": "search-filter.e2e.ts",
+              "line": 80,
+              "column": 7
+            },
+            {
+              "title": "should sort programs by commission rate",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-0afde2483b420df8476a",
+              "file": "search-filter.e2e.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "should clear all filters",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-09338f1e7554dfd1ec73",
+              "file": "search-filter.e2e.ts",
+              "line": 164,
+              "column": 7
+            },
+            {
+              "title": "should display program count and statistics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-d9728ee5d1ce5dd8739b",
+              "file": "search-filter.e2e.ts",
+              "line": 192,
+              "column": 7
+            },
+            {
+              "title": "should handle no results gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-7610114d15c53d760a82",
+              "file": "search-filter.e2e.ts",
+              "line": 202,
+              "column": 7
+            },
+            {
+              "title": "should apply multiple filters simultaneously",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-f52a204c80cf1e8d863b",
+              "file": "search-filter.e2e.ts",
+              "line": 219,
+              "column": 7
+            },
+            {
+              "title": "should search programs by keyword",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-1ffc79754544fa7ecea2",
+              "file": "search-filter.e2e.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should filter by category",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-adffe0e2b2591ed8654d",
+              "file": "search-filter.e2e.ts",
+              "line": 44,
+              "column": 7
+            },
+            {
+              "title": "should filter by network",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-2717eb48e44ee2e9a60b",
+              "file": "search-filter.e2e.ts",
+              "line": 62,
+              "column": 7
+            },
+            {
+              "title": "should filter by commission rate range",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-b2e94423d05a4267bbb6",
+              "file": "search-filter.e2e.ts",
+              "line": 80,
+              "column": 7
+            },
+            {
+              "title": "should sort programs by commission rate",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-83ab308c40d3626aee70",
+              "file": "search-filter.e2e.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "should clear all filters",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-fde617fdcb9d39b2b0db",
+              "file": "search-filter.e2e.ts",
+              "line": 164,
+              "column": 7
+            },
+            {
+              "title": "should display program count and statistics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-1984d9e5d346ccdbbe88",
+              "file": "search-filter.e2e.ts",
+              "line": 192,
+              "column": 7
+            },
+            {
+              "title": "should handle no results gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-cab089a73a0564072d1a",
+              "file": "search-filter.e2e.ts",
+              "line": 202,
+              "column": 7
+            },
+            {
+              "title": "should apply multiple filters simultaneously",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-fcc6756bc340312581dc",
+              "file": "search-filter.e2e.ts",
+              "line": 219,
+              "column": 7
+            },
+            {
+              "title": "should search programs by keyword",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-62fb3e82a57a375afa75",
+              "file": "search-filter.e2e.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should filter by category",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-db02c6f714fc99738fcf",
+              "file": "search-filter.e2e.ts",
+              "line": 44,
+              "column": 7
+            },
+            {
+              "title": "should filter by network",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-2d18dcfc3a7506049781",
+              "file": "search-filter.e2e.ts",
+              "line": 62,
+              "column": 7
+            },
+            {
+              "title": "should filter by commission rate range",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-b83108da2fba682912c0",
+              "file": "search-filter.e2e.ts",
+              "line": 80,
+              "column": 7
+            },
+            {
+              "title": "should sort programs by commission rate",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-aee5602e756a69bbe40c",
+              "file": "search-filter.e2e.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "should clear all filters",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-b538d5926c52ae8e7873",
+              "file": "search-filter.e2e.ts",
+              "line": 164,
+              "column": 7
+            },
+            {
+              "title": "should display program count and statistics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-f2d753c09ba818779b4f",
+              "file": "search-filter.e2e.ts",
+              "line": 192,
+              "column": 7
+            },
+            {
+              "title": "should handle no results gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-efef09ab802a1d7c0771",
+              "file": "search-filter.e2e.ts",
+              "line": 202,
+              "column": 7
+            },
+            {
+              "title": "should apply multiple filters simultaneously",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-43a901cfac01b5572644",
+              "file": "search-filter.e2e.ts",
+              "line": 219,
+              "column": 7
+            },
+            {
+              "title": "should search programs by keyword",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-431093b99c954de62369",
+              "file": "search-filter.e2e.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should filter by category",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-70e64b1f64adbc284874",
+              "file": "search-filter.e2e.ts",
+              "line": 44,
+              "column": 7
+            },
+            {
+              "title": "should filter by network",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-a4a4227c9cabd81d0734",
+              "file": "search-filter.e2e.ts",
+              "line": 62,
+              "column": 7
+            },
+            {
+              "title": "should filter by commission rate range",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-fe8e0b6483268122b1a3",
+              "file": "search-filter.e2e.ts",
+              "line": 80,
+              "column": 7
+            },
+            {
+              "title": "should sort programs by commission rate",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-0bfc3aa06f0d18681a9e",
+              "file": "search-filter.e2e.ts",
+              "line": 117,
+              "column": 7
+            },
+            {
+              "title": "should clear all filters",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-be5ff6ced9f365382e8e",
+              "file": "search-filter.e2e.ts",
+              "line": 164,
+              "column": 7
+            },
+            {
+              "title": "should display program count and statistics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-1a4a34fd079bfe07e142",
+              "file": "search-filter.e2e.ts",
+              "line": 192,
+              "column": 7
+            },
+            {
+              "title": "should handle no results gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-0eebd161e0255251ca12",
+              "file": "search-filter.e2e.ts",
+              "line": 202,
+              "column": 7
+            },
+            {
+              "title": "should apply multiple filters simultaneously",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "44d643a5064afa745bbe-77e2a865a130b3ca56e4",
+              "file": "search-filter.e2e.ts",
+              "line": 219,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-11-19T13:03:42.602Z",
+    "duration": 173.62599999999998,
+    "expected": 0,
+    "skipped": 248,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
