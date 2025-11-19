@@ -20,18 +20,45 @@ interface OrganizationContextType {
 const OrganizationContext = createContext<OrganizationContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'current-organization-id';
-const DEFAULT_ORG_ID = 'default';
 
 export function OrganizationProvider({ children }: { children: ReactNode }) {
   const [currentOrgId, setCurrentOrgIdState] = useState<string | null>(null);
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Load from localStorage on mount
+  // Load organization ID on mount
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const orgId = stored || DEFAULT_ORG_ID;
-    setCurrentOrgIdState(orgId);
+    const initializeOrganization = async () => {
+      // First check localStorage
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        setCurrentOrgIdState(stored);
+        return;
+      }
+
+      // If no stored org, fetch user's organizations
+      try {
+        const response = await fetch('/api/organizations');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.organizations && data.organizations.length > 0) {
+            // Use first organization
+            const firstOrg = data.organizations[0];
+            setCurrentOrgIdState(firstOrg.id);
+            localStorage.setItem(STORAGE_KEY, firstOrg.id);
+          } else {
+            setLoading(false);
+          }
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Failed to fetch organizations:', error);
+        setLoading(false);
+      }
+    };
+
+    initializeOrganization();
   }, []);
 
   // Fetch organization details when orgId changes
@@ -48,10 +75,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
           const data = await response.json();
           setOrganization(data);
         } else {
-          // If default org doesn't exist, clear it
-          if (currentOrgId === DEFAULT_ORG_ID) {
-            setOrganization(null);
-          }
+          setOrganization(null);
         }
       } catch (error) {
         console.error('Failed to fetch organization:', error);
