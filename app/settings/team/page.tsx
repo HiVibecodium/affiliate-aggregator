@@ -195,7 +195,7 @@ export default function TeamManagementPage() {
           </Link>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Team Management</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Управление командой</h1>
               <p className="text-gray-600 mt-1">{organization.name}</p>
             </div>
             <button
@@ -220,7 +220,7 @@ export default function TeamManagementPage() {
         {/* Seat Usage */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">Team Seats</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Места в команде</h2>
             <span
               className={`text-lg font-bold ${
                 seatsUsed >= seatsLimit ? 'text-red-600' : 'text-gray-700'
@@ -287,7 +287,7 @@ export default function TeamManagementPage() {
         {/* Members List */}
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b">
-            <h2 className="text-xl font-semibold text-gray-900">Team Members</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Участники команды</h2>
           </div>
 
           <div className="divide-y">
@@ -360,7 +360,7 @@ export default function TeamManagementPage() {
 
             {organization.members.length === 0 && (
               <div className="px-6 py-12 text-center text-gray-500">
-                <p>No team members yet</p>
+                <p>Пока нет участников команды</p>
                 <button
                   onClick={() => setShowInviteModal(true)}
                   className="mt-4 text-blue-600 hover:text-blue-700 font-medium"
@@ -374,7 +374,7 @@ export default function TeamManagementPage() {
 
         {/* Role Descriptions */}
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h3 className="font-semibold text-gray-900 mb-3">Role Permissions</h3>
+          <h3 className="font-semibold text-gray-900 mb-3">Права ролей</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <h4 className="font-medium text-gray-900 mb-1">👑 Owner</h4>
@@ -404,7 +404,7 @@ export default function TeamManagementPage() {
       {showInviteModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Invite Team Member</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Пригласить участника команды</h2>
 
             <form onSubmit={handleInvite}>
               <div className="mb-4">

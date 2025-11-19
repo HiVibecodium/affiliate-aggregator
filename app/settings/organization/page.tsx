@@ -156,7 +156,7 @@ export default function OrganizationSettingsPage() {
           >
             ← Назад в настройки
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Organization Settings</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Настройки организации</h1>
           <p className="text-gray-600 mt-1">Manage your organization profile and settings</p>
         </div>
       </div>
@@ -263,7 +263,7 @@ export default function OrganizationSettingsPage() {
           <div className="bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-lg p-6">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Current Plan</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Текущий план</h3>
                 <p className="text-3xl font-bold text-purple-600 capitalize mb-2">
                   {organization.tier}
                 </p>
@@ -326,7 +326,7 @@ export default function OrganizationSettingsPage() {
 
             {/* Delete Organization */}
             <div>
-              <h3 className="font-semibold text-red-600 mb-2">Delete Organization</h3>
+              <h3 className="font-semibold text-red-600 mb-2">Удалить организацию</h3>
               <p className="text-sm text-gray-600 mb-3">
                 Permanently delete this organization and all associated data. This action cannot be
                 undone.
