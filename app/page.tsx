@@ -43,7 +43,7 @@ export default async function Home() {
             🌐 Global Affiliate Networks Aggregator
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 md:mb-8 px-4">
-            Откройте для себя 80,000+ партнерских программ со всего мира
+            Откройте для себя 750+ лучших партнерских программ со всего мира
           </p>
           <div className="flex gap-2 sm:gap-4 justify-center flex-wrap px-2">
             <Link
@@ -122,7 +122,7 @@ export default async function Home() {
               <div className="text-gray-500 dark:text-gray-400 text-sm font-semibold uppercase mb-2">
                 Средний процент
               </div>
-              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">5-30%</div>
+              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">42%</div>
               <div className="text-purple-600 dark:text-purple-400 text-sm">Комиссия с продаж</div>
             </div>
           </div>
@@ -175,8 +175,8 @@ export default async function Home() {
           </div>
           <div className="text-center p-6 bg-white rounded-xl shadow-lg">
             <div className="text-4xl mb-4">📈</div>
-            <h3 className="text-xl font-semibold mb-2">Актуальные данные</h3>
-            <p className="text-gray-600">База из 80,000+ программ обновляется регулярно</p>
+            <h3 className="text-xl font-semibold mb-2">Только качество</h3>
+            <p className="text-gray-600">750+ отборных программ с высокими комиссиями</p>
           </div>
           <div className="text-center p-6 bg-white rounded-xl shadow-lg">
             <div className="text-4xl mb-4">💼</div>

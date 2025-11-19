@@ -1,7 +1,7 @@
 {
   "name": "Affiliate Aggregator",
   "short_name": "AffAgg",
-  "description": "Глобальный агрегатор партнёрских программ. 80,000+ программ, analytics, email alerts.",
+  "description": "Глобальный агрегатор партнёрских программ. 750+ отборных программ с высокими комиссиями, analytics, email alerts.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

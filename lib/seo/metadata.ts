@@ -7,7 +7,7 @@ import { Metadata } from 'next';
 
 const APP_NAME = 'Affiliate Aggregator';
 const APP_DESCRIPTION =
-  'Глобальный агрегатор партнёрских программ. 80,000+ программ от 6 крупнейших сетей. Поиск, сравнение, аналитика.';
+  'Глобальный агрегатор партнёрских программ. 750+ отборных программ от 6 крупнейших сетей. Средняя комиссия 42%. Поиск, сравнение, аналитика.';
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://affiliate-aggregator-five.vercel.app';
 
 /**
