@@ -1,5 +1,7 @@
 'use client';
 
+import { translateCategory } from '@/lib/translations/categories';
+
 interface CountryFilter {
   value: string;
   code: string;
@@ -111,7 +113,7 @@ export function ProgramFilters({
             <option value="">Все категории</option>
             {filters?.categories.map((cat) => (
               <option key={cat.value} value={cat.value}>
-                {cat.value} ({cat.count.toLocaleString()})
+                {translateCategory(cat.value)} ({cat.count.toLocaleString()})
               </option>
             ))}
           </select>

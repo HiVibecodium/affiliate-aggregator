@@ -8,6 +8,7 @@
 
 import Link from 'next/link';
 import { useComparison } from '@/contexts/ComparisonContext';
+import { translateCategory } from '@/lib/translations/categories';
 import {
   calculateDifficulty,
   isNewProgram,
@@ -201,7 +202,7 @@ export function EnhancedProgramCard({
       {program.category && (
         <div className="mb-4">
           <span className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-full">
-            {program.category}
+            {translateCategory(program.category)}
           </span>
         </div>
       )}

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { calculateDifficulty, calculateQuality, isNewProgram } from '@/lib/program-utils';
+import { translateCategory } from '@/lib/translations/categories';
 
 interface Program {
   id: string;
@@ -133,7 +134,7 @@ export function ProgramCard({
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm">
           <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-medium">
-            {program.category}
+            {translateCategory(program.category)}
           </span>
           <span className="text-gray-600">
             Мин. выплата: ${program.paymentThreshold.toLocaleString()}
