@@ -255,9 +255,9 @@ export default function TeamManagementPage() {
                   />
                 </svg>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-yellow-800">Seat limit reached</h3>
+                  <h3 className="text-sm font-medium text-yellow-800">Достигнут лимит мест</h3>
                   <p className="mt-1 text-sm text-yellow-700">
-                    Upgrade to Business or Enterprise plan to add more team members.
+                    Обновите до плана Business или Enterprise для добавления участников.
                   </p>
                   <Link
                     href="/billing/upgrade"
@@ -273,13 +273,13 @@ export default function TeamManagementPage() {
           {/* Plan info */}
           <div className="mt-4 text-sm text-gray-600">
             <p>
-              Current plan: <span className="font-semibold capitalize">{organization.tier}</span>
+              Текущий план: <span className="font-semibold capitalize">{organization.tier}</span>
             </p>
             <p className="text-xs text-gray-500 mt-1">
-              {organization.tier === 'free' && 'Free: 1 seat'}
-              {organization.tier === 'pro' && 'Pro: 1 seat'}
-              {organization.tier === 'business' && 'Business: 5 seats'}
-              {organization.tier === 'enterprise' && 'Enterprise: Unlimited seats'}
+              {organization.tier === 'free' && 'Free: 1 место'}
+              {organization.tier === 'pro' && 'Pro: 1 место'}
+              {organization.tier === 'business' && 'Business: 5 мест'}
+              {organization.tier === 'enterprise' && 'Enterprise: Неограниченно мест'}
             </p>
           </div>
         </div>
@@ -304,16 +304,16 @@ export default function TeamManagementPage() {
                     <div>
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-gray-900">
-                          {member.user?.name || member.invitedEmail || 'Unknown'}
+                          {member.user?.name || member.invitedEmail || 'Неизвестно'}
                         </h3>
                         {member.status === 'pending' && (
                           <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded">
-                            Pending
+                            Ожидание
                           </span>
                         )}
                         {member.role === 'owner' && (
                           <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded">
-                            Owner
+                            Владелец
                           </span>
                         )}
                       </div>
@@ -321,9 +321,9 @@ export default function TeamManagementPage() {
                         {member.user?.email || member.invitedEmail}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        Role: <span className="capitalize font-medium">{member.role}</span>
+                        Роль: <span className="capitalize font-medium">{member.role}</span>
                         {member.status === 'active' && (
-                          <> • Joined {new Date(member.createdAt).toLocaleDateString()}</>
+                          <> • Присоединился {new Date(member.createdAt).toLocaleDateString()}</>
                         )}
                         {member.status === 'pending' && <> • Приглашен, ожидает принятия</>}
                       </p>
@@ -377,24 +377,24 @@ export default function TeamManagementPage() {
           <h3 className="font-semibold text-gray-900 mb-3">Права ролей</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
-              <h4 className="font-medium text-gray-900 mb-1">👑 Owner</h4>
-              <p className="text-gray-600">Full access, billing, delete organization</p>
+              <h4 className="font-medium text-gray-900 mb-1">👑 Владелец</h4>
+              <p className="text-gray-600">Полный доступ, биллинг, удаление организации</p>
             </div>
             <div>
-              <h4 className="font-medium text-gray-900 mb-1">🔧 Admin</h4>
-              <p className="text-gray-600">Manage users, programs, view analytics</p>
+              <h4 className="font-medium text-gray-900 mb-1">🔧 Администратор</h4>
+              <p className="text-gray-600">Управление пользователями, программами, аналитика</p>
             </div>
             <div>
-              <h4 className="font-medium text-gray-900 mb-1">📊 Manager</h4>
-              <p className="text-gray-600">Manage programs, view analytics</p>
+              <h4 className="font-medium text-gray-900 mb-1">📊 Менеджер</h4>
+              <p className="text-gray-600">Управление программами, аналитика</p>
             </div>
             <div>
-              <h4 className="font-medium text-gray-900 mb-1">👤 Member</h4>
-              <p className="text-gray-600">View and create programs</p>
+              <h4 className="font-medium text-gray-900 mb-1">👤 Участник</h4>
+              <p className="text-gray-600">Просмотр и создание программ</p>
             </div>
             <div>
-              <h4 className="font-medium text-gray-900 mb-1">👁️ Viewer</h4>
-              <p className="text-gray-600">Read-only access</p>
+              <h4 className="font-medium text-gray-900 mb-1">👁️ Наблюдатель</h4>
+              <p className="text-gray-600">Только чтение</p>
             </div>
           </div>
         </div>
