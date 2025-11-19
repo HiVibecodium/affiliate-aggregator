@@ -29,8 +29,8 @@ export async function GET() {
           })),
         };
       },
-      300
-    ); // 5 minutes
+      600
+    ); // 10 minutes
 
     return NextResponse.json(stats);
   } catch (error) {

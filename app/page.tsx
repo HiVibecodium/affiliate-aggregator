@@ -2,6 +2,9 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { HomeHeader } from '@/components/HomeHeader';
 
+// Revalidate every 10 minutes
+export const revalidate = 600;
+
 async function getStats() {
   try {
     const [totalPrograms, totalNetworks, programsByNetwork] = await Promise.all([

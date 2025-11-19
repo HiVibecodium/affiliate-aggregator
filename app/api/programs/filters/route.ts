@@ -25,8 +25,8 @@ export async function GET(request: NextRequest) {
       async () => {
         return await fetchFiltersData(network, category, commissionType);
       },
-      300
-    );
+      600
+    ); // 10 minutes
   } catch (error) {
     return NextResponse.json(
       {
