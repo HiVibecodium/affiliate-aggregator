@@ -45,10 +45,26 @@ export default function TeamManagementPage() {
     if (!currentOrgId) return;
 
     try {
-      const response = await fetch(`/api/organizations/${currentOrgId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setOrganization(data);
+      // Fetch organization details and members in parallel
+      const [orgResponse, membersResponse] = await Promise.all([
+        fetch(`/api/organizations/${currentOrgId}`),
+        fetch(`/api/organizations/${currentOrgId}/members`),
+      ]);
+
+      if (orgResponse.ok && membersResponse.ok) {
+        const orgData = await orgResponse.json();
+        const membersData = await membersResponse.json();
+
+        // Combine data
+        setOrganization({
+          ...orgData,
+          members: membersData.members || [],
+        });
+      } else {
+        console.error('Failed to fetch:', {
+          org: orgResponse.status,
+          members: membersResponse.status,
+        });
       }
     } catch (error) {
       console.error('Failed to fetch organization:', error);
