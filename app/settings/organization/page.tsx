@@ -157,7 +157,7 @@ export default function OrganizationSettingsPage() {
             ← Назад в настройки
           </Link>
           <h1 className="text-3xl font-bold text-gray-900">Настройки организации</h1>
-          <p className="text-gray-600 mt-1">Manage your organization profile and settings</p>
+          <p className="text-gray-600 mt-1">Управление профилем и настройками организации</p>
         </div>
       </div>
 
@@ -165,7 +165,7 @@ export default function OrganizationSettingsPage() {
         <form onSubmit={handleSave} className="space-y-6">
           {/* Basic Information */}
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Basic Information</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Основная информация</h2>
 
             <div className="space-y-4">
               {/* Organization Name */}
@@ -182,7 +182,7 @@ export default function OrganizationSettingsPage() {
                   placeholder="My Company Inc."
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  This name will be visible to team members
+                  Это название будет видно участникам команды
                 </p>
               </div>
 
@@ -205,9 +205,7 @@ export default function OrganizationSettingsPage() {
                     placeholder="my-company"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  Lowercase letters, numbers, and hyphens only
-                </p>
+                <p className="text-xs text-gray-500 mt-1">Только строчные буквы, цифры и дефисы</p>
               </div>
 
               {/* Description */}
@@ -220,9 +218,9 @@ export default function OrganizationSettingsPage() {
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Brief description of your organization..."
+                  placeholder="Краткое описание вашей организации..."
                 />
-                <p className="text-xs text-gray-500 mt-1">Optional</p>
+                <p className="text-xs text-gray-500 mt-1">Необязательно</p>
               </div>
 
               {/* Website */}
@@ -237,7 +235,7 @@ export default function OrganizationSettingsPage() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="https://example.com"
                 />
-                <p className="text-xs text-gray-500 mt-1">Optional</p>
+                <p className="text-xs text-gray-500 mt-1">Необязательно</p>
               </div>
             </div>
 
@@ -254,7 +252,7 @@ export default function OrganizationSettingsPage() {
                 disabled={saving}
                 className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? 'Saving...' : 'Save Changes'}
+                {saving ? 'Сохранение...' : 'Сохранить изменения'}
               </button>
             </div>
           </div>
@@ -268,11 +266,12 @@ export default function OrganizationSettingsPage() {
                   {organization.tier}
                 </p>
                 <p className="text-sm text-gray-600">
-                  {organization.tier === 'free' && '1 seat • Basic features'}
-                  {organization.tier === 'pro' && '1 seat • Email alerts • Advanced features'}
-                  {organization.tier === 'business' && '5 seats • API access • Team collaboration'}
+                  {organization.tier === 'free' && '1 место • Базовые функции'}
+                  {organization.tier === 'pro' &&
+                    '1 место • Email уведомления • Расширенные функции'}
+                  {organization.tier === 'business' && '5 мест • API доступ • Командная работа'}
                   {organization.tier === 'enterprise' &&
-                    'Unlimited • Custom features • Dedicated support'}
+                    'Неограниченно • Индивидуальные функции • Выделенная поддержка'}
                 </p>
               </div>
               {organization.tier !== 'enterprise' && (
@@ -288,14 +287,14 @@ export default function OrganizationSettingsPage() {
 
           {/* Organization Info */}
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Organization Info</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Информация об организации</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-gray-600">Organization ID:</span>
+                <span className="text-gray-600">ID организации:</span>
                 <p className="font-mono text-gray-900 mt-1">{organization.id}</p>
               </div>
               <div>
-                <span className="text-gray-600">Created:</span>
+                <span className="text-gray-600">Создана:</span>
                 <p className="text-gray-900 mt-1">
                   {new Date(organization.createdAt).toLocaleDateString('ru-RU')}
                 </p>
@@ -311,9 +310,9 @@ export default function OrganizationSettingsPage() {
           <div className="space-y-4">
             {/* Transfer Ownership */}
             <div className="border-b pb-4">
-              <h3 className="font-semibold text-gray-900 mb-2">Transfer Ownership</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">Передать владение</h3>
               <p className="text-sm text-gray-600 mb-3">
-                Transfer ownership of this organization to another team member
+                Передать права владения организацией другому участнику команды
               </p>
               <button
                 type="button"
@@ -332,13 +331,13 @@ export default function OrganizationSettingsPage() {
                 undone.
               </p>
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                <p className="text-sm text-red-800 font-medium mb-2">This will delete:</p>
+                <p className="text-sm text-red-800 font-medium mb-2">Будет удалено:</p>
                 <ul className="text-sm text-red-700 space-y-1 ml-4">
-                  <li>• All team members and invitations</li>
-                  <li>• All saved searches and favorites</li>
-                  <li>• All application tracking data</li>
-                  <li>• All billing and subscription data</li>
-                  <li>• All audit logs and history</li>
+                  <li>• Все участники команды и приглашения</li>
+                  <li>• Все сохраненные поиски и избранное</li>
+                  <li>• Все данные отслеживания заявок</li>
+                  <li>• Все данные биллинга и подписок</li>
+                  <li>• Все логи аудита и история</li>
                 </ul>
               </div>
               <button
@@ -347,7 +346,7 @@ export default function OrganizationSettingsPage() {
                 disabled={deleting}
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {deleting ? 'Deleting...' : '🗑️ Delete Organization'}
+                {deleting ? 'Удаление...' : '🗑️ Удалить организацию'}
               </button>
             </div>
           </div>

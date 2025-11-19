@@ -21,7 +21,7 @@ export default async function DashboardPage() {
             </div>
             <div className="flex items-center gap-3">
               <Link href="/programs" className="text-gray-600 hover:text-gray-900 font-medium">
-                Browse Programs
+                Обзор программ
               </Link>
               <Link href="/programs/new" className="text-gray-600 hover:text-gray-900 font-medium">
                 🆕 New Programs
@@ -43,8 +43,8 @@ export default async function DashboardPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Title */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Analytics Dashboard</h1>
-          <p className="text-gray-600">Global overview of affiliate programs and networks</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Панель аналитики</h1>
+          <p className="text-gray-600">Общий обзор партнерских программ и сетей</p>
         </div>
 
         {/* Overview Cards - Now Clickable! */}
@@ -306,7 +306,7 @@ export default async function DashboardPage() {
               className="bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-4 transition-all hover:scale-105"
             >
               <div className="text-3xl mb-2">🔍</div>
-              <h3 className="font-semibold mb-1">Browse Programs</h3>
+              <h3 className="font-semibold mb-1">Обзор программ</h3>
               <p className="text-sm text-white/80">Explore 80,000+ affiliate programs</p>
             </Link>
 
