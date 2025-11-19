@@ -301,7 +301,7 @@ async function generateReport(beforeStats: any, keepIds: string[]) {
   console.log('='.repeat(50));
 }
 
-async function main() {
+async function main(executeMode: boolean = false) {
   try {
     console.log('🚀 Запуск оптимизации базы данных\n');
     console.log('Критерии отбора:');
@@ -319,14 +319,16 @@ async function main() {
     // 2. Отбор топовых программ
     const topProgramIds = await selectTopPrograms();
 
-    // 3. DRY RUN - показываем что будет удалено
-    await cleanupDatabase(topProgramIds, true);
+    // 3. Очистка базы данных (dry run или реальное выполнение)
+    await cleanupDatabase(topProgramIds, !executeMode);
 
     // 4. Генерируем отчет
     await generateReport(beforeStats, topProgramIds);
 
-    console.log('\n\n⚠️  Это был DRY RUN. Для реального удаления запустите:');
-    console.log('   npm run db:optimize -- --execute\n');
+    if (!executeMode) {
+      console.log('\n\n⚠️  Это был DRY RUN. Для реального удаления запустите:');
+      console.log('   npm run db:optimize:execute\n');
+    }
   } catch (error) {
     console.error('❌ Ошибка:', error);
     process.exit(1);
@@ -340,7 +342,7 @@ const shouldExecute = process.argv.includes('--execute');
 
 if (shouldExecute) {
   console.log('⚠️  ВНИМАНИЕ: Режим выполнения! Изменения будут применены.\n');
-  main();
+  main(true);
 } else {
-  main();
+  main(false);
 }

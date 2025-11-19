@@ -22,7 +22,9 @@
     "db:optimize": "dotenv -e .env.local -- tsx scripts/optimize-database.ts",
     "db:optimize:execute": "dotenv -e .env.local -- tsx scripts/optimize-database.ts --execute",
     "db:import": "dotenv -e .env.local -- tsx scripts/batch-import-programs.ts",
-    "db:import:example": "dotenv -e .env.local -- tsx scripts/batch-import-programs.ts --example"
+    "db:import:example": "dotenv -e .env.local -- tsx scripts/batch-import-programs.ts --example",
+    "db:backup": "dotenv -e .env.local -- tsx scripts/backup-database.ts",
+    "db:restore": "dotenv -e .env.local -- tsx scripts/restore-database.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
