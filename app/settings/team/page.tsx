@@ -163,7 +163,7 @@ export default function TeamManagementPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading team...</p>
+          <p className="text-gray-600">Загрузка команды...</p>
         </div>
       </div>
     );
@@ -173,9 +173,9 @@ export default function TeamManagementPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Organization not found</p>
+          <p className="text-gray-600">Организация не найдена</p>
           <Link href="/settings" className="text-blue-600 hover:underline mt-4 inline-block">
-            Back to Settings
+            Назад в настройки
           </Link>
         </div>
       </div>
@@ -226,7 +226,7 @@ export default function TeamManagementPage() {
                 seatsUsed >= seatsLimit ? 'text-red-600' : 'text-gray-700'
               }`}
             >
-              {seatsUsed} / {seatsLimit} used
+              {seatsUsed} / {seatsLimit} использовано
             </span>
           </div>
 
@@ -350,7 +350,7 @@ export default function TeamManagementPage() {
                         onClick={() => handleRemoveMember(member.id)}
                         className="px-3 py-1 text-red-600 hover:bg-red-50 rounded text-sm font-medium transition"
                       >
-                        Remove
+                        Удалить
                       </button>
                     </div>
                   )}
@@ -408,9 +408,7 @@ export default function TeamManagementPage() {
 
             <form onSubmit={handleInvite}>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email адрес</label>
                 <input
                   type="email"
                   value={inviteEmail}
@@ -441,14 +439,14 @@ export default function TeamManagementPage() {
                   onClick={() => setShowInviteModal(false)}
                   className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
                 >
-                  Cancel
+                  Отмена
                 </button>
                 <button
                   type="submit"
                   disabled={inviting}
                   className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition disabled:bg-gray-300"
                 >
-                  {inviting ? 'Sending...' : 'Send Invite'}
+                  {inviting ? 'Отправка...' : 'Отправить приглашение'}
                 </button>
               </div>
             </form>

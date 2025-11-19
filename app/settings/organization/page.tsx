@@ -126,7 +126,7 @@ export default function OrganizationSettingsPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading organization...</p>
+          <p className="text-gray-600">Загрузка организации...</p>
         </div>
       </div>
     );
@@ -136,9 +136,9 @@ export default function OrganizationSettingsPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Organization not found</p>
+          <p className="text-gray-600">Организация не найдена</p>
           <Link href="/settings" className="text-blue-600 hover:underline mt-4 inline-block">
-            Back to Settings
+            Назад в настройки
           </Link>
         </div>
       </div>
