@@ -11,6 +11,9 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { useTour } from '@/hooks/useTour';
 import { calculateDifficulty } from '@/lib/program-utils';
 
+// Disable static generation for this page (uses search params)
+export const dynamic = 'force-dynamic';
+
 interface Program {
   id: string;
   name: string;

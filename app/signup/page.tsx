@@ -1,23 +1,26 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+
+// Disable static generation for this page (requires client-side auth)
+export const dynamic = 'force-dynamic';
 
 export default function SignupPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const router = useRouter()
-  const supabase = createClient()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const router = useRouter();
+  const supabase = createClient();
 
   const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
     const { error } = await supabase.auth.signUp({
       email,
@@ -25,46 +28,42 @@ export default function SignupPage() {
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
-    })
+    });
 
     if (error) {
-      setError(error.message)
-      setLoading(false)
+      setError(error.message);
+      setLoading(false);
     } else {
       // Sync user with database and create organization
       try {
         const syncResponse = await fetch('/api/auth/sync', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-        })
+        });
 
         if (!syncResponse.ok) {
-          console.error('Failed to sync user with database')
+          console.error('Failed to sync user with database');
         }
       } catch (syncError) {
-        console.error('Sync error:', syncError)
+        console.error('Sync error:', syncError);
       }
 
-      setSuccess(true)
-      setLoading(false)
+      setSuccess(true);
+      setLoading(false);
       // Auto redirect to dashboard after signup
       setTimeout(() => {
-        router.push('/dashboard')
-        router.refresh()
-      }, 1500)
+        router.push('/dashboard');
+        router.refresh();
+      }, 1500);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-md">
         <div>
-          <h2 className="text-center text-3xl font-bold text-gray-900">
-            🌐 Affiliate Aggregator
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Create your account
-          </p>
+          <h2 className="text-center text-3xl font-bold text-gray-900">🌐 Affiliate Aggregator</h2>
+          <p className="mt-2 text-center text-sm text-gray-600">Create your account</p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSignup}>
           {error && (
@@ -130,5 +129,5 @@ export default function SignupPage() {
         </form>
       </div>
     </div>
-  )
+  );
 }

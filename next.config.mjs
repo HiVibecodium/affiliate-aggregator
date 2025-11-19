@@ -116,4 +116,8 @@ const sentryWebpackPluginOptions = {
   autoInstrumentMiddleware: false,
 };
 
-export default withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+// Conditionally apply Sentry config (skip during build if causing issues)
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+const config = isBuild ? nextConfig : withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+
+export default config;
