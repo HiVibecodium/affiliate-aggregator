@@ -2,11 +2,39 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { StatsCards } from '@/components/analytics/StatsCards';
-import { CommissionChart } from '@/components/analytics/CommissionChart';
-import { CategoryChart } from '@/components/analytics/CategoryChart';
-import { TrendChart } from '@/components/analytics/TrendChart';
 import { TopProgramsTable } from '@/components/analytics/TopProgramsTable';
+
+// Dynamic imports for heavy chart components (recharts ~100kb)
+// These are only loaded when needed, reducing initial bundle size
+const CommissionChart = dynamic(
+  () =>
+    import('@/components/analytics/CommissionChart').then((mod) => ({
+      default: mod.CommissionChart,
+    })),
+  {
+    loading: () => <div className="bg-white rounded-lg border p-6 h-[350px] animate-pulse" />,
+    ssr: false,
+  }
+);
+
+const CategoryChart = dynamic(
+  () =>
+    import('@/components/analytics/CategoryChart').then((mod) => ({ default: mod.CategoryChart })),
+  {
+    loading: () => <div className="bg-white rounded-lg border p-6 h-[350px] animate-pulse" />,
+    ssr: false,
+  }
+);
+
+const TrendChart = dynamic(
+  () => import('@/components/analytics/TrendChart').then((mod) => ({ default: mod.TrendChart })),
+  {
+    loading: () => <div className="bg-white rounded-lg border p-6 h-[350px] animate-pulse" />,
+    ssr: false,
+  }
+);
 
 interface PopularProgram {
   id: string;

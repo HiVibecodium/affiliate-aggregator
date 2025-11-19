@@ -1,10 +1,60 @@
 /**
- * Redis Cache Wrapper
- * Optional caching layer using Upstash Redis
+ * Hybrid Cache System
+ * - In-memory LRU cache for fast access (primary)
+ * - Optional Redis for distributed caching (fallback)
  * Falls back gracefully if Redis is not configured
  */
 
 import type { Redis } from '@upstash/redis';
+
+// In-memory LRU cache to reduce memory usage
+class LRUCache<T> {
+  private cache: Map<string, { value: T; expiry: number }>;
+  private maxSize: number;
+
+  constructor(maxSize: number = 100) {
+    this.cache = new Map();
+    this.maxSize = maxSize;
+  }
+
+  get(key: string): T | null {
+    const item = this.cache.get(key);
+    if (!item) return null;
+
+    // Check expiry
+    if (Date.now() > item.expiry) {
+      this.cache.delete(key);
+      return null;
+    }
+
+    // Move to end (LRU)
+    this.cache.delete(key);
+    this.cache.set(key, item);
+    return item.value;
+  }
+
+  set(key: string, value: T, ttlSeconds: number): void {
+    // Remove oldest if at capacity
+    if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey) {
+        this.cache.delete(firstKey);
+      }
+    }
+
+    this.cache.set(key, {
+      value,
+      expiry: Date.now() + ttlSeconds * 1000,
+    });
+  }
+
+  clear(): void {
+    this.cache.clear();
+  }
+}
+
+// Global in-memory cache instance
+const memoryCache = new LRUCache<unknown>(100);
 
 let redis: Redis | null = null;
 
@@ -29,31 +79,47 @@ export async function getCached<T>(
   fetcher: () => Promise<T>,
   ttl: number = 300
 ): Promise<T> {
-  // If Redis not configured, just fetch
-  if (!redis) {
-    return fetcher();
+  // Try in-memory cache first (fastest)
+  const memCached = memoryCache.get(key);
+  if (memCached) {
+    return memCached as T;
   }
 
-  try {
-    // Try to get from cache
-    const cached = await redis.get(key);
-
-    if (cached) {
-      return cached as T;
+  // Try Redis if configured
+  if (redis) {
+    try {
+      const cached = await redis.get(key);
+      if (cached) {
+        // Store in memory for next time
+        memoryCache.set(key, cached as T, ttl);
+        return cached as T;
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Redis error, continuing with fetch:', error);
+      }
     }
-
-    // Cache miss - fetch and store
-    const data = await fetcher();
-    await redis.setex(key, ttl, JSON.stringify(data));
-
-    return data;
-  } catch (error) {
-    // Redis error - fall back to direct fetch
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Redis error, falling back:', error);
-    }
-    return fetcher();
   }
+
+  // Cache miss - fetch and store
+  const data = await fetcher();
+
+  // Store in memory cache
+  memoryCache.set(key, data, ttl);
+
+  // Store in Redis if available
+  if (redis) {
+    try {
+      await redis.setex(key, ttl, JSON.stringify(data));
+    } catch (error) {
+      // Redis error - non-critical, already in memory cache
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Redis setex error:', error);
+      }
+    }
+  }
+
+  return data;
 }
 
 export async function invalidateCache(pattern: string): Promise<void> {

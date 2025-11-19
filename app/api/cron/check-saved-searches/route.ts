@@ -25,11 +25,15 @@ export async function GET(request: Request) {
     logger.log('Starting saved searches check...');
 
     // Get all active searches with alerts enabled
+    // Limit to 1000 per run to prevent memory issues
+    // If there are more, they'll be processed in next cron run
     const searches = await prisma.savedSearch.findMany({
       where: {
         active: true,
         alertsEnabled: true,
       },
+      take: 1000,
+      orderBy: { lastCheckedAt: 'asc' }, // Process oldest first
     });
 
     logger.log(`Found ${searches.length} searches to check`);

@@ -25,9 +25,25 @@ Sentry.init({
     return event;
   },
 
-  // Ignore certain errors
+  // Ignore certain errors to reduce noise and memory usage
   ignoreErrors: [
     'ECONNREFUSED',
     'ETIMEDOUT',
+    'ENOTFOUND',
+    'EPIPE',
+    'ERR_NETWORK',
+    // Common user errors
+    'ResizeObserver loop',
+    'Network request failed',
+    'Load failed',
   ],
+
+  // Limit breadcrumbs to reduce memory
+  maxBreadcrumbs: 30, // default is 100
+
+  // Sample rate for errors (100% in production, but with filtering)
+  sampleRate: 1.0,
+
+  // Don't attach stack traces to messages (memory optimization)
+  attachStacktrace: false,
 });

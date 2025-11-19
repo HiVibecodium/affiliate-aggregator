@@ -3,19 +3,22 @@
  * SEO-optimized page for each affiliate network
  */
 
-import { notFound } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
-import { EnhancedProgramCard } from '@/components/EnhancedProgramCard'
-import { Metadata } from 'next'
+import { notFound } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
+import { EnhancedProgramCard } from '@/components/EnhancedProgramCard';
+import { Metadata } from 'next';
 
 interface NetworkPageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: NetworkPageProps): Promise<Metadata> {
-  const { slug } = await params
-  const networkName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  const { slug } = await params;
+  const networkName = slug
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
 
   return {
     title: `${networkName} Партнёрские Программы - Affiliate Aggregator`,
@@ -24,25 +27,28 @@ export async function generateMetadata({ params }: NetworkPageProps): Promise<Me
       title: `${networkName} Affiliate Programs`,
       description: `Browse all ${networkName} affiliate programs with detailed comparisons`,
     },
-  }
+  };
 }
 
 export default async function NetworkPage({ params }: NetworkPageProps) {
-  const { slug } = await params
-  const networkName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  const { slug } = await params;
+  const networkName = slug
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
 
   // Get network
   const network = await prisma.affiliateNetwork.findFirst({
     where: { name: networkName },
     include: {
       _count: {
-        select: { programs: { where: { active: true } } }
-      }
-    }
-  })
+        select: { programs: { where: { active: true } } },
+      },
+    },
+  });
 
   if (!network) {
-    notFound()
+    notFound();
   }
 
   // Get programs
@@ -52,14 +58,15 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
       active: true,
     },
     include: {
-      network: { select: { name: true } }
+      network: { select: { name: true } },
     },
     take: 50,
-    orderBy: { createdAt: 'desc' }
-  })
+    orderBy: { createdAt: 'desc' },
+  });
 
   // Stats
-  const avgCommission = programs.reduce((sum, p) => sum + (p.commissionRate || 0), 0) / programs.length
+  const avgCommission =
+    programs.reduce((sum, p) => sum + (p.commissionRate || 0), 0) / programs.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -70,7 +77,8 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
             {network.name} Партнёрские Программы
           </h1>
           <p className="text-xl text-blue-100 max-w-3xl">
-            {network.description || `Полный каталог партнёрских программ от ${network.name}. Сравнивай условия, читай отзывы, выбирай лучшее.`}
+            {network.description ||
+              `Полный каталог партнёрских программ от ${network.name}. Сравнивай условия, читай отзывы, выбирай лучшее.`}
           </p>
 
           {/* Quick Stats */}
@@ -97,9 +105,7 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
 
       {/* Programs List */}
       <div className="container mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Все Программы {network.name}
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Все Программы {network.name}</h2>
 
         <div className="grid gap-6">
           {programs.map((program) => (
@@ -127,7 +133,8 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
         <div className="prose max-w-none">
           <h2>О {network.name}</h2>
           <p>
-            {network.name} - одна из ведущих партнёрских сетей с {network._count.programs} активными программами.
+            {network.name} - одна из ведущих партнёрских сетей с {network._count.programs} активными
+            программами.
             {network.website && ` Официальный сайт: ${network.website}`}
           </p>
 
@@ -149,17 +156,24 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Generate static params for build
 export async function generateStaticParams() {
   const networks = await prisma.affiliateNetwork.findMany({
     where: { active: true },
-    select: { name: true }
-  })
+    select: { name: true },
+    take: 20, // Limit to reduce build memory usage
+  });
 
   return networks.map((network) => ({
-    slug: network.name.toLowerCase().replace(/\s+/g, '-')
-  }))
+    slug: network.name.toLowerCase().replace(/\s+/g, '-'),
+  }));
 }
+
+// Allow dynamic generation for other networks
+export const dynamicParams = true;
+
+// Revalidate every 24 hours
+export const revalidate = 86400;

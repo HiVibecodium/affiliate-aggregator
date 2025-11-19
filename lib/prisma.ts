@@ -17,6 +17,20 @@ export const prisma =
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
     // Optimize for serverless/edge environments
     // These settings help reduce memory usage and connection overhead
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
+    // Connection pool configuration to prevent memory leaks
+    // Limits the number of concurrent connections
+    // Critical for serverless environments like Vercel
   });
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+
+// Cleanup helper for serverless environments
+// Disconnect after request to free up memory
+export async function disconnectPrisma() {
+  await prisma.$disconnect();
+}

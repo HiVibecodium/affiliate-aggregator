@@ -3,28 +3,34 @@
  * SEO-optimized page for each category
  */
 
-import { notFound } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
-import { EnhancedProgramCard } from '@/components/EnhancedProgramCard'
-import { Metadata } from 'next'
+import { notFound } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
+import { EnhancedProgramCard } from '@/components/EnhancedProgramCard';
+import { Metadata } from 'next';
 
 interface CategoryPageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
-  const { slug } = await params
-  const categoryName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  const { slug } = await params;
+  const categoryName = slug
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
 
   return {
     title: `${categoryName} Партнёрские Программы - Лучшие Предложения`,
     description: `Топ партнёрские программы в категории ${categoryName}. Высокие комиссии, проверенные сети, реальные отзывы.`,
-  }
+  };
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { slug } = await params
-  const categoryName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  const { slug } = await params;
+  const categoryName = slug
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
 
   // Get programs in category
   const programs = await prisma.affiliateProgram.findMany({
@@ -33,18 +39,19 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       active: true,
     },
     include: {
-      network: { select: { name: true } }
+      network: { select: { name: true } },
     },
     take: 100,
-    orderBy: { commissionRate: 'desc' }
-  })
+    orderBy: { commissionRate: 'desc' },
+  });
 
   if (programs.length === 0) {
-    notFound()
+    notFound();
   }
 
-  const avgCommission = programs.reduce((sum, p) => sum + (p.commissionRate || 0), 0) / programs.length
-  const topCommission = Math.max(...programs.map(p => p.commissionRate || 0))
+  const avgCommission =
+    programs.reduce((sum, p) => sum + (p.commissionRate || 0), 0) / programs.length;
+  const topCommission = Math.max(...programs.map((p) => p.commissionRate || 0));
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -77,9 +84,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
       {/* Programs */}
       <div className="container mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Топ Программы в {categoryName}
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Топ Программы в {categoryName}</h2>
 
         <div className="grid gap-6">
           {programs.map((program) => (
@@ -99,31 +104,51 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         <div className="prose max-w-none">
           <h2>Партнёрские Программы {categoryName} - Полный Гид</h2>
           <p>
-            Выбираете партнёрскую программу в категории {categoryName}? Мы собрали {programs.length} лучших предложений
-            от проверенных сетей. Средняя комиссия в этой нише: {avgCommission.toFixed(1)}%, максимальная - до {topCommission}%.
+            Выбираете партнёрскую программу в категории {categoryName}? Мы собрали {programs.length}{' '}
+            лучших предложений от проверенных сетей. Средняя комиссия в этой нише:{' '}
+            {avgCommission.toFixed(1)}%, максимальная - до {topCommission}%.
           </p>
 
           <h3>Как выбрать программу в {categoryName}?</h3>
           <ul>
-            <li><strong>Комиссия:</strong> Обращайте внимание не только на процент, но и на тип (CPA, CPS, CPL)</li>
-            <li><strong>Cookie:</strong> Чем дольше cookie, тем больше шансов на конверсию</li>
-            <li><strong>Выплаты:</strong> Проверьте минимальный порог и методы оплаты</li>
-            <li><strong>Отзывы:</strong> Читайте опыт других affiliates</li>
+            <li>
+              <strong>Комиссия:</strong> Обращайте внимание не только на процент, но и на тип (CPA,
+              CPS, CPL)
+            </li>
+            <li>
+              <strong>Cookie:</strong> Чем дольше cookie, тем больше шансов на конверсию
+            </li>
+            <li>
+              <strong>Выплаты:</strong> Проверьте минимальный порог и методы оплаты
+            </li>
+            <li>
+              <strong>Отзывы:</strong> Читайте опыт других affiliates
+            </li>
           </ul>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export async function generateStaticParams() {
-  const categories = await prisma.affiliateProgram.findMany({
+  // Only pre-render top 30 categories to reduce build memory usage
+  // Other categories will be generated on-demand (ISR)
+  const categories = await prisma.affiliateProgram.groupBy({
+    by: ['category'],
     where: { active: true, category: { not: null } },
-    select: { category: true },
-    distinct: ['category'],
-  })
+    _count: { id: true },
+    orderBy: { _count: { id: 'desc' } },
+    take: 30, // Only top 30 categories
+  });
 
   return categories.map((cat) => ({
-    slug: cat.category!.toLowerCase().replace(/\s+/g, '-')
-  }))
+    slug: cat.category!.toLowerCase().replace(/\s+/g, '-'),
+  }));
 }
+
+// Allow dynamic generation for other categories
+export const dynamicParams = true;
+
+// Revalidate every 24 hours
+export const revalidate = 86400;

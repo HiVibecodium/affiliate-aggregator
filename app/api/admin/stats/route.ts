@@ -42,20 +42,22 @@ export async function GET() {
       _sum: { amount: true },
     });
 
-    // MRR calculation
-    const mrr = await prisma.subscription.findMany({
+    // MRR calculation - use groupBy instead of loading all subscriptions
+    const mrrByTier = await prisma.subscription.groupBy({
+      by: ['tier'],
       where: { status: { in: ['active', 'trialing'] } },
-      select: { tier: true },
+      _count: { id: true },
     });
 
-    const mrrValue = mrr.reduce((sum, sub) => {
-      const prices: Record<string, number> = {
-        pro: 12,
-        business: 49,
-        enterprise: 500, // average
-        free: 0,
-      };
-      return sum + (prices[sub.tier] || 0);
+    const prices: Record<string, number> = {
+      pro: 12,
+      business: 49,
+      enterprise: 500, // average
+      free: 0,
+    };
+
+    const mrrValue = mrrByTier.reduce((sum, group) => {
+      return sum + (prices[group.tier] || 0) * group._count.id;
     }, 0);
 
     // Program Stats

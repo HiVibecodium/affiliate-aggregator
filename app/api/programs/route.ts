@@ -6,7 +6,9 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '20');
+    // Limit maximum to 100 to prevent memory issues
+    const requestedLimit = parseInt(searchParams.get('limit') || '20');
+    const limit = Math.min(requestedLimit, 100);
 
     // Filters
     const network = searchParams.get('network');
@@ -164,28 +166,38 @@ export async function GET(request: NextRequest) {
       prisma.affiliateProgram.count({ where }),
     ]);
 
-    // Get average ratings for programs (in parallel)
-    const programIds = programs.map((p) => p.id);
-    const ratings = await prisma.programReview.groupBy({
-      by: ['programId'],
-      where: {
-        programId: { in: programIds },
-        status: 'approved',
-      },
-      _avg: {
-        rating: true,
-      },
-    });
+    // Only fetch ratings if limit is reasonable (≤50) to save memory
+    // For larger requests, ratings are skipped to improve performance
+    let programsWithRatings;
 
-    // Create rating map
-    const ratingMap = new Map(ratings.map((r) => [r.programId, r._avg.rating || 0]));
+    if (limit <= 50) {
+      const programIds = programs.map((p) => p.id);
+      const ratings = await prisma.programReview.groupBy({
+        by: ['programId'],
+        where: {
+          programId: { in: programIds },
+          status: 'approved',
+        },
+        _avg: {
+          rating: true,
+        },
+      });
 
-    // Add rating to each program
-    const programsWithRatings = programs.map((p) => ({
-      ...p,
-      averageRating: ratingMap.get(p.id) || null,
-      reviewCount: p._count.reviews,
-    }));
+      const ratingMap = new Map(ratings.map((r) => [r.programId, r._avg.rating || 0]));
+
+      programsWithRatings = programs.map((p) => ({
+        ...p,
+        averageRating: ratingMap.get(p.id) || null,
+        reviewCount: p._count.reviews,
+      }));
+    } else {
+      // Skip ratings for large requests to save memory
+      programsWithRatings = programs.map((p) => ({
+        ...p,
+        averageRating: null,
+        reviewCount: p._count.reviews,
+      }));
+    }
 
     return NextResponse.json({
       programs: programsWithRatings,
