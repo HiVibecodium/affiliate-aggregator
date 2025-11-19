@@ -168,10 +168,10 @@ export default function OrganizationSettingsPage() {
             <h2 className="text-xl font-bold text-gray-900 mb-6">Основная информация</h2>
 
             <div className="space-y-4">
-              {/* Organization Name */}
+              {/* Название организации */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Organization Name *
+                  Название организации *
                 </label>
                 <input
                   type="text"
@@ -189,7 +189,7 @@ export default function OrganizationSettingsPage() {
               {/* Slug */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Organization Slug *
+                  URL организации *
                 </label>
                 <div className="flex items-center">
                   <span className="text-gray-500 mr-2">affiliate-aggregator.com/org/</span>
@@ -225,9 +225,7 @@ export default function OrganizationSettingsPage() {
 
               {/* Website */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Website URL
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">URL сайта</label>
                 <input
                   type="url"
                   value={website}
@@ -245,7 +243,7 @@ export default function OrganizationSettingsPage() {
                 href="/settings"
                 className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                Отмена
               </Link>
               <button
                 type="submit"
@@ -279,7 +277,7 @@ export default function OrganizationSettingsPage() {
                   href="/billing/upgrade"
                   className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-xl"
                 >
-                  Upgrade Plan →
+                  Улучшить план →
                 </Link>
               )}
             </div>
@@ -303,12 +301,12 @@ export default function OrganizationSettingsPage() {
           </div>
         </form>
 
-        {/* Danger Zone */}
+        {/* Опасная зона */}
         <div className="bg-white rounded-lg shadow-lg border-2 border-red-200 p-6 mt-6">
-          <h2 className="text-xl font-bold text-red-600 mb-4">⚠️ Danger Zone</h2>
+          <h2 className="text-xl font-bold text-red-600 mb-4">⚠️ Опасная зона</h2>
 
           <div className="space-y-4">
-            {/* Transfer Ownership */}
+            {/* Передать владение */}
             <div className="border-b pb-4">
               <h3 className="font-semibold text-gray-900 mb-2">Передать владение</h3>
               <p className="text-sm text-gray-600 mb-3">
@@ -319,7 +317,7 @@ export default function OrganizationSettingsPage() {
                 onClick={() => alert('Transfer ownership feature coming soon!')}
                 className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg transition-colors"
               >
-                Transfer Ownership
+                Передать владение
               </button>
             </div>
 
@@ -327,8 +325,8 @@ export default function OrganizationSettingsPage() {
             <div>
               <h3 className="font-semibold text-red-600 mb-2">Удалить организацию</h3>
               <p className="text-sm text-gray-600 mb-3">
-                Permanently delete this organization and all associated data. This action cannot be
-                undone.
+                Безвозвратно удалить организацию и все связанные данные. Это действие нельзя
+                отменить.
               </p>
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                 <p className="text-sm text-red-800 font-medium mb-2">Будет удалено:</p>

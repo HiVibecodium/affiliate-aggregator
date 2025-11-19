@@ -24,16 +24,16 @@ export default async function DashboardPage() {
                 Обзор программ
               </Link>
               <Link href="/programs/new" className="text-gray-600 hover:text-gray-900 font-medium">
-                🆕 New Programs
+                🆕 Новые программы
               </Link>
               <Link href="/settings" className="text-gray-600 hover:text-gray-900 font-medium">
-                Settings
+                Настройки
               </Link>
               <Link
                 href="/"
                 className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg transition-colors"
               >
-                Home
+                Главная
               </Link>
             </div>
           </div>
