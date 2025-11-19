@@ -1,0 +1,255 @@
+#!/usr/bin/env tsx
+/**
+ * Database Optimization Script
+ * Reduces database size by keeping only top-quality affiliate programs
+ */
+
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+// Критерии для отбора лучших программ
+const QUALITY_CRITERIA = {
+  minCommissionRate: 15, // Минимум 15% комиссия
+  minCookieDuration: 30, // Минимум 30 дней cookie
+  topCategories: [
+    'Software & Services',
+    'Business & Investing',
+    'Digital Products',
+    'Online Education',
+    'Marketing & SEO',
+    'Health & Fitness',
+    'Beauty & Personal Care',
+    'Home & Garden',
+  ],
+  topNetworks: [
+    'ShareASale',
+    'CJ Affiliate',
+    'Awin',
+    'ClickBank',
+    'Rakuten Advertising',
+    'Amazon Associates',
+  ],
+  maxPrograms: 500, // Оставить максимум 500 лучших программ
+};
+
+async function analyzeCurrentDatabase() {
+  console.log('📊 Анализ текущей базы данных...\n');
+
+  const total = await prisma.affiliateProgram.count();
+  const active = await prisma.affiliateProgram.count({ where: { active: true } });
+
+  const byNetwork = await prisma.affiliateProgram.groupBy({
+    by: ['networkId'],
+    _count: true,
+    orderBy: { _count: { networkId: 'desc' } },
+    take: 10,
+  });
+
+  const highCommission = await prisma.affiliateProgram.count({
+    where: {
+      commissionRate: { gte: QUALITY_CRITERIA.minCommissionRate },
+      active: true,
+    },
+  });
+
+  const longCookie = await prisma.affiliateProgram.count({
+    where: {
+      cookieDuration: { gte: QUALITY_CRITERIA.minCookieDuration },
+      active: true,
+    },
+  });
+
+  console.log(`Всего программ: ${total.toLocaleString()}`);
+  console.log(`Активных: ${active.toLocaleString()}`);
+  console.log(
+    `С комиссией ≥${QUALITY_CRITERIA.minCommissionRate}%: ${highCommission.toLocaleString()}`
+  );
+  console.log(
+    `С cookie ≥${QUALITY_CRITERIA.minCookieDuration} дней: ${longCookie.toLocaleString()}`
+  );
+  console.log(`\nТоп 10 сетей по количеству программ:`);
+
+  for (const item of byNetwork) {
+    const network = await prisma.affiliateNetwork.findUnique({
+      where: { id: item.networkId },
+      select: { name: true },
+    });
+    console.log(`  ${network?.name}: ${item._count}`);
+  }
+
+  return { total, active, highCommission, longCookie };
+}
+
+async function selectTopPrograms() {
+  console.log('\n\n🎯 Отбор топовых программ...\n');
+
+  // Получаем все сети
+  const networks = await prisma.affiliateNetwork.findMany({
+    where: { name: { in: QUALITY_CRITERIA.topNetworks } },
+    select: { id: true, name: true },
+  });
+
+  const networkIds = networks.map((n) => n.id);
+
+  // Отбираем лучшие программы по критериям
+  const topPrograms = await prisma.affiliateProgram.findMany({
+    where: {
+      active: true,
+      OR: [
+        // Высокая комиссия
+        {
+          commissionRate: { gte: QUALITY_CRITERIA.minCommissionRate },
+        },
+        // Популярные сети
+        {
+          networkId: { in: networkIds },
+          commissionRate: { gte: 10 },
+        },
+        // Длинный cookie
+        {
+          cookieDuration: { gte: QUALITY_CRITERIA.minCookieDuration },
+          commissionRate: { gte: 10 },
+        },
+        // Популярные категории
+        {
+          category: { in: QUALITY_CRITERIA.topCategories },
+          commissionRate: { gte: 10 },
+        },
+      ],
+    },
+    orderBy: [{ commissionRate: 'desc' }, { cookieDuration: 'desc' }],
+    take: QUALITY_CRITERIA.maxPrograms,
+    select: { id: true },
+  });
+
+  console.log(`✅ Отобрано ${topPrograms.length} топовых программ`);
+  return topPrograms.map((p) => p.id);
+}
+
+async function cleanupDatabase(keepIds: string[], dryRun: boolean = true) {
+  console.log('\n\n🧹 Очистка базы данных...\n');
+
+  if (dryRun) {
+    console.log('⚠️  DRY RUN MODE - изменения не будут применены\n');
+  }
+
+  const toDelete = await prisma.affiliateProgram.count({
+    where: {
+      id: { notIn: keepIds },
+    },
+  });
+
+  console.log(`Программ к удалению: ${toDelete.toLocaleString()}`);
+  console.log(`Программ останется: ${keepIds.length}`);
+
+  if (!dryRun) {
+    console.log('\n🔥 Удаление программ...');
+
+    // Удаляем связанные данные
+    await prisma.programClick.deleteMany({
+      where: { programId: { notIn: keepIds } },
+    });
+
+    await prisma.favorite.deleteMany({
+      where: { programId: { notIn: keepIds } },
+    });
+
+    await prisma.programReview.deleteMany({
+      where: { programId: { notIn: keepIds } },
+    });
+
+    await prisma.programApplication.deleteMany({
+      where: { programId: { notIn: keepIds } },
+    });
+
+    await prisma.programAccess.deleteMany({
+      where: { programId: { notIn: keepIds } },
+    });
+
+    // Удаляем сами программы
+    const result = await prisma.affiliateProgram.deleteMany({
+      where: { id: { notIn: keepIds } },
+    });
+
+    console.log(`✅ Удалено ${result.count.toLocaleString()} программ`);
+  }
+
+  return toDelete;
+}
+
+async function generateReport(beforeStats: any, keepIds: string[]) {
+  console.log('\n\n📊 ФИНАЛЬНЫЙ ОТЧЕТ\n');
+  console.log('='.repeat(50));
+
+  const afterTotal = keepIds.length;
+  const removed = beforeStats.total - afterTotal;
+  const reductionPercent = ((removed / beforeStats.total) * 100).toFixed(1);
+
+  console.log(`\nБыло программ: ${beforeStats.total.toLocaleString()}`);
+  console.log(`Осталось программ: ${afterTotal.toLocaleString()}`);
+  console.log(`Удалено: ${removed.toLocaleString()} (${reductionPercent}%)`);
+
+  console.log('\n📈 Качество отобранных программ:');
+
+  const topProgramsStats = await prisma.affiliateProgram.aggregate({
+    where: { id: { in: keepIds } },
+    _avg: {
+      commissionRate: true,
+      cookieDuration: true,
+    },
+    _max: {
+      commissionRate: true,
+    },
+  });
+
+  console.log(`  Средняя комиссия: ${topProgramsStats._avg.commissionRate?.toFixed(2)}%`);
+  console.log(`  Средняя длина cookie: ${topProgramsStats._avg.cookieDuration?.toFixed(0)} дней`);
+  console.log(`  Максимальная комиссия: ${topProgramsStats._max.commissionRate}%`);
+
+  console.log('\n✨ Оптимизация завершена!');
+  console.log('='.repeat(50));
+}
+
+async function main() {
+  try {
+    console.log('🚀 Запуск оптимизации базы данных\n');
+    console.log('Критерии отбора:');
+    console.log(`  - Минимальная комиссия: ${QUALITY_CRITERIA.minCommissionRate}%`);
+    console.log(`  - Минимальная длина cookie: ${QUALITY_CRITERIA.minCookieDuration} дней`);
+    console.log(`  - Максимум программ: ${QUALITY_CRITERIA.maxPrograms}`);
+    console.log(`  - Топовые сети: ${QUALITY_CRITERIA.topNetworks.length}`);
+    console.log(`  - Топовые категории: ${QUALITY_CRITERIA.topCategories.length}`);
+    console.log('\n' + '='.repeat(50) + '\n');
+
+    // 1. Анализ текущей базы
+    const beforeStats = await analyzeCurrentDatabase();
+
+    // 2. Отбор топовых программ
+    const topProgramIds = await selectTopPrograms();
+
+    // 3. DRY RUN - показываем что будет удалено
+    await cleanupDatabase(topProgramIds, true);
+
+    // 4. Генерируем отчет
+    await generateReport(beforeStats, topProgramIds);
+
+    console.log('\n\n⚠️  Это был DRY RUN. Для реального удаления запустите:');
+    console.log('   npm run db:optimize -- --execute\n');
+  } catch (error) {
+    console.error('❌ Ошибка:', error);
+    process.exit(1);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+// Проверяем аргументы командной строки
+const shouldExecute = process.argv.includes('--execute');
+
+if (shouldExecute) {
+  console.log('⚠️  ВНИМАНИЕ: Режим выполнения! Изменения будут применены.\n');
+  main();
+} else {
+  main();
+}

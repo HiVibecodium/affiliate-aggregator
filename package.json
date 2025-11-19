@@ -18,7 +18,11 @@
     "db:push": "dotenv -e .env.local -- prisma db push",
     "db:studio": "dotenv -e .env.local -- prisma studio",
     "postinstall": "prisma generate",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:optimize": "dotenv -e .env.local -- tsx scripts/optimize-database.ts",
+    "db:optimize:execute": "dotenv -e .env.local -- tsx scripts/optimize-database.ts --execute",
+    "db:import": "dotenv -e .env.local -- tsx scripts/batch-import-programs.ts",
+    "db:import:example": "dotenv -e .env.local -- tsx scripts/batch-import-programs.ts --example"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
@@ -71,6 +75,7 @@
     "prettier": "^3.6.2",
     "prisma": "^5.22.0",
     "tailwindcss": "^4.1.17",
+    "tsx": "^4.20.6",
     "typescript": "^5.7.3"
   },
   "engines": {

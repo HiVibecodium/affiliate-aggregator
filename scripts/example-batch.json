@@ -1,0 +1,45 @@
+{
+  "name": "Топовые программы 2025",
+  "description": "Подборка лучших партнерских программ с высокими комиссиями",
+  "programs": [
+    {
+      "networkName": "ShareASale",
+      "externalId": "example-1",
+      "name": "Premium Web Hosting",
+      "description": "Лучший хостинг для WordPress с комиссией 50%",
+      "category": "Software & Services",
+      "commissionRate": 50,
+      "commissionType": "CPS",
+      "cookieDuration": 90,
+      "paymentThreshold": 50,
+      "paymentMethods": ["PayPal", "Bank Transfer"],
+      "active": true
+    },
+    {
+      "networkName": "ClickBank",
+      "externalId": "example-2",
+      "name": "Online Marketing Course",
+      "description": "Курс по интернет-маркетингу с пожизненной комиссией",
+      "category": "Online Education",
+      "commissionRate": 75,
+      "commissionType": "CPS",
+      "cookieDuration": 60,
+      "paymentThreshold": 100,
+      "paymentMethods": ["PayPal", "Direct Deposit"],
+      "active": true
+    },
+    {
+      "networkName": "CJ Affiliate",
+      "externalId": "example-3",
+      "name": "Fashion E-commerce",
+      "description": "Международный магазин модной одежды",
+      "category": "Fashion & Apparel",
+      "commissionRate": 20,
+      "commissionType": "CPS",
+      "cookieDuration": 30,
+      "paymentThreshold": 50,
+      "paymentMethods": ["Bank Transfer", "Payoneer"],
+      "active": true
+    }
+  ]
+}
