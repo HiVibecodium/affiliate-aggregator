@@ -78,14 +78,14 @@ describe('Array Helpers', () => {
 
   describe('Array utilities', () => {
     it('should remove duplicates', () => {
-      const removeDuplicates = (arr: any[]) => Array.from(new Set(arr));
+      const removeDuplicates = (arr: unknown[]) => Array.from(new Set(arr));
 
       expect(removeDuplicates([1, 2, 2, 3, 3, 3])).toEqual([1, 2, 3]);
       expect(removeDuplicates(['a', 'b', 'a', 'c'])).toEqual(['a', 'b', 'c']);
     });
 
     it('should chunk arrays', () => {
-      const chunk = (arr: any[], size: number) => {
+      const chunk = (arr: unknown[], size: number) => {
         const chunks = [];
         for (let i = 0; i < arr.length; i += size) {
           chunks.push(arr.slice(i, i + size));
@@ -148,13 +148,13 @@ describe('Array Helpers', () => {
     });
 
     it('should get unique values', () => {
-      const unique = (arr: any[]) => [...new Set(arr)];
+      const unique = (arr: unknown[]) => [...new Set(arr)];
 
       expect(unique([1, 1, 2, 3, 2])).toEqual([1, 2, 3]);
     });
 
     it('should shuffle array', () => {
-      const shuffle = (arr: any[]) => {
+      const shuffle = (arr: unknown[]) => {
         const shuffled = [...arr];
         for (let i = shuffled.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -221,7 +221,7 @@ describe('Array Helpers', () => {
     });
 
     it('should count occurrences', () => {
-      const count = (arr: any[], value: any) => {
+      const count = (arr: unknown[], value: any) => {
         return arr.filter((item) => item === value).length;
       };
 

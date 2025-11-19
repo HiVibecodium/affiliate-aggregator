@@ -5,16 +5,16 @@
  * POST /api/referrals - Create referral link
  */
 
-import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 function generateReferralCode(): string {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  let code = 'REF-'
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = 'REF-';
   for (let i = 0; i < 8; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length))
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  return code
+  return code;
 }
 
 /**
@@ -22,21 +22,21 @@ function generateReferralCode(): string {
  */
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
 
     if (!userId) {
-      return NextResponse.json({ error: 'User ID required' }, { status: 400 })
+      return NextResponse.json({ error: 'User ID required' }, { status: 400 });
     }
 
     // Get or create referral code
     let referral = await prisma.referral.findFirst({
       where: { referrerId: userId, status: 'pending' },
-    })
+    });
 
     if (!referral) {
       // Create new referral code
-      const code = generateReferralCode()
+      const code = generateReferralCode();
       referral = await prisma.referral.create({
         data: {
           referrerId: userId,
@@ -45,22 +45,22 @@ export async function GET(request: Request) {
           referrerReward: '1_month_free',
           referredReward: '50_percent_off',
         },
-      })
+      });
     }
 
     // Get referral stats
     const stats = await prisma.referral.aggregate({
       where: { referrerId: userId },
       _count: { id: true },
-    })
+    });
 
     const completed = await prisma.referral.count({
       where: { referrerId: userId, status: 'completed' },
-    })
+    });
 
     const rewarded = await prisma.referral.count({
       where: { referrerId: userId, status: 'rewarded' },
-    })
+    });
 
     return NextResponse.json({
       referralCode: referral.referralCode,
@@ -70,10 +70,10 @@ export async function GET(request: Request) {
         rewarded,
         pending: stats._count.id - completed - rewarded,
       },
-    })
-  } catch (error: any) {
-    console.error('Referral error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    });
+  } catch (error: unknown) {
+    console.error('Referral error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
@@ -82,20 +82,20 @@ export async function GET(request: Request) {
  */
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const { userId, email } = body
+    const body = await request.json();
+    const { userId, email } = body;
 
     if (!userId || !email) {
-      return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
 
     // Get user's referral code
     let referral = await prisma.referral.findFirst({
       where: { referrerId: userId, status: 'pending' },
-    })
+    });
 
     if (!referral) {
-      const code = generateReferralCode()
+      const code = generateReferralCode();
       referral = await prisma.referral.create({
         data: {
           referrerId: userId,
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
           referrerReward: '1_month_free',
           referredReward: '50_percent_off',
         },
-      })
+      });
     } else {
       // Update with invited email
       referral = await prisma.referral.create({
@@ -117,14 +117,14 @@ export async function POST(request: Request) {
           referrerReward: '1_month_free',
           referredReward: '50_percent_off',
         },
-      })
+      });
     }
 
     // TODO: Send invitation email
 
-    return NextResponse.json({ success: true, referral })
-  } catch (error: any) {
-    console.error('Invite error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true, referral });
+  } catch (error: unknown) {
+    console.error('Invite error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -5,8 +5,8 @@
  * Returns comprehensive analytics data for charts and visualizations
  */
 
-import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   try {
@@ -16,7 +16,7 @@ export async function GET() {
       where: { active: true, commissionType: { not: null } },
       _count: { id: true },
       _avg: { commissionRate: true },
-    })
+    });
 
     // 2. Programs by Category (Top 10)
     const categoryStats = await prisma.affiliateProgram.groupBy({
@@ -25,7 +25,7 @@ export async function GET() {
       _count: { id: true },
       orderBy: { _count: { id: 'desc' } },
       take: 10,
-    })
+    });
 
     // 3. Programs by Network
     const networkStats = await prisma.affiliateNetwork.findMany({
@@ -46,26 +46,22 @@ export async function GET() {
         },
       },
       take: 10,
-    })
+    });
 
     // 4. New Programs Trend (Last 30 days)
-    const thirtyDaysAgo = new Date()
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const newProgramsTrend = await prisma.$queryRaw<
-      { date: Date; count: bigint }[]
-    >`
+    const newProgramsTrend = await prisma.$queryRaw<{ date: Date; count: bigint }[]>`
       SELECT DATE("createdAt") as date, COUNT(*)::bigint as count
       FROM "AffiliateProgram"
       WHERE "createdAt" >= ${thirtyDaysAgo} AND "active" = true
       GROUP BY DATE("createdAt")
       ORDER BY date ASC
-    `
+    `;
 
     // 5. Cookie Duration Distribution
-    const cookieDistribution = await prisma.$queryRaw<
-      { range: string; count: bigint }[]
-    >`
+    const cookieDistribution = await prisma.$queryRaw<{ range: string; count: bigint }[]>`
       SELECT
         CASE
           WHEN "cookieDuration" < 7 THEN '<7 days'
@@ -86,12 +82,10 @@ export async function GET() {
           WHEN '60-90 days' THEN 4
           ELSE 5
         END
-    `
+    `;
 
     // 6. Payment Threshold Distribution
-    const thresholdDistribution = await prisma.$queryRaw<
-      { range: string; count: bigint }[]
-    >`
+    const thresholdDistribution = await prisma.$queryRaw<{ range: string; count: bigint }[]>`
       SELECT
         CASE
           WHEN "paymentThreshold" < 50 THEN '<$50'
@@ -112,7 +106,7 @@ export async function GET() {
           WHEN '$200-500' THEN 4
           ELSE 5
         END
-    `
+    `;
 
     // 7. Top Programs by Views (using clicks as proxy)
     const topPrograms = await prisma.affiliateProgram.findMany({
@@ -133,18 +127,18 @@ export async function GET() {
         },
       },
       take: 10,
-    })
+    });
 
     // 8. Overall Stats
-    const totalPrograms = await prisma.affiliateProgram.count({ where: { active: true } })
-    const totalNetworks = await prisma.affiliateNetwork.count({ where: { active: true } })
-    const totalClicks = await prisma.programClick.count()
-    const totalReviews = await prisma.programReview.count({ where: { status: 'approved' } })
+    const totalPrograms = await prisma.affiliateProgram.count({ where: { active: true } });
+    const totalNetworks = await prisma.affiliateNetwork.count({ where: { active: true } });
+    const totalClicks = await prisma.programClick.count();
+    const totalReviews = await prisma.programReview.count({ where: { status: 'approved' } });
 
     const avgCommission = await prisma.affiliateProgram.aggregate({
       where: { active: true, commissionRate: { not: null } },
       _avg: { commissionRate: true },
-    })
+    });
 
     return NextResponse.json({
       overview: {
@@ -188,9 +182,9 @@ export async function GET() {
         reviews: program._count.reviews,
         applications: program._count.applications,
       })),
-    })
-  } catch (error: any) {
-    console.error('Analytics error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    });
+  } catch (error: unknown) {
+    console.error('Analytics error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

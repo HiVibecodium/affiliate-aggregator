@@ -7,20 +7,20 @@
  * PUT /api/saved-searches - Update saved search
  */
 
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { checkAndRecordUsage } from '@/lib/billing/feature-gates'
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { checkAndRecordUsage } from '@/lib/billing/feature-gates';
 
 /**
  * GET - List all saved searches for user
  */
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
 
     if (!userId) {
-      return NextResponse.json({ error: 'User ID required' }, { status: 400 })
+      return NextResponse.json({ error: 'User ID required' }, { status: 400 });
     }
 
     const searches = await prisma.savedSearch.findMany({
@@ -29,12 +29,12 @@ export async function GET(request: NextRequest) {
         active: true,
       },
       orderBy: { createdAt: 'desc' },
-    })
+    });
 
-    return NextResponse.json({ searches })
-  } catch (error: any) {
-    console.error('Failed to fetch saved searches:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ searches });
+  } catch (error: unknown) {
+    console.error('Failed to fetch saved searches:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
@@ -43,15 +43,15 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { userId, name, description, filters, alertsEnabled, alertFrequency } = body
+    const body = await request.json();
+    const { userId, name, description, filters, alertsEnabled, alertFrequency } = body;
 
     if (!userId || !name || !filters) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // Check feature access
-    const access = await checkAndRecordUsage(userId, 'saved_searches')
+    const access = await checkAndRecordUsage(userId, 'saved_searches');
 
     if (!access.allowed) {
       return NextResponse.json(
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
           requiresUpgrade: true,
         },
         { status: 403 }
-      )
+      );
     }
 
     // Create saved search
@@ -74,12 +74,12 @@ export async function POST(request: NextRequest) {
         alertsEnabled: alertsEnabled ?? true,
         alertFrequency: alertFrequency || 'daily',
       },
-    })
+    });
 
-    return NextResponse.json({ success: true, savedSearch })
-  } catch (error: any) {
-    console.error('Failed to create saved search:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true, savedSearch });
+  } catch (error: unknown) {
+    console.error('Failed to create saved search:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
@@ -88,20 +88,20 @@ export async function POST(request: NextRequest) {
  */
 export async function PUT(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { id, userId, name, description, filters, alertsEnabled, alertFrequency } = body
+    const body = await request.json();
+    const { id, userId, name, description, filters, alertsEnabled, alertFrequency } = body;
 
     if (!id || !userId) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // Verify ownership
     const existing = await prisma.savedSearch.findFirst({
       where: { id, userId },
-    })
+    });
 
     if (!existing) {
-      return NextResponse.json({ error: 'Saved search not found' }, { status: 404 })
+      return NextResponse.json({ error: 'Saved search not found' }, { status: 404 });
     }
 
     // Update
@@ -114,12 +114,12 @@ export async function PUT(request: NextRequest) {
         ...(alertsEnabled !== undefined && { alertsEnabled }),
         ...(alertFrequency && { alertFrequency }),
       },
-    })
+    });
 
-    return NextResponse.json({ success: true, savedSearch: updated })
-  } catch (error: any) {
-    console.error('Failed to update saved search:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true, savedSearch: updated });
+  } catch (error: unknown) {
+    console.error('Failed to update saved search:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
@@ -128,32 +128,32 @@ export async function PUT(request: NextRequest) {
  */
 export async function DELETE(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const id = searchParams.get('id')
-    const userId = searchParams.get('userId')
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    const userId = searchParams.get('userId');
 
     if (!id || !userId) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // Verify ownership
     const existing = await prisma.savedSearch.findFirst({
       where: { id, userId },
-    })
+    });
 
     if (!existing) {
-      return NextResponse.json({ error: 'Saved search not found' }, { status: 404 })
+      return NextResponse.json({ error: 'Saved search not found' }, { status: 404 });
     }
 
     // Soft delete
     await prisma.savedSearch.update({
       where: { id },
       data: { active: false },
-    })
+    });
 
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Failed to delete saved search:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true });
+  } catch (error: unknown) {
+    console.error('Failed to delete saved search:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

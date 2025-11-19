@@ -4,9 +4,9 @@
  * Get available subscription plans with pricing
  */
 
-import { NextResponse } from 'next/server'
-import { STRIPE_PLANS, formatAmount } from '@/lib/billing/stripe'
-import { TIER_LIMITS } from '@/lib/billing/feature-gates'
+import { NextResponse } from 'next/server';
+import { STRIPE_PLANS, formatAmount } from '@/lib/billing/stripe';
+import { TIER_LIMITS } from '@/lib/billing/feature-gates';
 
 export async function GET() {
   try {
@@ -155,11 +155,14 @@ export async function GET() {
         cta: 'Contact Sales',
         popular: false,
       },
-    ]
+    ];
 
-    return NextResponse.json({ plans })
-  } catch (error: any) {
-    console.error('Get plans error:', error)
-    return NextResponse.json({ error: error.message || 'Failed to get plans' }, { status: 500 })
+    return NextResponse.json({ plans });
+  } catch (error: unknown) {
+    console.error('Get plans error:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to get plans' },
+      { status: 500 }
+    );
   }
 }

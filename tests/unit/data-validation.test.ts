@@ -62,14 +62,14 @@ describe('Data Validation', () => {
 
   describe('Array validation', () => {
     it('should validate non-empty arrays', () => {
-      const isNonEmpty = (arr: any[]) => Array.isArray(arr) && arr.length > 0;
+      const isNonEmpty = (arr: unknown[]) => Array.isArray(arr) && arr.length > 0;
 
       expect(isNonEmpty([1, 2, 3])).toBe(true);
       expect(isNonEmpty([])).toBe(false);
     });
 
     it('should validate array length', () => {
-      const isValidLength = (arr: any[], min: number, max: number) => {
+      const isValidLength = (arr: unknown[], min: number, max: number) => {
         return arr.length >= min && arr.length <= max;
       };
 
@@ -78,7 +78,7 @@ describe('Data Validation', () => {
     });
 
     it('should validate array contains specific values', () => {
-      const contains = (arr: any[], value: any) => arr.includes(value);
+      const contains = (arr: unknown[], value: any) => arr.includes(value);
 
       expect(contains(['a', 'b', 'c'], 'b')).toBe(true);
       expect(contains(['a', 'b', 'c'], 'd')).toBe(false);

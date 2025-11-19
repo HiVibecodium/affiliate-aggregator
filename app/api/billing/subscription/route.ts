@@ -9,36 +9,36 @@
  * Cancel subscription
  */
 
-import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server';
 import {
   getActiveSubscription,
   cancelSubscription,
   reactivateSubscription,
   changeSubscriptionPlan,
-} from '@/lib/billing/subscription'
-import { getPriceId } from '@/lib/billing/stripe'
-import { prisma } from '@/lib/prisma'
+} from '@/lib/billing/subscription';
+import { getPriceId } from '@/lib/billing/stripe';
+import { prisma } from '@/lib/prisma';
 
 /**
  * GET - Get user's subscription details
  */
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
 
     if (!userId) {
-      return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
+      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
 
-    const subscription = await getActiveSubscription(userId)
+    const subscription = await getActiveSubscription(userId);
 
     if (!subscription) {
       return NextResponse.json({
         tier: 'free',
         status: 'active',
         subscription: null,
-      })
+      });
     }
 
     // Get recent invoices
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
       where: { userId },
       orderBy: { createdAt: 'desc' },
       take: 5,
-    })
+    });
 
     return NextResponse.json({
       tier: subscription.tier,
@@ -58,10 +58,13 @@ export async function GET(request: Request) {
         trialEnd: subscription.trialEnd,
       },
       invoices,
-    })
-  } catch (error: any) {
-    console.error('Get subscription error:', error)
-    return NextResponse.json({ error: error.message || 'Failed to get subscription' }, { status: 500 })
+    });
+  } catch (error: unknown) {
+    console.error('Get subscription error:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to get subscription' },
+      { status: 500 }
+    );
   }
 }
 
@@ -70,35 +73,35 @@ export async function GET(request: Request) {
  */
 export async function PUT(request: Request) {
   try {
-    const body = await request.json()
-    const { userId, newTier, newInterval } = body
+    const body = await request.json();
+    const { userId, newTier, newInterval } = body;
 
     if (!userId || !newTier || !newInterval) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     if (!['pro', 'business'].includes(newTier)) {
-      return NextResponse.json({ error: 'Invalid tier' }, { status: 400 })
+      return NextResponse.json({ error: 'Invalid tier' }, { status: 400 });
     }
 
     if (!['month', 'year'].includes(newInterval)) {
-      return NextResponse.json({ error: 'Invalid interval' }, { status: 400 })
+      return NextResponse.json({ error: 'Invalid interval' }, { status: 400 });
     }
 
-    const subscription = await getActiveSubscription(userId)
+    const subscription = await getActiveSubscription(userId);
 
     if (!subscription) {
-      return NextResponse.json({ error: 'No active subscription found' }, { status: 404 })
+      return NextResponse.json({ error: 'No active subscription found' }, { status: 404 });
     }
 
-    const newPriceId = getPriceId(newTier, newInterval)
+    const newPriceId = getPriceId(newTier, newInterval);
 
     if (!newPriceId) {
-      return NextResponse.json({ error: 'Price ID not configured' }, { status: 500 })
+      return NextResponse.json({ error: 'Price ID not configured' }, { status: 500 });
     }
 
     // Change subscription plan
-    const updated = await changeSubscriptionPlan(subscription.id, newPriceId, newTier)
+    const updated = await changeSubscriptionPlan(subscription.id, newPriceId, newTier);
 
     return NextResponse.json({
       success: true,
@@ -107,10 +110,13 @@ export async function PUT(request: Request) {
         tier: updated.tier,
         status: updated.status,
       },
-    })
-  } catch (error: any) {
-    console.error('Update subscription error:', error)
-    return NextResponse.json({ error: error.message || 'Failed to update subscription' }, { status: 500 })
+    });
+  } catch (error: unknown) {
+    console.error('Update subscription error:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to update subscription' },
+      { status: 500 }
+    );
   }
 }
 
@@ -119,22 +125,22 @@ export async function PUT(request: Request) {
  */
 export async function DELETE(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
-    const immediately = searchParams.get('immediately') === 'true'
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
+    const immediately = searchParams.get('immediately') === 'true';
 
     if (!userId) {
-      return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
+      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
 
-    const subscription = await getActiveSubscription(userId)
+    const subscription = await getActiveSubscription(userId);
 
     if (!subscription) {
-      return NextResponse.json({ error: 'No active subscription found' }, { status: 404 })
+      return NextResponse.json({ error: 'No active subscription found' }, { status: 404 });
     }
 
     // Cancel subscription
-    const updated = await cancelSubscription(subscription.id, immediately)
+    const updated = await cancelSubscription(subscription.id, immediately);
 
     return NextResponse.json({
       success: true,
@@ -144,10 +150,13 @@ export async function DELETE(request: Request) {
         cancelAtPeriodEnd: updated.cancelAtPeriodEnd,
         canceledAt: updated.canceledAt,
       },
-    })
-  } catch (error: any) {
-    console.error('Cancel subscription error:', error)
-    return NextResponse.json({ error: error.message || 'Failed to cancel subscription' }, { status: 500 })
+    });
+  } catch (error: unknown) {
+    console.error('Cancel subscription error:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to cancel subscription' },
+      { status: 500 }
+    );
   }
 }
 
@@ -156,25 +165,28 @@ export async function DELETE(request: Request) {
  */
 export async function PATCH(request: Request) {
   try {
-    const body = await request.json()
-    const { userId } = body
+    const body = await request.json();
+    const { userId } = body;
 
     if (!userId) {
-      return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
+      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
 
-    const subscription = await getActiveSubscription(userId)
+    const subscription = await getActiveSubscription(userId);
 
     if (!subscription) {
-      return NextResponse.json({ error: 'No subscription found' }, { status: 404 })
+      return NextResponse.json({ error: 'No subscription found' }, { status: 404 });
     }
 
     if (!subscription.cancelAtPeriodEnd) {
-      return NextResponse.json({ error: 'Subscription is not scheduled for cancellation' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Subscription is not scheduled for cancellation' },
+        { status: 400 }
+      );
     }
 
     // Reactivate subscription
-    const updated = await reactivateSubscription(subscription.id)
+    const updated = await reactivateSubscription(subscription.id);
 
     return NextResponse.json({
       success: true,
@@ -183,9 +195,12 @@ export async function PATCH(request: Request) {
         status: updated.status,
         cancelAtPeriodEnd: updated.cancelAtPeriodEnd,
       },
-    })
-  } catch (error: any) {
-    console.error('Reactivate subscription error:', error)
-    return NextResponse.json({ error: error.message || 'Failed to reactivate subscription' }, { status: 500 })
+    });
+  } catch (error: unknown) {
+    console.error('Reactivate subscription error:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to reactivate subscription' },
+      { status: 500 }
+    );
   }
 }

@@ -145,7 +145,7 @@ export async function GET(request: Request) {
       emailsSent,
       totalMatches,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Cron job error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

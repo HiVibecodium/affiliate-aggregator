@@ -83,7 +83,7 @@ export async function GET(request: Request) {
         headers: { 'Content-Type': 'text/html; charset=utf-8' },
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Unsubscribe error:', error);
 
     return new Response(

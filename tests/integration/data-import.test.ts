@@ -19,8 +19,7 @@ jest.mock('@/lib/prisma', () => ({
 }));
 
 describe('Data Import Integration Tests', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let prismaMock: any;
+  let prismaMock: unknown;
 
   beforeEach(() => {
     jest.clearAllMocks();
