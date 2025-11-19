@@ -154,7 +154,7 @@ export default function OrganizationSettingsPage() {
             href="/settings"
             className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block"
           >
-            ← Back to Settings
+            ← Назад в настройки
           </Link>
           <h1 className="text-3xl font-bold text-gray-900">Organization Settings</h1>
           <p className="text-gray-600 mt-1">Manage your organization profile and settings</p>

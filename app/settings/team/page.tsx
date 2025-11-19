@@ -107,7 +107,7 @@ export default function TeamManagementPage() {
   };
 
   const handleRemoveMember = async (memberId: string) => {
-    if (!confirm('Remove this team member?')) return;
+    if (!confirm('Удалить этого участника команды?')) return;
     if (!currentOrgId) return;
 
     try {
@@ -119,7 +119,7 @@ export default function TeamManagementPage() {
         throw new Error('Failed to remove member');
       }
 
-      alert('Member removed successfully');
+      alert('Участник успешно удален');
       fetchOrganization();
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Failed to remove member');
@@ -140,7 +140,7 @@ export default function TeamManagementPage() {
         throw new Error('Failed to change role');
       }
 
-      alert('Role updated successfully');
+      alert('Роль успешно обновлена');
       fetchOrganization();
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Failed to change role');
@@ -191,7 +191,7 @@ export default function TeamManagementPage() {
             href="/settings"
             className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block"
           >
-            ← Back to Settings
+            ← Назад в настройки
           </Link>
           <div className="flex items-center justify-between">
             <div>
@@ -206,9 +206,11 @@ export default function TeamManagementPage() {
                   ? 'bg-blue-500 text-white hover:bg-blue-600'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
-              title={!canInvite ? 'Seat limit reached. Upgrade to add more members.' : ''}
+              title={
+                !canInvite ? 'Достигнут лимит мест. Обновите план для добавления участников.' : ''
+              }
             >
-              + Invite Member
+              + Пригласить участника
             </button>
           </div>
         </div>
@@ -261,7 +263,7 @@ export default function TeamManagementPage() {
                     href="/billing/upgrade"
                     className="mt-2 inline-block text-sm font-medium text-yellow-800 hover:text-yellow-900 underline"
                   >
-                    Upgrade Now →
+                    Обновить сейчас →
                   </Link>
                 </div>
               </div>
@@ -323,7 +325,7 @@ export default function TeamManagementPage() {
                         {member.status === 'active' && (
                           <> • Joined {new Date(member.createdAt).toLocaleDateString()}</>
                         )}
-                        {member.status === 'pending' && <> • Invited, awaiting acceptance</>}
+                        {member.status === 'pending' && <> • Приглашен, ожидает принятия</>}
                       </p>
                     </div>
                   </div>
@@ -337,10 +339,10 @@ export default function TeamManagementPage() {
                         onChange={(e) => handleChangeRole(member.id, e.target.value)}
                         className="border border-gray-300 rounded px-3 py-1 text-sm"
                       >
-                        <option value="viewer">Viewer</option>
-                        <option value="member">Member</option>
-                        <option value="manager">Manager</option>
-                        <option value="admin">Admin</option>
+                        <option value="viewer">Наблюдатель</option>
+                        <option value="member">Участник</option>
+                        <option value="manager">Менеджер</option>
+                        <option value="admin">Администратор</option>
                       </select>
 
                       {/* Remove button */}
@@ -363,7 +365,7 @@ export default function TeamManagementPage() {
                   onClick={() => setShowInviteModal(true)}
                   className="mt-4 text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  Invite your first team member →
+                  Пригласите первого участника →
                 </button>
               </div>
             )}
@@ -420,16 +422,16 @@ export default function TeamManagementPage() {
               </div>
 
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Роль</label>
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="viewer">Viewer - Read only</option>
-                  <option value="member">Member - View and create</option>
-                  <option value="manager">Manager - Manage programs</option>
-                  <option value="admin">Admin - Full access (except billing)</option>
+                  <option value="viewer">Наблюдатель - Только чтение</option>
+                  <option value="member">Участник - Просмотр и создание</option>
+                  <option value="manager">Менеджер - Управление программами</option>
+                  <option value="admin">Администратор - Полный доступ (кроме биллинга)</option>
                 </select>
               </div>
 
