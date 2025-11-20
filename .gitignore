@@ -68,3 +68,5 @@ backup-*.env
 backup-*.md
 *BACKUP*.md
 *SESSION_SUMMARY*.md
+
+.vercel

@@ -1,0 +1,148 @@
+name: Emergency Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_tag:
+        description: 'Deployment tag to rollback to (e.g., deploy-20250611-143022)'
+        required: true
+        type: string
+      reason:
+        description: 'Reason for rollback'
+        required: true
+        type: string
+      skip_tests:
+        description: 'Skip tests (emergency only)'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  validate-rollback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify deployment tag exists
+        run: |
+          git fetch --tags
+          if ! git rev-parse "${{ inputs.deployment_tag }}" >/dev/null 2>&1; then
+            echo "❌ Deployment tag ${{ inputs.deployment_tag }} not found"
+            exit 1
+          fi
+          echo "✅ Deployment tag found"
+
+      - name: Show rollback details
+        run: |
+          echo "🔄 ROLLBACK INITIATED"
+          echo "Target tag: ${{ inputs.deployment_tag }}"
+          echo "Reason: ${{ inputs.reason }}"
+          echo "Initiated by: ${{ github.actor }}"
+          echo "Skip tests: ${{ inputs.skip_tests }}"
+
+  execute-rollback:
+    runs-on: ubuntu-latest
+    needs: validate-rollback
+    environment:
+      name: production
+      url: https://affiliate-aggregator-five.vercel.app
+
+    steps:
+      - name: Checkout code at tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.deployment_tag }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run quick tests
+        if: ${{ !inputs.skip_tests }}
+        run: npm run test:unit
+        env:
+          DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.TEST_DIRECT_URL }}
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Build rollback version
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Deploy rollback to production
+        id: rollback-deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "rollback_url=$URL" >> $GITHUB_OUTPUT
+          echo "Rollback deployed to: $URL"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Verify rollback deployment
+        run: |
+          sleep 30
+          curl -f https://affiliate-aggregator-five.vercel.app/api/health || exit 1
+          echo "✅ Rollback deployment health check passed"
+
+      - name: Create rollback incident log
+        run: |
+          echo "# ROLLBACK INCIDENT LOG" > rollback-log.md
+          echo "Date: $(date)" >> rollback-log.md
+          echo "Tag: ${{ inputs.deployment_tag }}" >> rollback-log.md
+          echo "Reason: ${{ inputs.reason }}" >> rollback-log.md
+          echo "Initiated by: ${{ github.actor }}" >> rollback-log.md
+          echo "Status: SUCCESS" >> rollback-log.md
+
+      - name: Upload incident log
+        uses: actions/upload-artifact@v4
+        with:
+          name: rollback-incident-log
+          path: rollback-log.md
+          retention-days: 90
+
+      - name: Notify rollback completion
+        run: |
+          echo "✅ ROLLBACK COMPLETED SUCCESSFULLY"
+          echo "Previous version restored: ${{ inputs.deployment_tag }}"
+          echo "Reason: ${{ inputs.reason }}"
+
+  post-rollback-monitoring:
+    runs-on: ubuntu-latest
+    needs: execute-rollback
+
+    steps:
+      - name: Monitor for 5 minutes
+        run: |
+          echo "Monitoring rolled-back deployment..."
+          for i in {1..10}; do
+            if curl -f https://affiliate-aggregator-five.vercel.app/api/health; then
+              echo "Health check $i passed"
+              sleep 30
+            else
+              echo "❌ Health check $i failed - manual intervention required"
+              exit 1
+            fi
+          done
+          echo "✅ Rollback monitoring complete - system stable"

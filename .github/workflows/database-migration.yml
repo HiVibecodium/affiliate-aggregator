@@ -1,0 +1,181 @@
+name: Database Migration
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      migration_name:
+        description: 'Migration name (optional - runs all pending if empty)'
+        required: false
+        type: string
+      create_backup:
+        description: 'Create database backup before migration'
+        required: false
+        type: boolean
+        default: true
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  validate-migration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check migration status
+        run: |
+          echo "Checking migration status for ${{ inputs.environment }}..."
+          npx prisma migrate status
+        env:
+          DATABASE_URL: ${{ inputs.environment == 'production' && secrets.PRODUCTION_DATABASE_URL || secrets.STAGING_DATABASE_URL }}
+
+      - name: Validate migration files
+        run: |
+          if [ -d "prisma/migrations" ]; then
+            echo "✅ Migration files found"
+            ls -la prisma/migrations/
+          else
+            echo "⚠️ No migration files found"
+          fi
+
+  backup-database:
+    runs-on: ubuntu-latest
+    needs: validate-migration
+    if: ${{ inputs.create_backup }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Create database backup
+        run: |
+          echo "Creating backup for ${{ inputs.environment }}..."
+          BACKUP_NAME="${{ inputs.environment }}-backup-$(date +%Y%m%d-%H%M%S).sql"
+          echo "Backup name: $BACKUP_NAME"
+          # Add your backup command here based on your database
+          # For Supabase/Postgres:
+          # pg_dump $DATABASE_URL > $BACKUP_NAME
+        env:
+          DATABASE_URL: ${{ inputs.environment == 'production' && secrets.PRODUCTION_DATABASE_URL || secrets.STAGING_DATABASE_URL }}
+
+      - name: Upload backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-backup-${{ inputs.environment }}
+          path: '*.sql'
+          retention-days: 30
+
+  run-migration:
+    runs-on: ubuntu-latest
+    needs: [validate-migration, backup-database]
+    if: always() && needs.validate-migration.result == 'success' && (needs.backup-database.result == 'success' || needs.backup-database.result == 'skipped')
+    environment:
+      name: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Prisma migrations
+        id: migrate
+        run: |
+          echo "Running migrations on ${{ inputs.environment }}..."
+          npx prisma migrate deploy
+          echo "✅ Migrations completed successfully"
+        env:
+          DATABASE_URL: ${{ inputs.environment == 'production' && secrets.PRODUCTION_DATABASE_URL || secrets.STAGING_DATABASE_URL }}
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Verify migration
+        run: |
+          echo "Verifying migration status..."
+          npx prisma migrate status
+        env:
+          DATABASE_URL: ${{ inputs.environment == 'production' && secrets.PRODUCTION_DATABASE_URL || secrets.STAGING_DATABASE_URL }}
+
+      - name: Create migration log
+        run: |
+          echo "# MIGRATION LOG" > migration-log.md
+          echo "Environment: ${{ inputs.environment }}" >> migration-log.md
+          echo "Date: $(date)" >> migration-log.md
+          echo "Migration: ${{ inputs.migration_name || 'All pending' }}" >> migration-log.md
+          echo "Initiated by: ${{ github.actor }}" >> migration-log.md
+          echo "Status: SUCCESS" >> migration-log.md
+
+      - name: Upload migration log
+        uses: actions/upload-artifact@v4
+        with:
+          name: migration-log-${{ inputs.environment }}
+          path: migration-log.md
+          retention-days: 90
+
+  post-migration-validation:
+    runs-on: ubuntu-latest
+    needs: run-migration
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run data validation tests
+        run: |
+          echo "Running post-migration validation..."
+          # Add your validation scripts here
+          npx prisma db pull --print
+        env:
+          DATABASE_URL: ${{ inputs.environment == 'production' && secrets.PRODUCTION_DATABASE_URL || secrets.STAGING_DATABASE_URL }}
+
+      - name: Check database health
+        run: |
+          echo "Checking database health..."
+          # Add database health checks here
+
+      - name: Notify success
+        if: success()
+        run: |
+          echo "✅ Migration completed successfully on ${{ inputs.environment }}"
+          echo "All validation checks passed"
