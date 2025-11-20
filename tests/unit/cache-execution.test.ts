@@ -49,7 +49,7 @@ describe('Cache Module - Execution Tests', () => {
 
     it('should execute with default TTL', async () => {
       const fetcher = jest.fn(async () => 'value');
-      const result = await getCached('key', fetcher);
+      const result = await getCached('key-default-ttl', fetcher);
 
       expect(result).toBe('value');
       expect(fetcher).toHaveBeenCalled();
@@ -57,7 +57,7 @@ describe('Cache Module - Execution Tests', () => {
 
     it('should execute with custom TTL', async () => {
       const fetcher = jest.fn(async () => 123);
-      const result = await getCached('key', fetcher, 600);
+      const result = await getCached('key-custom-ttl', fetcher, 600);
 
       expect(result).toBe(123);
       expect(fetcher).toHaveBeenCalled();
