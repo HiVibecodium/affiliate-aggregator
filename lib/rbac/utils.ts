@@ -205,6 +205,7 @@ export function createAuditLogData(
   details?: Record<string, any>
 ): {
   action: string;
+  organizationId: string;
   resourceType: string;
   resourceId: string | null;
   performedBy: string;
@@ -212,6 +213,7 @@ export function createAuditLogData(
 } {
   return {
     action,
+    organizationId: context.organizationId,
     resourceType: 'user',
     resourceId: targetUserId || null,
     performedBy: context.userId,

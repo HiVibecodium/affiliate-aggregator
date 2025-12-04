@@ -89,7 +89,7 @@ export async function PUT(
         email: targetMember.user.email,
         oldRole: targetMember.role,
         newRole: role,
-      }) as any,
+      }),
     });
 
     return NextResponse.json({
@@ -167,7 +167,7 @@ export async function DELETE(
       data: createAuditLogData('member_removed', rbacContext, targetMember.userId, {
         email: targetMember.user.email,
         role: targetMember.role,
-      }) as any,
+      }),
     });
 
     return NextResponse.json({

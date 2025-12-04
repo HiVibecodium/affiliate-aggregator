@@ -23,6 +23,7 @@ export const prisma =
     // Connection pool configuration optimized for serverless (Vercel)
     // Works with PgBouncer connection pooling (pgbouncer=true in DATABASE_URL)
     // connection_limit=1 in DATABASE_URL ensures single connection per instance
+
     __internal: {
       engine: {
         // Reduce connection acquisition timeout for faster failures

@@ -4,13 +4,23 @@
  * Uses dynamic import to reduce initial bundle size
  */
 
+// Type for program data in PDF export
+interface ProgramPDFData {
+  name: string;
+  network: {
+    name: string;
+  };
+  commissionRate: number | null;
+  commissionType: string | null;
+}
+
 // Dynamic import for jsPDF to reduce bundle size
 async function loadJsPDF() {
   const { default: jsPDF } = await import('jspdf');
   return jsPDF;
 }
 
-export async function generateProgramPDF(programs: any[]) {
+export async function generateProgramPDF(programs: ProgramPDFData[]) {
   const jsPDF = await loadJsPDF();
   const doc = new jsPDF();
 
@@ -39,7 +49,7 @@ export async function generateProgramPDF(programs: any[]) {
   return doc;
 }
 
-export async function downloadProgramsPDF(programs: any[], filename = 'programs.pdf') {
+export async function downloadProgramsPDF(programs: ProgramPDFData[], filename = 'programs.pdf') {
   const doc = await generateProgramPDF(programs);
   doc.save(filename);
 }

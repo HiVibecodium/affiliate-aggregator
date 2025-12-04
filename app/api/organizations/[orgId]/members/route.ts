@@ -153,7 +153,7 @@ export async function POST(
 
       // Log audit entry
       await prisma.auditLog.create({
-        data: createAuditLogData('member_added', rbacContext, user.id, { email, role }) as any,
+        data: createAuditLogData('member_added', rbacContext, user.id, { email, role }),
       });
 
       return NextResponse.json(

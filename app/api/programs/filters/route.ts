@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCached, CacheKeys } from '@/lib/cache';
 import { getCountryInfo } from '@/lib/countries';
+import type { Prisma } from '@prisma/client';
 
 /**
  * GET /api/programs/filters
@@ -45,7 +46,7 @@ async function fetchFiltersData(
 ) {
   try {
     // Build base where clause for cascading filters
-    const baseWhere: any = { active: true };
+    const baseWhere: Prisma.AffiliateProgramWhereInput = { active: true };
 
     if (network) {
       baseWhere.network = { name: network };
