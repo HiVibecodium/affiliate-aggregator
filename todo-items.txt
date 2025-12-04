@@ -1,0 +1,11 @@
+app/api/invite/accept/route.ts:        // inviteToken: token, // TODO: Uncomment after migration
+app/api/invite/accept/route.ts:    // TODO: Get current user from session/auth
+app/api/invite/accept/route.ts:        // inviteToken: null, // TODO: Uncomment after migration
+app/api/invite/decline/route.ts:        // inviteToken: token, // TODO: Uncomment after migration
+app/api/invite/verify/route.ts:        // inviteToken: token, // TODO: Uncomment after migration
+app/api/organizations/[orgId]/members/route.ts:          // inviteToken, // TODO: Uncomment after migration
+app/api/referrals/route.ts:    // TODO: Send invitation email
+app/layout.tsx:        {/* TODO: Add Bing Webmaster verification code */}
+app/layout.tsx:        {/* TODO: Add Yandex Webmaster verification code (optional) */}
+lib/billing/webhooks.ts:  // TODO: Send notification to user about failed payment
+components/OrganizationSwitcher.tsx:// import { createClient } from '@/lib/supabase/client'; // TODO: Use when implementing org switching

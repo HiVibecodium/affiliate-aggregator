@@ -1,1 +1,4 @@
+# Check for secrets before committing
+bash scripts/check-secrets.sh || exit 1
+
 npx lint-staged
