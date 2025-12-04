@@ -23,11 +23,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           content="p1cIXuadbLcYL6mD1hJFnRn3ma9r6OkIl9etzF4bY0U"
         />
 
-        {/* TODO: Add Bing Webmaster verification code */}
-        {/* <meta name="msvalidate.01" content="YOUR_BING_CODE" /> */}
+        {/* Bing Webmaster Tools Verification */}
+        {process.env.NEXT_PUBLIC_BING_VERIFICATION && (
+          <meta name="msvalidate.01" content={process.env.NEXT_PUBLIC_BING_VERIFICATION} />
+        )}
 
-        {/* TODO: Add Yandex Webmaster verification code (optional) */}
-        {/* <meta name="yandex-verification" content="YOUR_YANDEX_CODE" /> */}
+        {/* Yandex Webmaster Verification (optional - for Russian market) */}
+        {process.env.NEXT_PUBLIC_YANDEX_VERIFICATION && (
+          <meta name="yandex-verification" content={process.env.NEXT_PUBLIC_YANDEX_VERIFICATION} />
+        )}
 
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#3b82f6" />

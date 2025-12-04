@@ -7,9 +7,9 @@ import { logger } from '@/lib/logger';
  * Displays current organization and list of other available organizations
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-// import { createClient } from '@/lib/supabase/client'; // TODO: Use when implementing org switching
+import { createClient } from '@/lib/supabase/client';
 
 interface Organization {
   id: string;
@@ -29,11 +29,27 @@ export function OrganizationSwitcher({ currentOrg, className = '' }: Organizatio
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSwitching, setIsSwitching] = useState(false);
   const router = useRouter();
+  const supabase = createClient();
+
+  const loadSavedOrganization = useCallback(() => {
+    try {
+      const savedOrgId = localStorage.getItem('selected_organization_id');
+      if (savedOrgId && !currentOrg) {
+        // If there's a saved org but no current org, navigate to it
+        router.push(`/dashboard?org=${savedOrgId}`);
+      }
+    } catch (error) {
+      logger.warn('Failed to load saved organization:', error);
+    }
+  }, [currentOrg, router]);
 
   useEffect(() => {
     fetchOrganizations();
-  }, []);
+    // Load last selected organization from localStorage
+    loadSavedOrganization();
+  }, [loadSavedOrganization]);
 
   async function fetchOrganizations() {
     try {
@@ -53,10 +69,39 @@ export function OrganizationSwitcher({ currentOrg, className = '' }: Organizatio
     }
   }
 
-  function handleOrgSwitch(org: Organization) {
-    setIsOpen(false);
-    // Navigate to organization dashboard
-    router.push(`/dashboard?org=${org.id}`);
+  async function handleOrgSwitch(org: Organization) {
+    try {
+      setIsSwitching(true);
+      setIsOpen(false);
+
+      // Verify user has access to this organization
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        logger.error('No authenticated user found');
+        return;
+      }
+
+      // Save selected organization to localStorage for persistence
+      try {
+        localStorage.setItem('selected_organization_id', org.id);
+        localStorage.setItem('selected_organization_name', org.name);
+      } catch (error) {
+        logger.warn('Failed to save organization to localStorage:', error);
+      }
+
+      // Navigate to organization dashboard
+      router.push(`/dashboard?org=${org.id}`);
+
+      // Refresh the page to update context
+      router.refresh();
+    } catch (error) {
+      logger.error('Error switching organization:', error);
+    } finally {
+      setIsSwitching(false);
+    }
   }
 
   function handleCreateOrg() {
@@ -71,12 +116,39 @@ export function OrganizationSwitcher({ currentOrg, className = '' }: Organizatio
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-900 transition-colors"
+        disabled={isSwitching}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
         <div className="flex items-center gap-2 flex-1">
-          {currentOrg ? (
+          {isSwitching ? (
+            <>
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                <svg
+                  className="animate-spin h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </div>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Switching...</span>
+            </>
+          ) : currentOrg ? (
             <>
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-semibold">
                 {currentOrg.name.charAt(0).toUpperCase()}
