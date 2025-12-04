@@ -16,6 +16,7 @@ jest.mock('@/lib/prisma', () => ({
     },
     organizationMember: {
       findFirst: jest.fn(),
+      findUnique: jest.fn(),
       findMany: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -24,6 +25,7 @@ jest.mock('@/lib/prisma', () => ({
     },
     user: {
       findUnique: jest.fn(),
+      create: jest.fn(),
     },
     auditLog: {
       create: jest.fn(),
@@ -31,7 +33,11 @@ jest.mock('@/lib/prisma', () => ({
   },
 }));
 
-// Mock Supabase
+// Mock Supabase SSR (used by org-middleware)
+const { setMockUser, clearMockUser } = require('@supabase/ssr');
+jest.mock('@supabase/ssr');
+
+// Mock Supabase server client (legacy, for compatibility)
 jest.mock('@/lib/supabase/server', () => ({
   createClient: jest.fn(() => ({
     auth: {
@@ -42,22 +48,17 @@ jest.mock('@/lib/supabase/server', () => ({
 
 describe('Organizations API', () => {
   let prismaMock: any;
-  let supabaseMock: any;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    clearMockUser(); // Clear Supabase SSR mock
     prismaMock = require('@/lib/prisma').prisma;
-    const { createClient } = require('@/lib/supabase/server');
-    supabaseMock = createClient();
   });
 
   describe('GET /api/organizations', () => {
     it('should return user organizations', async () => {
       // Mock authenticated user
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: { id: 'user_123' } },
-        error: null,
-      });
+      setMockUser({ id: 'user_123', email: 'test@example.com' });
 
       // Mock organizations
       prismaMock.organizationMember.findMany.mockResolvedValue([
@@ -89,10 +90,7 @@ describe('Organizations API', () => {
     });
 
     it('should return 401 for unauthenticated user', async () => {
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: null },
-        error: { message: 'Not authenticated' },
-      });
+      setMockUser(null, { message: 'Not authenticated' });
 
       const { GET } = await import('@/app/api/organizations/route');
       const request = new NextRequest('http://localhost:3000/api/organizations');
@@ -104,10 +102,7 @@ describe('Organizations API', () => {
 
   describe('POST /api/organizations', () => {
     it('should create organization with owner role', async () => {
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: { id: 'user_123' } },
-        error: null,
-      });
+      setMockUser({ id: 'user_123', email: 'test@example.com' });
 
       prismaMock.user.findUnique.mockResolvedValue({
         id: 'user_123',
@@ -167,10 +162,7 @@ describe('Organizations API', () => {
     });
 
     it('should validate organization name', async () => {
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: { id: 'user_123' } },
-        error: null,
-      });
+      setMockUser({ id: 'user_123', email: 'test@example.com' });
 
       const { POST } = await import('@/app/api/organizations/route');
       const request = new NextRequest('http://localhost:3000/api/organizations', {
@@ -189,10 +181,7 @@ describe('Organizations API', () => {
 
   describe('GET /api/organizations/[orgId]', () => {
     it('should return organization details', async () => {
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: { id: 'user_123' } },
-        error: null,
-      });
+      setMockUser({ id: 'user_123', email: 'test@example.com' });
 
       prismaMock.organizationMember.findFirst.mockResolvedValue({
         id: 'member_1',
@@ -226,10 +215,7 @@ describe('Organizations API', () => {
     });
 
     it('should return 403 for non-member', async () => {
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: { id: 'user_123' } },
-        error: null,
-      });
+      setMockUser({ id: 'user_123', email: 'test@example.com' });
 
       prismaMock.organizationMember.findFirst.mockResolvedValue(null);
 
@@ -243,10 +229,7 @@ describe('Organizations API', () => {
 
   describe('PUT /api/organizations/[orgId]', () => {
     it('should update organization (owner only)', async () => {
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: { id: 'user_123' } },
-        error: null,
-      });
+      setMockUser({ id: 'user_123', email: 'test@example.com' });
 
       prismaMock.organizationMember.findFirst.mockResolvedValue({
         id: 'member_1',
@@ -286,10 +269,7 @@ describe('Organizations API', () => {
     });
 
     it('should return 403 for non-owner', async () => {
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: { id: 'user_123' } },
-        error: null,
-      });
+      setMockUser({ id: 'user_123', email: 'test@example.com' });
 
       prismaMock.organizationMember.findFirst.mockResolvedValue({
         id: 'member_1',
@@ -313,10 +293,7 @@ describe('Organizations API', () => {
 
   describe('GET /api/organizations/[orgId]/members', () => {
     it('should return organization members', async () => {
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: { id: 'user_123' } },
-        error: null,
-      });
+      setMockUser({ id: 'user_123', email: 'test@example.com' });
 
       prismaMock.organizationMember.findFirst.mockResolvedValue({
         id: 'member_1',
@@ -362,10 +339,7 @@ describe('Organizations API', () => {
 
   describe('POST /api/organizations/[orgId]/members', () => {
     it('should invite member (admin/owner only)', async () => {
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: { id: 'user_123' } },
-        error: null,
-      });
+      setMockUser({ id: 'user_123', email: 'test@example.com' });
 
       prismaMock.organizationMember.findFirst.mockResolvedValue({
         id: 'member_1',
@@ -409,10 +383,7 @@ describe('Organizations API', () => {
 
   describe('DELETE /api/organizations/[orgId]/members/[memberId]', () => {
     it('should remove member (admin/owner only)', async () => {
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: { id: 'user_123' } },
-        error: null,
-      });
+      setMockUser({ id: 'user_123', email: 'test@example.com' });
 
       prismaMock.organizationMember.findFirst
         .mockResolvedValueOnce({
@@ -450,10 +421,7 @@ describe('Organizations API', () => {
     });
 
     it('should prevent removing the only owner', async () => {
-      supabaseMock.auth.getUser.mockResolvedValue({
-        data: { user: { id: 'user_123' } },
-        error: null,
-      });
+      setMockUser({ id: 'user_123', email: 'test@example.com' });
 
       prismaMock.organizationMember.findFirst
         .mockResolvedValueOnce({
