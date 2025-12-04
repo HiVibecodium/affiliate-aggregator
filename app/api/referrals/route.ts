@@ -8,6 +8,8 @@ import { logger } from '@/lib/logger';
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendEmail } from '@/lib/email/resend-client';
+import { generateReferralInviteEmail } from '@/lib/email/templates/referral-invite';
 
 function generateReferralCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -124,9 +126,55 @@ export async function POST(request: Request) {
       });
     }
 
-    // TODO: Send invitation email
+    // Get referrer details for email
+    const referrer = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true, email: true },
+    });
 
-    return NextResponse.json({ success: true, referral });
+    // Build signup URL with referral code
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const signupUrl = `${appUrl}/signup?ref=${referral.referralCode}`;
+
+    // Send invitation email
+    const emailTemplate = generateReferralInviteEmail({
+      referrerName: referrer?.name || referrer?.email || 'Your friend',
+      referralCode: referral.referralCode,
+      signupUrl,
+      referrerReward: referral.referrerReward || '1_month_free',
+      referredReward: referral.referredReward || '50_percent_off',
+      appUrl,
+    });
+
+    const emailResult = await sendEmail({
+      to: email,
+      subject: emailTemplate.subject,
+      html: emailTemplate.html,
+    });
+
+    if (!emailResult.success) {
+      logger.error('Failed to send referral invitation email:', {
+        userId,
+        email,
+        reason: emailResult.reason || 'unknown',
+        error: emailResult.error,
+      });
+    } else {
+      logger.log('Referral invitation sent:', {
+        userId,
+        email,
+        referralCode: referral.referralCode,
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
+      referral,
+      emailSent: emailResult.success,
+      message: emailResult.success
+        ? `Invitation sent to ${email}`
+        : 'Referral created but email not sent - check configuration',
+    });
   } catch (error: unknown) {
     logger.error('Invite error:', error);
     return NextResponse.json(

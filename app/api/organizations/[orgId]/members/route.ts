@@ -193,7 +193,7 @@ export async function POST(
           role,
           status: 'pending',
           invitedEmail: email,
-          // inviteToken, // TODO: Uncomment after migration
+          inviteToken,
           invitedAt: new Date(),
         },
       });
