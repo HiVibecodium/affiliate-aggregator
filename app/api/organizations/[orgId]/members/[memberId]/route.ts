@@ -7,14 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getOrgContext, toRBACContext, OrgAuth } from '@/lib/auth/org-middleware';
-import {
-  can,
-  canManageUser,
-  createAuditLogData,
-  Permission,
-  isValidRole,
-  isRole,
-} from '@/lib/rbac/utils';
+import { can, canManageUser, createAuditLogData, Permission, isValidRole } from '@/lib/rbac/utils';
 
 /**
  * PUT /api/organizations/[orgId]/members/[memberId]
@@ -59,10 +52,7 @@ export async function PUT(
     const { role, permissions } = body;
 
     if (role && !isValidRole(role)) {
-      return NextResponse.json(
-        { error: `Invalid role: ${role}` },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: `Invalid role: ${role}` }, { status: 400 });
     }
 
     // Check if user can manage target role
@@ -95,12 +85,11 @@ export async function PUT(
 
     // Log audit entry
     await prisma.auditLog.create({
-      data: createAuditLogData(
-        'member_updated',
-        rbacContext,
-        targetMember.userId,
-        { email: targetMember.user.email, oldRole: targetMember.role, newRole: role }
-      ) as any,
+      data: createAuditLogData('member_updated', rbacContext, targetMember.userId, {
+        email: targetMember.user.email,
+        oldRole: targetMember.role,
+        newRole: role,
+      }) as any,
     });
 
     return NextResponse.json({
@@ -115,10 +104,7 @@ export async function PUT(
     });
   } catch (error) {
     console.error('Error updating member:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -178,12 +164,10 @@ export async function DELETE(
 
     // Log audit entry
     await prisma.auditLog.create({
-      data: createAuditLogData(
-        'member_removed',
-        rbacContext,
-        targetMember.userId,
-        { email: targetMember.user.email, role: targetMember.role }
-      ) as any,
+      data: createAuditLogData('member_removed', rbacContext, targetMember.userId, {
+        email: targetMember.user.email,
+        role: targetMember.role,
+      }) as any,
     });
 
     return NextResponse.json({
@@ -191,9 +175,6 @@ export async function DELETE(
     });
   } catch (error) {
     console.error('Error removing member:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

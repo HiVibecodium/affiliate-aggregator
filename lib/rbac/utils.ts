@@ -3,7 +3,7 @@
  * Implements constraint-driven permission validation with optimal performance
  */
 
-import { Permission, getRolePermissions, hasHigherOrEqualRole, isValidRole } from './permissions';
+import { Permission, getRolePermissions, hasHigherOrEqualRole } from './permissions';
 
 // Re-export commonly used types and functions
 export { Permission, isValidRole } from './permissions';

@@ -18,6 +18,8 @@ const customJestConfig = {
     '@sentry/nextjs': '<rootDir>/__mocks__/@sentry/nextjs.js',
     '^uuid$': '<rootDir>/__mocks__/uuid.js',
     '^resend$': '<rootDir>/__mocks__/resend.js',
+    '^next/server$': '<rootDir>/__mocks__/next/server.js',
+    '^next/headers$': '<rootDir>/__mocks__/next/headers.js',
   },
   testPathIgnorePatterns: [
     '<rootDir>/.next/',
