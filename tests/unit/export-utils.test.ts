@@ -20,11 +20,14 @@ const mockDocument = {
   },
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.document = mockDocument as any;
 global.URL = {
   createObjectURL: jest.fn(() => 'blob:mock-url'),
   revokeObjectURL: jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.Blob = jest.fn() as any;
 
 describe('Export Utils', () => {
@@ -129,7 +132,7 @@ describe('Export Utils', () => {
   });
 
   it('should create CSV blob', () => {
-    const csvContent = 'Name,Network\nTest,ShareASale';
+    const _csvContent = 'Name,Network\nTest,ShareASale';
     const blob = { type: 'text/csv;charset=utf-8;' };
 
     expect(blob.type).toBe('text/csv;charset=utf-8;');

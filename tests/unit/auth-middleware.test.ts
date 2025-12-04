@@ -42,12 +42,13 @@ describe('Auth Middleware Logic', () => {
     it('should validate session structure', () => {
       const isValidSession = (session: unknown) => {
         if (!session || typeof session !== 'object') return false;
-        const s = session as Record<string, any>;
+        const s = session as Record<string, unknown>;
+        const user = s.user as Record<string, unknown> | null | undefined;
         return (
-          typeof s.user === 'object' &&
-          s.user !== null &&
-          typeof s.user.id === 'string' &&
-          typeof s.user.email === 'string'
+          typeof user === 'object' &&
+          user !== null &&
+          typeof user.id === 'string' &&
+          typeof user.email === 'string'
         );
       };
 
@@ -129,7 +130,7 @@ describe('Auth Middleware Logic', () => {
     it('should isolate data by organization', () => {
       const getOrgData = (
         orgId: string,
-        allData: Array<{ organizationId: string; [key: string]: any }>
+        allData: Array<{ organizationId: string; [key: string]: unknown }>
       ) => {
         return allData.filter((item) => item.organizationId === orgId);
       };

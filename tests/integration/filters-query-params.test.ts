@@ -89,6 +89,7 @@ describe('Filter Query Parameters', () => {
       minCommission: '10',
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const params = new URLSearchParams(currentFilters as any);
     const reconstructed = Object.fromEntries(params.entries());
 

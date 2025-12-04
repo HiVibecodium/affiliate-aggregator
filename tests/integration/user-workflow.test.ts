@@ -53,6 +53,7 @@ describe('User Workflows', () => {
         theme: 'light',
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const updatePreference = (key: string, value: any) => {
         preferences[key as keyof typeof preferences] = value;
       };
@@ -82,10 +83,12 @@ describe('User Workflows', () => {
       expect(Object.keys(workflow.filters).length).toBe(2);
 
       // Step 3: View results
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       workflow.results = ['prog-1', 'prog-2'] as any;
       expect(workflow.results.length).toBe(2);
 
       // Step 4: Select program
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       workflow.selectedProgram = 'prog-1' as any;
       expect(workflow.selectedProgram).toBe('prog-1');
 

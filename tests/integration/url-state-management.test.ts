@@ -4,6 +4,7 @@
 
 describe('URL State Management', () => {
   it('should sync filters to URL', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const syncFiltersToUrl = (filters: Record<string, any>) => {
       const params = new URLSearchParams();
 
@@ -108,6 +109,7 @@ describe('URL State Management', () => {
   });
 
   it('should generate shareable links', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const generateShareableLink = (baseUrl: string, filters: Record<string, any>) => {
       const params = new URLSearchParams();
 

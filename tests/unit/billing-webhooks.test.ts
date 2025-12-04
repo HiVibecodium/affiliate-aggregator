@@ -52,6 +52,7 @@ jest.mock('@/lib/logger', () => ({
 }));
 
 describe('Billing Webhooks', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let prismaMock: any;
 
   beforeEach(() => {
@@ -76,6 +77,7 @@ describe('Billing Webhooks', () => {
         type: 'checkout_completed',
         status: 'success',
         stripeEventId: 'cs_test_123',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         eventData: session as any,
         subscriptionId: null,
         invoiceId: null,
@@ -177,6 +179,7 @@ describe('Billing Webhooks', () => {
         type: 'subscription_created',
         status: 'success',
         stripeEventId: 'sub_123',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         eventData: subscription as any,
         subscriptionId: 'sub_123',
         invoiceId: null,
@@ -276,6 +279,7 @@ describe('Billing Webhooks', () => {
         type: 'subscription_deleted',
         status: 'success',
         stripeEventId: 'sub_123',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         eventData: subscription as any,
         subscriptionId: 'sub_123',
         invoiceId: null,
@@ -368,6 +372,7 @@ describe('Billing Webhooks', () => {
         type: 'invoice_paid',
         status: 'success',
         stripeEventId: 'inv_123',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         eventData: invoice as any,
         subscriptionId: 'sub_123',
         invoiceId: 'inv_123',
@@ -456,6 +461,7 @@ describe('Billing Webhooks', () => {
         type: 'invoice_payment_failed',
         status: 'failed',
         stripeEventId: 'inv_123',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         eventData: invoice as any,
         subscriptionId: 'sub_123',
         invoiceId: 'inv_123',
@@ -589,6 +595,7 @@ describe('Billing Webhooks', () => {
         type: 'checkout_completed',
         status: 'success',
         stripeEventId: 'cs_test_123',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         eventData: event.data.object as any,
         subscriptionId: null,
         invoiceId: null,

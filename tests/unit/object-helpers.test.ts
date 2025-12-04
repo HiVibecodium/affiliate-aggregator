@@ -98,7 +98,7 @@ describe('Object Helpers', () => {
     });
 
     it('should check required fields', () => {
-      const hasFields = (obj: Record<string, any>, fields: string[]) => {
+      const hasFields = (obj: Record<string, unknown>, fields: string[]) => {
         return fields.every((field) => field in obj);
       };
 
@@ -109,7 +109,7 @@ describe('Object Helpers', () => {
     });
 
     it('should validate field types', () => {
-      const validateTypes = (obj: Record<string, any>, schema: Record<string, string>) => {
+      const validateTypes = (obj: Record<string, unknown>, schema: Record<string, string>) => {
         return Object.entries(schema).every(([key, type]) => typeof obj[key] === type);
       };
 
@@ -129,7 +129,10 @@ describe('Object Helpers', () => {
     });
 
     it('should filter object properties', () => {
-      const filterObject = (obj: Record<string, any>, predicate: (value: any) => boolean) => {
+      const filterObject = (
+        obj: Record<string, unknown>,
+        predicate: (value: unknown) => boolean
+      ) => {
         return Object.fromEntries(Object.entries(obj).filter(([_, value]) => predicate(value)));
       };
 
@@ -153,7 +156,7 @@ describe('Object Helpers', () => {
 
   describe('Object comparison', () => {
     it('should check deep equality', () => {
-      const deepEqual = (a: any, b: any): boolean => {
+      const deepEqual = (a: unknown, b: unknown): boolean => {
         return JSON.stringify(a) === JSON.stringify(b);
       };
 
@@ -162,7 +165,7 @@ describe('Object Helpers', () => {
     });
 
     it('should check shallow equality', () => {
-      const shallowEqual = (a: Record<string, any>, b: Record<string, any>) => {
+      const shallowEqual = (a: Record<string, unknown>, b: Record<string, unknown>) => {
         const keysA = Object.keys(a);
         const keysB = Object.keys(b);
 
@@ -178,6 +181,7 @@ describe('Object Helpers', () => {
 
   describe('Nested objects', () => {
     it('should access nested properties safely', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const get = (obj: any, path: string) => {
         return path.split('.').reduce((acc, key) => acc?.[key], obj);
       };
@@ -189,7 +193,8 @@ describe('Object Helpers', () => {
     });
 
     it('should set nested properties', () => {
-      const set = (obj: any, path: string, value: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const set = (obj: any, path: string, value: unknown) => {
         const keys = path.split('.');
         const lastKey = keys.pop()!;
 
@@ -201,6 +206,7 @@ describe('Object Helpers', () => {
         target[lastKey] = value;
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const obj: any = {};
       set(obj, 'user.profile.name', 'Test');
 

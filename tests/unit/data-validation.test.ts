@@ -78,7 +78,7 @@ describe('Data Validation', () => {
     });
 
     it('should validate array contains specific values', () => {
-      const contains = (arr: unknown[], value: any) => arr.includes(value);
+      const contains = (arr: unknown[], value: unknown) => arr.includes(value);
 
       expect(contains(['a', 'b', 'c'], 'b')).toBe(true);
       expect(contains(['a', 'b', 'c'], 'd')).toBe(false);
@@ -87,7 +87,7 @@ describe('Data Validation', () => {
 
   describe('Object validation', () => {
     it('should validate required fields', () => {
-      const hasRequiredFields = (obj: any, fields: string[]) => {
+      const hasRequiredFields = (obj: Record<string, unknown>, fields: string[]) => {
         return fields.every((field) => field in obj);
       };
 
@@ -107,7 +107,7 @@ describe('Data Validation', () => {
 
   describe('Date validation', () => {
     it('should validate date objects', () => {
-      const isValidDate = (d: any) => d instanceof Date && !isNaN(d.getTime());
+      const isValidDate = (d: unknown) => d instanceof Date && !isNaN(d.getTime());
 
       expect(isValidDate(new Date())).toBe(true);
       expect(isValidDate(new Date('invalid'))).toBe(false);

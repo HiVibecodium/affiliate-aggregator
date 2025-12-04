@@ -123,6 +123,7 @@ describe('Program Badges', () => {
     });
 
     it('should handle null/undefined', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(formatPaymentMethods(null as any)).toBe('Not specified');
     });
 

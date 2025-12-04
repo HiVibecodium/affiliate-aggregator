@@ -36,6 +36,7 @@ export const prisma =
         query_timeout: 30000,
       },
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any);
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;

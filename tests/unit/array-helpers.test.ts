@@ -221,7 +221,7 @@ describe('Array Helpers', () => {
     });
 
     it('should count occurrences', () => {
-      const count = (arr: unknown[], value: any) => {
+      const count = (arr: unknown[], value: unknown) => {
         return arr.filter((item) => item === value).length;
       };
 

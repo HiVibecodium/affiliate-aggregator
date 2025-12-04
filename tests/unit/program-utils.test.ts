@@ -189,6 +189,7 @@ describe('Program Utils', () => {
     });
 
     it('should handle null/undefined', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(formatPaymentMethods(null as any)).toBe('Не указано');
     });
   });

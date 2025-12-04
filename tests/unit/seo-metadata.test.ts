@@ -58,6 +58,7 @@ describe('SEO Metadata', () => {
       expect(defaultMetadata.robots).toHaveProperty('index');
       expect(defaultMetadata.robots).toHaveProperty('follow');
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const robots = defaultMetadata.robots as any;
       expect(robots.index).toBe(true);
       expect(robots.follow).toBe(true);

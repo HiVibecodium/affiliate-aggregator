@@ -47,6 +47,7 @@ jest.mock('@/lib/supabase/server', () => ({
 }));
 
 describe('Organizations API', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let prismaMock: any;
 
   beforeEach(() => {
