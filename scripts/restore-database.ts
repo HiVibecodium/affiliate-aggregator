@@ -5,6 +5,7 @@
  */
 
 import { PrismaClient } from '@prisma/client';
+import type { AffiliateProgram } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -91,7 +92,7 @@ async function restoreBackup(backupFileName: string) {
     for (let i = 0; i < programs.length; i += batchSize) {
       const batch = programs.slice(i, i + batchSize);
       await Promise.all(
-        batch.map((program: any) =>
+        batch.map((program: AffiliateProgram) =>
           prisma.affiliateProgram.create({
             data: {
               id: program.id,

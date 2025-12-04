@@ -24,6 +24,8 @@ export const prisma =
     // Works with PgBouncer connection pooling (pgbouncer=true in DATABASE_URL)
     // connection_limit=1 in DATABASE_URL ensures single connection per instance
 
+    // Note: __internal is not in Prisma's public TypeScript API
+
     __internal: {
       engine: {
         // Reduce connection acquisition timeout for faster failures

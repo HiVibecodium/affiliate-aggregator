@@ -99,8 +99,9 @@ async function importBatch(batchFile: string) {
 
       console.log(`  ✅ Импорт: ${program.name} (${program.commissionRate}%)`);
       imported++;
-    } catch (error: any) {
-      console.error(`  ❌ Ошибка при импорте ${program.name}:`, error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      console.error(`  ❌ Ошибка при импорте ${program.name}:`, message);
       errors++;
     }
   }

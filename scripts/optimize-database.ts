@@ -8,6 +8,14 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Database statistics interface
+interface DatabaseStats {
+  total: number;
+  active: number;
+  highCommission: number;
+  longCookie: number;
+}
+
 // Критерии для отбора лучших программ
 const QUALITY_CRITERIA = {
   minCommissionRate: 15, // Минимум 15% комиссия
@@ -34,7 +42,7 @@ const QUALITY_CRITERIA = {
   minProgramsPerCategory: 10, // Минимум программ в каждой категории
 };
 
-async function analyzeCurrentDatabase() {
+async function analyzeCurrentDatabase(): Promise<DatabaseStats> {
   console.log('📊 Анализ текущей базы данных...\n');
 
   const total = await prisma.affiliateProgram.count();
@@ -246,7 +254,7 @@ async function cleanupDatabase(keepIds: string[], dryRun: boolean = true) {
   return toDelete;
 }
 
-async function generateReport(beforeStats: any, keepIds: string[]) {
+async function generateReport(beforeStats: DatabaseStats, keepIds: string[]) {
   console.log('\n\n📊 ФИНАЛЬНЫЙ ОТЧЕТ\n');
   console.log('='.repeat(50));
 
