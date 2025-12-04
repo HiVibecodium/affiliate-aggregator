@@ -9,6 +9,8 @@ import { prisma } from '@/lib/prisma';
 import { stripe } from './stripe';
 import type { Prisma } from '@prisma/client';
 import { logger } from '@/lib/logger';
+import { sendEmail } from '@/lib/email/resend-client';
+import { generatePaymentFailedEmail } from '@/lib/email/templates/payment-failed';
 // Extended Stripe types for webhook events
 interface StripeSubscriptionWithPeriods extends Stripe.Subscription {
   current_period_start: number;
@@ -261,6 +263,9 @@ export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
 
   const dbSubscription = await prisma.subscription.findUnique({
     where: { stripeSubscriptionId: subscriptionId },
+    include: {
+      user: true,
+    },
   });
 
   if (!dbSubscription) {
@@ -290,7 +295,64 @@ export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
     },
   });
 
-  // TODO: Send notification to user about failed payment
+  // Get default payment method for card details
+  let lastFour = '****';
+  try {
+    if (dbSubscription.stripeCustomerId) {
+      const customer = (await stripe.customers.retrieve(
+        dbSubscription.stripeCustomerId
+      )) as Stripe.Customer;
+      const defaultPaymentMethodId = customer.invoice_settings?.default_payment_method;
+
+      if (defaultPaymentMethodId) {
+        const paymentMethod = await stripe.paymentMethods.retrieve(
+          typeof defaultPaymentMethodId === 'string'
+            ? defaultPaymentMethodId
+            : defaultPaymentMethodId.id
+        );
+        lastFour = paymentMethod.card?.last4 || '****';
+      }
+    }
+  } catch (error) {
+    logger.error('Error fetching payment method details:', error);
+  }
+
+  // Calculate next retry date (Stripe typically retries after 3-5 days)
+  const nextRetryDate = new Date();
+  nextRetryDate.setDate(nextRetryDate.getDate() + 3);
+
+  // Send email notification to user
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://affiliate-aggregator.com';
+  const emailTemplate = generatePaymentFailedEmail({
+    userName: dbSubscription.user.name || dbSubscription.user.email.split('@')[0],
+    amount: invoice.amount_due,
+    currency: invoice.currency,
+    lastFour,
+    tier: dbSubscription.tier,
+    invoiceUrl: invoice.hosted_invoice_url || null,
+    updatePaymentUrl: `${appUrl}/billing?action=update-payment`,
+    appUrl,
+    retryDate: nextRetryDate,
+  });
+
+  const emailResult = await sendEmail({
+    to: dbSubscription.user.email,
+    subject: emailTemplate.subject,
+    html: emailTemplate.html,
+  });
+
+  if (!emailResult.success) {
+    logger.error('Failed to send payment failure email:', {
+      userId: dbSubscription.userId,
+      reason: emailResult.reason || 'unknown',
+      error: emailResult.error,
+    });
+  } else {
+    logger.log('Payment failure notification sent:', {
+      userId: dbSubscription.userId,
+      email: dbSubscription.user.email,
+    });
+  }
 }
 
 /**

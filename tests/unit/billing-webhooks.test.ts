@@ -40,7 +40,15 @@ jest.mock('@/lib/billing/stripe', () => ({
     customers: {
       retrieve: jest.fn(),
     },
+    paymentMethods: {
+      retrieve: jest.fn(),
+    },
   },
+}));
+
+// Mock Email Service
+jest.mock('@/lib/email/resend-client', () => ({
+  sendEmail: jest.fn(),
 }));
 
 // Mock logger
@@ -412,9 +420,15 @@ describe('Billing Webhooks', () => {
 
   describe('handleInvoicePaymentFailed', () => {
     it('should update subscription to past_due and create billing event', async () => {
+      const { stripe } = require('@/lib/billing/stripe');
+      const { sendEmail } = require('@/lib/email/resend-client');
+
       const invoice = {
         id: 'inv_123',
         subscription: 'sub_123',
+        amount_due: 2999,
+        currency: 'usd',
+        hosted_invoice_url: 'https://invoice.stripe.com/inv_123',
       } as unknown as Stripe.Invoice;
 
       prismaMock.subscription.findUnique.mockResolvedValue({
@@ -434,6 +448,34 @@ describe('Billing Webhooks', () => {
         trialEnd: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        user: {
+          id: 'user_123',
+          email: 'test@example.com',
+          name: 'Test User',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+
+      stripe.customers.retrieve.mockResolvedValue({
+        id: 'cus_123',
+        invoice_settings: {
+          default_payment_method: 'pm_123',
+        },
+      });
+
+      stripe.paymentMethods.retrieve.mockResolvedValue({
+        id: 'pm_123',
+        type: 'card',
+        card: {
+          last4: '4242',
+          brand: 'visa',
+        },
+      });
+
+      sendEmail.mockResolvedValue({
+        success: true,
+        result: { id: 'email_123' },
       });
 
       prismaMock.subscription.update.mockResolvedValue({
