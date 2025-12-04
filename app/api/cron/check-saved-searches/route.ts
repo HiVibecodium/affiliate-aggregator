@@ -11,6 +11,24 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendEmail } from '@/lib/email/resend-client';
 import { generateNewMatchesEmail } from '@/lib/email/templates/new-matches-alert';
+import type { Prisma } from '@prisma/client';
+
+// Type for saved search filters
+interface SavedSearchFilters {
+  network?: string;
+  category?: string;
+  commissionType?: string;
+  search?: string;
+  minCommission?: string | number;
+  maxCommission?: string | number;
+  country?: string;
+}
+
+// Type for alert frequency check
+interface AlertFrequencyCheck {
+  lastAlertSent: Date | null;
+  alertFrequency: string | null;
+}
 
 export async function GET(request: Request) {
   try {
@@ -57,10 +75,10 @@ export async function GET(request: Request) {
 
         // Find new programs since last check
         const lastCheck = search.lastCheckedAt || search.createdAt;
-        const filters = search.filters as any;
+        const filters = search.filters as SavedSearchFilters;
 
         // Build query based on saved filters
-        const where: any = {
+        const where: Prisma.AffiliateProgramWhereInput = {
           active: true,
           createdAt: { gt: new Date(lastCheck) },
         };
@@ -77,7 +95,12 @@ export async function GET(request: Request) {
         }
 
         if (filters.minCommission) {
-          where.commissionRate = { gte: parseFloat(filters.minCommission) };
+          where.commissionRate = {
+            gte:
+              typeof filters.minCommission === 'number'
+                ? filters.minCommission
+                : parseFloat(filters.minCommission),
+          };
         }
 
         // Find matching programs
@@ -161,7 +184,7 @@ export async function GET(request: Request) {
 /**
  * Check if alert should be sent based on frequency
  */
-function checkAlertFrequency(search: any): boolean {
+function checkAlertFrequency(search: AlertFrequencyCheck): boolean {
   if (!search.lastAlertSent) return true; // Never sent before
 
   const hoursSinceLastAlert =

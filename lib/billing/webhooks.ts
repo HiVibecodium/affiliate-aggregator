@@ -201,8 +201,11 @@ export async function handleSubscriptionDeleted(subscription: Stripe.Subscriptio
  * Handle invoice paid
  */
 export async function handleInvoicePaid(invoice: Stripe.Invoice) {
-  // Note: Stripe SDK types don't include all webhook properties
-  const subscriptionId = (invoice as any).subscription as string;
+  // Extract subscription ID (can be string or Stripe.Subscription object)
+  // Note: Stripe webhook Invoice type doesn't include subscription property in type definitions
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const subscription = (invoice as any).subscription;
+  const subscriptionId = typeof subscription === 'string' ? subscription : subscription?.id;
   if (!subscriptionId) return;
 
   const dbSubscription = await prisma.subscription.findUnique({
@@ -249,8 +252,11 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
  * Handle invoice payment failed
  */
 export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
-  // Note: Stripe SDK types don't include all webhook properties
-  const subscriptionId = (invoice as any).subscription as string;
+  // Extract subscription ID (can be string or Stripe.Subscription object)
+  // Note: Stripe webhook Invoice type doesn't include subscription property in type definitions
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const subscription = (invoice as any).subscription;
+  const subscriptionId = typeof subscription === 'string' ? subscription : subscription?.id;
   if (!subscriptionId) return;
 
   const dbSubscription = await prisma.subscription.findUnique({

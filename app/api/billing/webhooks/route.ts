@@ -39,9 +39,10 @@ export async function POST(request: Request) {
     let event;
     try {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    } catch (err: any) {
-      logger.error('Webhook signature verification failed:', err.message);
-      return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      logger.error('Webhook signature verification failed:', message);
+      return NextResponse.json({ error: `Webhook Error: ${message}` }, { status: 400 });
     }
 
     // Log webhook event
@@ -50,11 +51,12 @@ export async function POST(request: Request) {
     // Handle the event
     try {
       await handleWebhookEvent(event);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
       logger.error(`Error processing webhook ${event.type}:`, err);
       // Return 200 to acknowledge receipt, but log the error
       // This prevents Stripe from retrying if it's a processing error
-      return NextResponse.json({ error: err.message, received: true }, { status: 200 });
+      return NextResponse.json({ error: message, received: true }, { status: 200 });
     }
 
     // Return success
