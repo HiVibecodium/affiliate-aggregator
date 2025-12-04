@@ -1,28 +1,31 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { logger } from '@/lib/logger';
 
 const amazonPrograms = [
   {
     externalId: 'AMZN000001',
     name: 'Amazon Books',
-    description: 'Earn up to 10% commission on books, audiobooks, and Kindle products from Amazon\'s vast catalog.',
+    description:
+      "Earn up to 10% commission on books, audiobooks, and Kindle products from Amazon's vast catalog.",
     category: 'Books & Literature',
     commissionRate: 8,
     commissionType: 'CPS',
     cookieDuration: 24,
     paymentThreshold: 10,
-    paymentMethods: ['Direct Deposit', 'Amazon Gift Card']
+    paymentMethods: ['Direct Deposit', 'Amazon Gift Card'],
   },
   {
     externalId: 'AMZN000002',
     name: 'Amazon Electronics',
-    description: 'Promote electronics, computers, and tech gadgets. Commission rates vary by category.',
+    description:
+      'Promote electronics, computers, and tech gadgets. Commission rates vary by category.',
     category: 'Electronics',
     commissionRate: 4,
     commissionType: 'CPS',
     cookieDuration: 24,
     paymentThreshold: 10,
-    paymentMethods: ['Direct Deposit', 'Amazon Gift Card']
+    paymentMethods: ['Direct Deposit', 'Amazon Gift Card'],
   },
   {
     externalId: 'AMZN000003',
@@ -33,7 +36,7 @@ const amazonPrograms = [
     commissionType: 'CPS',
     cookieDuration: 24,
     paymentThreshold: 10,
-    paymentMethods: ['Direct Deposit', 'Amazon Gift Card']
+    paymentMethods: ['Direct Deposit', 'Amazon Gift Card'],
   },
   {
     externalId: 'AMZN000004',
@@ -44,7 +47,7 @@ const amazonPrograms = [
     commissionType: 'CPS',
     cookieDuration: 24,
     paymentThreshold: 10,
-    paymentMethods: ['Direct Deposit', 'Amazon Gift Card']
+    paymentMethods: ['Direct Deposit', 'Amazon Gift Card'],
   },
   {
     externalId: 'AMZN000005',
@@ -55,7 +58,7 @@ const amazonPrograms = [
     commissionType: 'CPS',
     cookieDuration: 24,
     paymentThreshold: 10,
-    paymentMethods: ['Direct Deposit', 'Amazon Gift Card']
+    paymentMethods: ['Direct Deposit', 'Amazon Gift Card'],
   },
   {
     externalId: 'AMZN000006',
@@ -66,7 +69,7 @@ const amazonPrograms = [
     commissionType: 'CPS',
     cookieDuration: 24,
     paymentThreshold: 10,
-    paymentMethods: ['Direct Deposit', 'Amazon Gift Card']
+    paymentMethods: ['Direct Deposit', 'Amazon Gift Card'],
   },
   {
     externalId: 'AMZN000007',
@@ -77,7 +80,7 @@ const amazonPrograms = [
     commissionType: 'CPS',
     cookieDuration: 24,
     paymentThreshold: 10,
-    paymentMethods: ['Direct Deposit', 'Amazon Gift Card']
+    paymentMethods: ['Direct Deposit', 'Amazon Gift Card'],
   },
   {
     externalId: 'AMZN000008',
@@ -88,7 +91,7 @@ const amazonPrograms = [
     commissionType: 'CPS',
     cookieDuration: 24,
     paymentThreshold: 10,
-    paymentMethods: ['Direct Deposit', 'Amazon Gift Card']
+    paymentMethods: ['Direct Deposit', 'Amazon Gift Card'],
   },
   {
     externalId: 'AMZN000009',
@@ -99,7 +102,7 @@ const amazonPrograms = [
     commissionType: 'CPS',
     cookieDuration: 24,
     paymentThreshold: 10,
-    paymentMethods: ['Direct Deposit', 'Amazon Gift Card']
+    paymentMethods: ['Direct Deposit', 'Amazon Gift Card'],
   },
   {
     externalId: 'AMZN000010',
@@ -110,14 +113,14 @@ const amazonPrograms = [
     commissionType: 'CPS',
     cookieDuration: 24,
     paymentThreshold: 10,
-    paymentMethods: ['Direct Deposit', 'Amazon Gift Card']
-  }
+    paymentMethods: ['Direct Deposit', 'Amazon Gift Card'],
+  },
 ];
 
 export async function POST() {
   try {
     const amazonNetwork = await prisma.affiliateNetwork.findFirst({
-      where: { name: 'Amazon Associates' }
+      where: { name: 'Amazon Associates' },
     });
 
     if (!amazonNetwork) {
@@ -132,8 +135,8 @@ export async function POST() {
       const existing = await prisma.affiliateProgram.findFirst({
         where: {
           networkId: amazonNetwork.id,
-          externalId: program.externalId
-        }
+          externalId: program.externalId,
+        },
       });
 
       if (existing) {
@@ -146,8 +149,8 @@ export async function POST() {
         data: {
           ...program,
           networkId: amazonNetwork.id,
-          active: true
-        }
+          active: true,
+        },
       });
 
       added++;
@@ -155,17 +158,23 @@ export async function POST() {
     }
 
     const count = await prisma.affiliateProgram.count({
-      where: { networkId: amazonNetwork.id }
+      where: { networkId: amazonNetwork.id },
     });
 
     return NextResponse.json({
       success: true,
       summary: { added, skipped, total: amazonPrograms.length },
       amazonAssociatesTotal: count,
-      results
+      results,
     });
   } catch (error) {
-    console.error('Error adding Amazon programs:', error);
-    return NextResponse.json({ error: 'Failed to add programs', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
+    logger.error('Error adding Amazon programs:', error);
+    return NextResponse.json(
+      {
+        error: 'Failed to add programs',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   }
 }

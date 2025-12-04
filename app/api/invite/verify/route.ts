@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * API: Verify Invite Token
  * GET /api/invite/verify?token=xxx&member=yyy
@@ -68,7 +69,7 @@ export async function GET(request: NextRequest) {
       expiresIn: getDaysRemaining(member.invitedAt),
     });
   } catch (error) {
-    console.error('Invite verification error:', error);
+    logger.error('Invite verification error:', error);
     return NextResponse.json({ error: 'Internal server error', valid: false }, { status: 500 });
   }
 }

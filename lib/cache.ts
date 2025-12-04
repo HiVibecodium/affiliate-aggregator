@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Hybrid Cache System
  * - In-memory LRU cache for fast access (primary)
@@ -69,7 +70,7 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
   } catch (_error) {
     // Redis not available, caching disabled
     if (process.env.NODE_ENV === 'development') {
-      console.warn('Redis not available, caching disabled');
+      logger.warn('Redis not available, caching disabled');
     }
   }
 }
@@ -96,7 +97,7 @@ export async function getCached<T>(
       }
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
-        console.error('Redis error, continuing with fetch:', error);
+        logger.error('Redis error, continuing with fetch:', error);
       }
     }
   }
@@ -114,7 +115,7 @@ export async function getCached<T>(
     } catch (error) {
       // Redis error - non-critical, already in memory cache
       if (process.env.NODE_ENV === 'development') {
-        console.error('Redis setex error:', error);
+        logger.error('Redis setex error:', error);
       }
     }
   }
@@ -132,7 +133,7 @@ export async function invalidateCache(pattern: string): Promise<void> {
     }
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Cache invalidation error:', error);
+      logger.error('Cache invalidation error:', error);
     }
   }
 }

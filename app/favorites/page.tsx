@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -55,7 +56,7 @@ export default function FavoritesPage() {
       setFavorites(data.favorites);
     } catch (err) {
       setError('Произошла ошибка при загрузке избранного');
-      console.error('Failed to fetch favorites:', err);
+      logger.error('Failed to fetch favorites:', err);
     } finally {
       setLoading(false);
     }
@@ -113,7 +114,7 @@ export default function FavoritesPage() {
         alert(error.error || 'Failed to remove favorite');
       }
     } catch (err) {
-      console.error('Failed to remove favorite:', err);
+      logger.error('Failed to remove favorite:', err);
       alert('Произошла ошибка. Попробуйте снова.');
     } finally {
       setRemovingId(null);

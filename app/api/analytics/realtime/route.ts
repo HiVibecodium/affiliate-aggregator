@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -56,7 +57,7 @@ export async function GET() {
       topPrograms,
     });
   } catch (error) {
-    console.error('Error fetching realtime analytics:', error);
+    logger.error('Error fetching realtime analytics:', error);
     return NextResponse.json({ error: 'Failed to fetch realtime analytics' }, { status: 500 });
   }
 }

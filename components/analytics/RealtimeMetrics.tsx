@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import React, { useEffect, useState } from 'react';
 import { AnalyticsWidget } from './AnalyticsWidget';
@@ -42,7 +43,7 @@ export function RealtimeMetrics() {
         setLastUpdate(new Date());
       }
     } catch (error) {
-      console.error('Failed to fetch realtime data:', error);
+      logger.error('Failed to fetch realtime data:', error);
     } finally {
       setLoading(false);
     }

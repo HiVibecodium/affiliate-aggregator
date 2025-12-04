@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Advanced Analytics API
  *
@@ -184,7 +185,7 @@ export async function GET() {
       })),
     });
   } catch (error: unknown) {
-    console.error('Analytics error:', error);
+    logger.error('Analytics error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

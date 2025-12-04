@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Input Validation Utilities
  * Provides validation and sanitization functions to prevent injection attacks
@@ -167,7 +168,7 @@ export function detectInjectionAttempt(input: string): boolean {
 export function sanitizeUserInput(input: string): string {
   // Check for injection attempts
   if (detectInjectionAttempt(input)) {
-    console.warn('Potential injection attempt detected:', input.substring(0, 50));
+    logger.warn('Potential injection attempt detected:', input.substring(0, 50));
     return '';
   }
 

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * GET /api/billing/plans
  *
@@ -159,7 +160,7 @@ export async function GET() {
 
     return NextResponse.json({ plans });
   } catch (error: unknown) {
-    console.error('Get plans error:', error);
+    logger.error('Get plans error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to get plans' },
       { status: 500 }

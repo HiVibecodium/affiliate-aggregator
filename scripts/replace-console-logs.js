@@ -1,77 +1,178 @@
 #!/usr/bin/env node
 /**
- * Script to replace console.* with logger.* and add logger import
+ * Script to replace console.log/error with structured logger
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const filesToUpdate = [
-  'app/api/analytics/popular/route.ts',
-  'app/api/analytics/web-vitals/route.ts',
-  'app/api/billing/webhooks/route.ts',
-  'app/api/cron/check-saved-searches/route.ts',
-  'app/api/import/bulk/route.ts',
-  'app/web-vitals.tsx',
-  'lib/data-import/importer.ts',
-  'lib/data-import/bulk-import.ts',
-];
+// Parse command line arguments
+const args = process.argv.slice(2);
+const isDryRun = args.includes('--dry-run');
 
-function updateFile(filePath) {
-  const fullPath = path.join(process.cwd(), filePath);
+// Statistics
+let stats = {
+  filesScanned: 0,
+  filesModified: 0,
+  consoleLogs: 0,
+  consoleErrors: 0,
+  consoleWarns: 0,
+  consoleInfos: 0,
+};
 
-  if (!fs.existsSync(fullPath)) {
-    console.log(`Skipping ${filePath} - file not found`);
-    return;
+function findFiles(dir, fileList = []) {
+  const files = fs.readdirSync(dir);
+
+  files.forEach((file) => {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+
+    if (stat.isDirectory()) {
+      if (!['node_modules', '.next', 'dist', 'build', 'tests', '__tests__'].includes(file)) {
+        findFiles(filePath, fileList);
+      }
+    } else if (file.endsWith('.ts') || file.endsWith('.tsx')) {
+      if (!file.includes('.test.') && !file.includes('.spec.')) {
+        fileList.push(filePath);
+      }
+    }
+  });
+
+  return fileList;
+}
+
+function needsLoggerImport(content) {
+  return (
+    (content.includes('console.log') ||
+      content.includes('console.error') ||
+      content.includes('console.warn') ||
+      content.includes('console.info')) &&
+    !content.includes("from '@/lib/logger'")
+  );
+}
+
+function addLoggerImport(content) {
+  const lines = content.split('\n');
+  const importLine = "import { logger } from '@/lib/logger';";
+
+  if (content.includes(importLine)) {
+    return content;
   }
 
-  let content = fs.readFileSync(fullPath, 'utf8');
+  let insertIndex = 0;
 
-  // Check if already has logger import
-  const hasLoggerImport =
-    content.includes("from '@/lib/logger'") || content.includes('from "@/lib/logger"');
-
-  // Replace console.* with logger.*
-  const hasConsole = /console\.(log|error|warn|info|debug)/.test(content);
-
-  if (!hasConsole) {
-    console.log(`Skipping ${filePath} - no console statements found`);
-    return;
-  }
-
-  content = content.replace(/console\.log\(/g, 'logger.log(');
-  content = content.replace(/console\.error\(/g, 'logger.error(');
-  content = content.replace(/console\.warn\(/g, 'logger.warn(');
-  content = content.replace(/console\.info\(/g, 'logger.info(');
-  content = content.replace(/console\.debug\(/g, 'logger.debug(');
-
-  // Add import if not present
-  if (!hasLoggerImport) {
-    // Find the last import statement
-    const importRegex = /^import .+ from .+;$/gm;
-    const imports = content.match(importRegex);
-
-    if (imports && imports.length > 0) {
-      const lastImport = imports[imports.length - 1];
-      const lastImportIndex = content.lastIndexOf(lastImport);
-      const insertPosition = lastImportIndex + lastImport.length;
-
-      content =
-        content.slice(0, insertPosition) +
-        "\nimport { logger } from '@/lib/logger';" +
-        content.slice(insertPosition);
-    } else {
-      // No imports found, add at the beginning
-      content = "import { logger } from '@/lib/logger';\n\n" + content;
+  // Skip directives
+  if (lines[0] && (lines[0].includes("'use client'") || lines[0].includes("'use server'"))) {
+    insertIndex = 1;
+    // Add blank line after directive
+    if (insertIndex < lines.length && lines[insertIndex].trim() !== '') {
+      lines.splice(insertIndex, 0, '');
+      insertIndex++;
     }
   }
 
-  fs.writeFileSync(fullPath, content, 'utf8');
-  console.log(`✅ Updated ${filePath}`);
+  // Skip to end of import block
+  while (insertIndex < lines.length && lines[insertIndex].trim().startsWith('import')) {
+    insertIndex++;
+  }
+
+  lines.splice(insertIndex, 0, importLine);
+  return lines.join('\n');
 }
 
-console.log('Starting console.* replacement...\n');
+function replaceConsoleLogs(content, filePath) {
+  let modified = content;
+  let changeCount = 0;
 
-filesToUpdate.forEach(updateFile);
+  const replacements = [
+    { pattern: /console\.log\(/g, replacement: 'logger.debug(', stat: 'consoleLogs' },
+    { pattern: /console\.error\(/g, replacement: 'logger.error(', stat: 'consoleErrors' },
+    { pattern: /console\.warn\(/g, replacement: 'logger.warn(', stat: 'consoleWarns' },
+    { pattern: /console\.info\(/g, replacement: 'logger.info(', stat: 'consoleInfos' },
+  ];
 
-console.log('\n✅ All files updated!');
+  for (const { pattern, replacement, stat } of replacements) {
+    const matches = content.match(pattern);
+    if (matches) {
+      modified = modified.replace(pattern, replacement);
+      stats[stat] += matches.length;
+      changeCount += matches.length;
+    }
+  }
+
+  if (changeCount > 0) {
+    console.log(`  ✓ ${path.relative(process.cwd(), filePath)}: ${changeCount} replacements`);
+  }
+
+  return modified;
+}
+
+function processFile(filePath) {
+  try {
+    stats.filesScanned++;
+
+    const content = fs.readFileSync(filePath, 'utf8');
+
+    if (!needsLoggerImport(content)) {
+      return;
+    }
+
+    let modified = replaceConsoleLogs(content, filePath);
+
+    if (modified !== content) {
+      modified = addLoggerImport(modified);
+      stats.filesModified++;
+
+      if (!isDryRun) {
+        fs.writeFileSync(filePath, modified, 'utf8');
+      }
+    }
+  } catch (error) {
+    console.error(`Error processing ${filePath}:`, error.message);
+  }
+}
+
+function main() {
+  console.log('🔍 Replacing console.log with structured logger...\n');
+
+  if (isDryRun) {
+    console.log('📋 DRY RUN MODE - No files will be modified\n');
+  }
+
+  try {
+    const dirs = ['app', 'lib', 'components'];
+    const files = [];
+
+    dirs.forEach((dir) => {
+      const dirPath = path.join(process.cwd(), dir);
+      if (fs.existsSync(dirPath)) {
+        findFiles(dirPath, files);
+      }
+    });
+
+    console.log(`Found ${files.length} files to scan\n`);
+
+    files.forEach((file) => processFile(file));
+
+    console.log('\n📊 Summary:');
+    console.log(`  Files scanned: ${stats.filesScanned}`);
+    console.log(`  Files modified: ${stats.filesModified}`);
+    console.log(`  console.log → logger.debug: ${stats.consoleLogs}`);
+    console.log(`  console.error → logger.error: ${stats.consoleErrors}`);
+    console.log(`  console.warn → logger.warn: ${stats.consoleWarns}`);
+    console.log(`  console.info → logger.info: ${stats.consoleInfos}`);
+
+    if (isDryRun) {
+      console.log('\n💡 Run without --dry-run to apply changes');
+    } else if (stats.filesModified > 0) {
+      console.log('\n✅ Done! Please review changes and run tests.');
+    } else {
+      console.log('\n✨ No changes needed!');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    process.exit(1);
+  }
+}
+
+main();

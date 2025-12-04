@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
 import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit';
+import { logger } from '@/lib/logger';
 
 /**
  * POST /api/auth/sync
@@ -107,7 +108,7 @@ async function syncHandler(_request: NextRequest) {
       })),
     });
   } catch (error) {
-    console.error('Auth sync error:', error);
+    logger.error('Auth sync error:', error);
     return NextResponse.json(
       {
         error: 'Internal server error',

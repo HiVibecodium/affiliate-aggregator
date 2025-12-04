@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * API Route: Unsubscribe from Saved Search Alerts
  *
@@ -84,7 +85,7 @@ export async function GET(request: Request) {
       }
     );
   } catch (error: unknown) {
-    console.error('Unsubscribe error:', error);
+    logger.error('Unsubscribe error:', error);
 
     return new Response(
       `

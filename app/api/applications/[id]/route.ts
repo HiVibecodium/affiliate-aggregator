@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/logger';
 
 /**
  * PATCH /api/applications/[id]
@@ -60,7 +61,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     return NextResponse.json({ success: true, application: updated });
   } catch (error) {
-    console.error('Failed to update application:', error);
+    logger.error('Failed to update application:', error);
     return NextResponse.json({ error: 'Failed to update application' }, { status: 500 });
   }
 }
@@ -101,7 +102,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Failed to delete application:', error);
+    logger.error('Failed to delete application:', error);
     return NextResponse.json({ error: 'Failed to delete application' }, { status: 500 });
   }
 }

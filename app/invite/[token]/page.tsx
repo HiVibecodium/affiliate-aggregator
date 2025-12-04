@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
@@ -45,7 +46,7 @@ export default function InviteAcceptPage() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to verify invitation';
       setError(errorMessage);
-      console.error('Invite verification error:', err);
+      logger.error('Invite verification error:', err);
     } finally {
       setLoading(false);
     }
@@ -72,7 +73,7 @@ export default function InviteAcceptPage() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to accept invitation';
       setError(errorMessage);
-      console.error('Invite acceptance error:', err);
+      logger.error('Invite acceptance error:', err);
     } finally {
       setAccepting(false);
     }
@@ -93,7 +94,7 @@ export default function InviteAcceptPage() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to decline invitation';
       setError(errorMessage);
-      console.error('Invite decline error:', err);
+      logger.error('Invite decline error:', err);
     }
   };
 

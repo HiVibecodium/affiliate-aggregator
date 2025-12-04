@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/logger';
 
 /**
  * GET /api/applications
@@ -37,7 +38,7 @@ export async function GET() {
 
     return NextResponse.json({ applications });
   } catch (error) {
-    console.error('Failed to fetch applications:', error);
+    logger.error('Failed to fetch applications:', error);
     return NextResponse.json({ error: 'Failed to fetch applications' }, { status: 500 });
   }
 }
@@ -104,7 +105,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, application }, { status: 201 });
   } catch (error) {
-    console.error('Failed to create application:', error);
+    logger.error('Failed to create application:', error);
     return NextResponse.json({ error: 'Failed to create application' }, { status: 500 });
   }
 }

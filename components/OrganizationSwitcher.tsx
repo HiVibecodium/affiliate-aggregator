@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 /**
  * Organization Switcher Component
@@ -46,7 +47,7 @@ export function OrganizationSwitcher({ currentOrg, className = '' }: Organizatio
       const data = await response.json();
       setOrganizations(data.organizations || []);
     } catch (error) {
-      console.error('Error fetching organizations:', error);
+      logger.error('Error fetching organizations:', error);
     } finally {
       setIsLoading(false);
     }

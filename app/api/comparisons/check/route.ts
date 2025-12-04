@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Check Comparison Access API
  *
@@ -28,7 +29,7 @@ export async function POST(_request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('[COMPARISON_CHECK_ERROR]', error);
+    logger.error('[COMPARISON_CHECK_ERROR]', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

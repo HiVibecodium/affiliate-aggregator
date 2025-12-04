@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
@@ -42,10 +43,10 @@ export default function SignupPage() {
         });
 
         if (!syncResponse.ok) {
-          console.error('Failed to sync user with database');
+          logger.error('Failed to sync user with database');
         }
       } catch (syncError) {
-        console.error('Sync error:', syncError);
+        logger.error('Sync error:', syncError);
       }
 
       setSuccess(true);

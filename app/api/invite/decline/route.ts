@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * API: Decline Team Invitation
  * POST /api/invite/decline
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
       message: 'Invitation declined',
     });
   } catch (error) {
-    console.error('Invite decline error:', error);
+    logger.error('Invite decline error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

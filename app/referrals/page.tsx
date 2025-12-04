@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 
@@ -30,7 +31,7 @@ export default function ReferralsPage() {
       const data = await response.json();
       setReferralData(data);
     } catch (error) {
-      console.error('Failed to fetch referral data:', error);
+      logger.error('Failed to fetch referral data:', error);
     } finally {
       setLoading(false);
     }

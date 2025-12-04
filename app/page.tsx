@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { HomeHeader } from '@/components/HomeHeader';
+import { logger } from '@/lib/logger';
 
 // Revalidate every 10 minutes
 export const revalidate = 600;
@@ -39,7 +40,7 @@ async function getStats(): Promise<HomeStats | null> {
       })),
     };
   } catch (error) {
-    console.error('Failed to fetch stats:', error);
+    logger.error('Failed to fetch stats:', error);
     return null;
   }
 }

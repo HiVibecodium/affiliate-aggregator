@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Saved Searches API
  *
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ searches });
   } catch (error: unknown) {
-    console.error('Failed to fetch saved searches:', error);
+    logger.error('Failed to fetch saved searches:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
@@ -81,7 +82,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, savedSearch });
   } catch (error: unknown) {
-    console.error('Failed to create saved search:', error);
+    logger.error('Failed to create saved search:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
@@ -124,7 +125,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({ success: true, savedSearch: updated });
   } catch (error: unknown) {
-    console.error('Failed to update saved search:', error);
+    logger.error('Failed to update saved search:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
@@ -162,7 +163,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
-    console.error('Failed to delete saved search:', error);
+    logger.error('Failed to delete saved search:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

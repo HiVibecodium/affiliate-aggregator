@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Resend Email Client
  *
@@ -34,7 +35,7 @@ export async function sendEmail({
 }) {
   if (!isEmailConfigured()) {
     if (process.env.NODE_ENV === 'development') {
-      console.warn('Email not configured, skipping send');
+      logger.warn('Email not configured, skipping send');
     }
     return { success: false, reason: 'not_configured' };
   }
@@ -50,7 +51,7 @@ export async function sendEmail({
     return { success: true, result };
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Failed to send email:', error);
+      logger.error('Failed to send email:', error);
     }
     return { success: false, error };
   }

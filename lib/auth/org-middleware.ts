@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Organization context middleware for Next.js API routes
  * Extracts organization context from request and validates user access
@@ -72,9 +73,8 @@ export async function getOrgContext(
     }
 
     // Get organization ID from various sources
-    const organizationId = orgId ||
-      request.nextUrl.searchParams.get('org') ||
-      request.headers.get('x-organization-id');
+    const organizationId =
+      orgId || request.nextUrl.searchParams.get('org') || request.headers.get('x-organization-id');
 
     if (!organizationId) {
       return null;
@@ -134,7 +134,7 @@ export async function getOrgContext(
       },
     };
   } catch (error) {
-    console.error('Error getting organization context:', error);
+    logger.error('Error getting organization context:', error);
     return null;
   }
 }
@@ -191,9 +191,7 @@ export function toRBACContext(orgContext: OrgContext): RBACContext {
 /**
  * Get user's organizations with membership details
  */
-export async function getUserOrganizations(
-  userId: string
-): Promise<
+export async function getUserOrganizations(userId: string): Promise<
   Array<{
     id: string;
     name: string;
@@ -219,7 +217,7 @@ export async function getUserOrganizations(
     },
   });
 
-  return memberships.map(m => ({
+  return memberships.map((m) => ({
     id: m.organization.id,
     name: m.organization.name,
     slug: m.organization.slug,

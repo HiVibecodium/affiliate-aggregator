@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * CSRF Token Management
  * Provides protection against Cross-Site Request Forgery attacks
@@ -55,7 +56,7 @@ export function verifyCSRFToken(token: string): boolean {
 
     return signature === expectedSignature;
   } catch (error) {
-    console.error('CSRF token verification error:', error);
+    logger.error('CSRF token verification error:', error);
     return false;
   }
 }

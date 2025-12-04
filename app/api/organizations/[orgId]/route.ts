@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Organization API - Individual organization operations
  * GET /api/organizations/[orgId] - Get organization details
@@ -58,7 +59,7 @@ export async function GET(
       memberCount: organization._count.members,
     });
   } catch (error) {
-    console.error('Error fetching organization:', error);
+    logger.error('Error fetching organization:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -132,7 +133,7 @@ export async function PUT(
       },
     });
   } catch (error: unknown) {
-    console.error('Error updating organization:', error);
+    logger.error('Error updating organization:', error);
 
     // Handle unique constraint error (slug)
     if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
@@ -180,7 +181,7 @@ export async function DELETE(
       message: 'Organization deleted successfully',
     });
   } catch (error) {
-    console.error('Error deleting organization:', error);
+    logger.error('Error deleting organization:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

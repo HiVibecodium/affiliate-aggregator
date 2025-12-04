@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/logger';
 
 /**
  * GET /api/reviews/[programId]
@@ -66,7 +67,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error('Failed to fetch reviews:', error);
+    logger.error('Failed to fetch reviews:', error);
     return NextResponse.json(
       {
         error: 'Failed to fetch reviews',
@@ -195,7 +196,7 @@ export async function POST(
       { status: 201 }
     );
   } catch (error) {
-    console.error('Failed to create review:', error);
+    logger.error('Failed to create review:', error);
     return NextResponse.json(
       {
         error: 'Failed to create review',

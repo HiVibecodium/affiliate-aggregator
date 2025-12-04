@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Admin Stats API
  * Comprehensive business metrics for admin dashboard
@@ -138,7 +139,7 @@ export async function GET() {
       },
     });
   } catch (error: unknown) {
-    console.error('Admin stats error:', error);
+    logger.error('Admin stats error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

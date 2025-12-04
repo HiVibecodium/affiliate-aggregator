@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * POST /api/billing/portal
  *
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: session.url });
   } catch (error: unknown) {
-    console.error('Portal session error:', error);
+    logger.error('Portal session error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to create portal session' },
       { status: 500 }

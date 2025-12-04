@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * API: Accept Team Invitation
  * POST /api/invite/accept
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
       organizationId: member.organizationId,
     });
   } catch (error) {
-    console.error('Invite acceptance error:', error);
+    logger.error('Invite acceptance error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

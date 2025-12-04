@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 
@@ -48,7 +49,7 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
       const data = await response.json();
       setSearches(data.searches || []);
     } catch (error) {
-      console.error('Failed to fetch saved searches:', error);
+      logger.error('Failed to fetch saved searches:', error);
     } finally {
       setLoading(false);
     }
@@ -93,7 +94,7 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
         alert('Search saved! You&apos;ll receive email alerts when new programs match.');
       }
     } catch (error) {
-      console.error('Failed to save search:', error);
+      logger.error('Failed to save search:', error);
       alert('Failed to save search');
     }
   };
@@ -108,7 +109,7 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
 
       setSearches(searches.filter((s) => s.id !== id));
     } catch (error) {
-      console.error('Failed to delete search:', error);
+      logger.error('Failed to delete search:', error);
     }
   };
 
@@ -128,7 +129,7 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
         searches.map((s) => (s.id === id ? { ...s, alertsEnabled: !currentlyEnabled } : s))
       );
     } catch (error) {
-      console.error('Failed to toggle alerts:', error);
+      logger.error('Failed to toggle alerts:', error);
     }
   };
 

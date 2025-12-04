@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Dynamic OG Image Generation
  * Generates Open Graph images for programs using @vercel/og
@@ -163,7 +164,7 @@ export async function GET(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.error('OG Image generation error:', error);
+    logger.error('OG Image generation error:', error);
     return new Response('Failed to generate image', { status: 500 });
   }
 }

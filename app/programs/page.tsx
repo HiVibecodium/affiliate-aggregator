@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import Link from 'next/link';
@@ -156,7 +157,7 @@ function ProgramsContent() {
       const data = await response.json();
       setStats(data);
     } catch (error) {
-      console.error('Failed to fetch stats:', error);
+      logger.error('Failed to fetch stats:', error);
     }
   }
 
@@ -174,7 +175,7 @@ function ProgramsContent() {
       const data = await response.json();
       setFilters(data);
     } catch (error) {
-      console.error('Failed to fetch filters:', error);
+      logger.error('Failed to fetch filters:', error);
     }
   }
 
@@ -187,7 +188,7 @@ function ProgramsContent() {
         setFavorites(favoriteIds);
       }
     } catch (error) {
-      console.error('Failed to fetch favorites:', error);
+      logger.error('Failed to fetch favorites:', error);
     }
   }
 
@@ -233,7 +234,7 @@ function ProgramsContent() {
         }
       }
     } catch (error) {
-      console.error('Failed to toggle favorite:', error);
+      logger.error('Failed to toggle favorite:', error);
       alert('Произошла ошибка. Попробуйте снова.');
     } finally {
       setFavoritesLoading(false);
@@ -259,7 +260,7 @@ function ProgramsContent() {
       });
     } catch (error) {
       // Silent fail - tracking shouldn't break UX
-      console.error('Failed to track click:', error);
+      logger.error('Failed to track click:', error);
     }
   }
 
@@ -301,7 +302,7 @@ function ProgramsContent() {
         });
       }
     } catch (error) {
-      console.error('Failed to fetch programs:', error);
+      logger.error('Failed to fetch programs:', error);
     } finally {
       setLoading(false);
     }

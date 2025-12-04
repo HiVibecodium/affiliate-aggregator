@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit';
+import { logger } from '@/lib/logger';
 
 /**
  * POST /api/track/click
@@ -48,7 +49,7 @@ async function trackClickHandler(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Click tracking error:', error);
+    logger.error('Click tracking error:', error);
     return NextResponse.json(
       {
         error: 'Failed to track click',

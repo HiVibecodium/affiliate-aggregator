@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * POST /api/billing/checkout
  *
@@ -76,7 +77,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ sessionId: session.id, url: session.url });
   } catch (error: unknown) {
-    console.error('Checkout error:', error);
+    logger.error('Checkout error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to create checkout session' },
       { status: 500 }

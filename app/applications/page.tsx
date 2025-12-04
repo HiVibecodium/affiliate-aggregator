@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -43,7 +44,7 @@ export default function ApplicationsPage() {
       const data = await response.json();
       setApplications(data.applications || []);
     } catch (error) {
-      console.error('Failed to fetch applications:', error);
+      logger.error('Failed to fetch applications:', error);
     } finally {
       setLoading(false);
     }

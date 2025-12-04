@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState } from 'react';
 
@@ -159,7 +160,7 @@ export function PricingTable({ currentTier = 'free', userId, userEmail }: Pricin
         throw new Error(data.error || 'Failed to create checkout session');
       }
     } catch (error: unknown) {
-      console.error('Upgrade error:', error);
+      logger.error('Upgrade error:', error);
       alert(error instanceof Error ? error.message : 'Failed to start checkout');
       setLoading(null);
     }

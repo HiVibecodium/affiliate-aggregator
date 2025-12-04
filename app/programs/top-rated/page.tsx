@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -56,7 +57,7 @@ export default function TopRatedProgramsPage() {
 
       setPrograms(filtered);
     } catch (error) {
-      console.error('Failed to fetch top rated programs:', error);
+      logger.error('Failed to fetch top rated programs:', error);
     } finally {
       setLoading(false);
     }

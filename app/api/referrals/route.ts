@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Referral System API
  *
@@ -72,7 +73,7 @@ export async function GET(request: Request) {
       },
     });
   } catch (error: unknown) {
-    console.error('Referral error:', error);
+    logger.error('Referral error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
@@ -127,7 +128,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, referral });
   } catch (error: unknown) {
-    console.error('Invite error:', error);
+    logger.error('Invite error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

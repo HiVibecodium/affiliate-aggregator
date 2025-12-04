@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * GET /api/billing/subscription
  * Get user's current subscription
@@ -60,7 +61,7 @@ export async function GET(request: Request) {
       invoices,
     });
   } catch (error: unknown) {
-    console.error('Get subscription error:', error);
+    logger.error('Get subscription error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to get subscription' },
       { status: 500 }
@@ -112,7 +113,7 @@ export async function PUT(request: Request) {
       },
     });
   } catch (error: unknown) {
-    console.error('Update subscription error:', error);
+    logger.error('Update subscription error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to update subscription' },
       { status: 500 }
@@ -152,7 +153,7 @@ export async function DELETE(request: Request) {
       },
     });
   } catch (error: unknown) {
-    console.error('Cancel subscription error:', error);
+    logger.error('Cancel subscription error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to cancel subscription' },
       { status: 500 }
@@ -197,7 +198,7 @@ export async function PATCH(request: Request) {
       },
     });
   } catch (error: unknown) {
-    console.error('Reactivate subscription error:', error);
+    logger.error('Reactivate subscription error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to reactivate subscription' },
       { status: 500 }

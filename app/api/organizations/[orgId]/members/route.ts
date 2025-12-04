@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Organization Members API endpoints
  * GET /api/organizations/[orgId]/members - List organization members
@@ -67,7 +68,7 @@ export async function GET(
       })),
     });
   } catch (error) {
-    console.error('Error fetching members:', error);
+    logger.error('Error fetching members:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -226,7 +227,7 @@ export async function POST(
       });
 
       if (!emailResult.success && emailResult.reason !== 'not_configured') {
-        console.error('Failed to send invitation email:', emailResult.error);
+        logger.error('Failed to send invitation email:', emailResult.error);
         // Continue anyway - user can still be invited manually
       }
 
@@ -263,7 +264,7 @@ export async function POST(
       );
     }
   } catch (error) {
-    console.error('Error adding member:', error);
+    logger.error('Error adding member:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

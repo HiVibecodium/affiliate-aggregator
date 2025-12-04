@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -96,7 +97,7 @@ export default function AnalyticsPage() {
         setAdvancedData(data);
       }
     } catch (err) {
-      console.error('Failed to fetch advanced analytics:', err);
+      logger.error('Failed to fetch advanced analytics:', err);
     }
   }
 
@@ -105,7 +106,7 @@ export default function AnalyticsPage() {
       const response = await fetch('/api/analytics/popular');
 
       if (!response.ok) {
-        console.error('Analytics API error:', response.status);
+        logger.error('Analytics API error:', response.status);
         setError('Analytics data temporarily unavailable');
         setPopularPrograms([]);
         setLoading(false);
@@ -123,7 +124,7 @@ export default function AnalyticsPage() {
         setError(null);
       }
     } catch (err) {
-      console.error('Failed to fetch analytics:', err);
+      logger.error('Failed to fetch analytics:', err);
       // Gracefully handle error - show empty state instead of crashing
       setError('Failed to load analytics data');
       setPopularPrograms([]);

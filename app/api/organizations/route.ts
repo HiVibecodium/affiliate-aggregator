@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Organization API endpoints
  * GET /api/organizations - List user's organizations
@@ -75,7 +76,7 @@ export async function GET() {
       })),
     });
   } catch (error) {
-    console.error('Error fetching organizations:', error);
+    logger.error('Error fetching organizations:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -208,7 +209,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error: unknown) {
-    console.error('Error creating organization:', error);
+    logger.error('Error creating organization:', error);
 
     // Handle unique constraint error (Prisma error)
     if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {

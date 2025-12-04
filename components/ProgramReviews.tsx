@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 
@@ -49,7 +50,7 @@ export function ProgramReviews({ programId }: ProgramReviewsProps) {
       setReviews(data.reviews || []);
       setStats(data.stats || null);
     } catch (error) {
-      console.error('Failed to fetch reviews:', error);
+      logger.error('Failed to fetch reviews:', error);
     } finally {
       setLoading(false);
     }

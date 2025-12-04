@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Billing Success Page
  *
@@ -28,7 +29,7 @@ export default async function BillingSuccessPage({
       planName = session.metadata.tier.charAt(0).toUpperCase() + session.metadata.tier.slice(1);
     }
   } catch (error) {
-    console.error('Failed to retrieve Stripe session:', error);
+    logger.error('Failed to retrieve Stripe session:', error);
   }
 
   return (

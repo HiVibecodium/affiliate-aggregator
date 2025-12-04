@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import React, { Component, ReactNode } from 'react';
 import { captureException } from '@sentry/nextjs';
@@ -37,7 +38,7 @@ export class ErrorBoundary extends Component<Props, State> {
     // Call custom error handler if provided
     this.props.onError?.(error, errorInfo);
 
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    logger.error('ErrorBoundary caught an error:', error, errorInfo);
   }
 
   render() {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { logger } from '@/lib/logger';
 
 /**
  * GET /api/programs/suggestions
@@ -67,7 +68,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(suggestions);
   } catch (error) {
-    console.error('[SUGGESTIONS_ERROR]', error);
+    logger.error('[SUGGESTIONS_ERROR]', error);
     return NextResponse.json({ error: 'Failed to fetch suggestions' }, { status: 500 });
   }
 }

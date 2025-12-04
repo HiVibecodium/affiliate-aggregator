@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 /**
  * Individual organization member management endpoints
  * PUT /api/organizations/[orgId]/members/[memberId] - Update member role
@@ -103,7 +104,7 @@ export async function PUT(
       },
     });
   } catch (error) {
-    console.error('Error updating member:', error);
+    logger.error('Error updating member:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -174,7 +175,7 @@ export async function DELETE(
       message: `Member ${targetMember.user.email} has been removed from the organization`,
     });
   } catch (error) {
-    console.error('Error removing member:', error);
+    logger.error('Error removing member:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

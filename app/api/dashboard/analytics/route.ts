@@ -1,14 +1,18 @@
 import { NextResponse } from 'next/server';
 import { getDashboardAnalytics } from '@/lib/dashboard/get-analytics';
+import { logger } from '@/lib/logger';
 
 export async function GET() {
   try {
     const analytics = await getDashboardAnalytics();
     return NextResponse.json(analytics);
   } catch (error) {
-    console.error('Dashboard analytics error:', error);
+    logger.error('Dashboard analytics error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch analytics', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch analytics',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
@@ -155,7 +159,7 @@ export async function GET_OLD() {
       recentPrograms
     });
   } catch (error) {
-    console.error('Dashboard analytics error:', error);
+    logger.error('Dashboard analytics error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch analytics', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

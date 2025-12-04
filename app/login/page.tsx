@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
@@ -37,7 +38,7 @@ export default function LoginPage() {
           headers: { 'Content-Type': 'application/json' },
         });
       } catch (syncError) {
-        console.error('Sync error:', syncError);
+        logger.error('Sync error:', syncError);
       }
 
       router.push('/dashboard');

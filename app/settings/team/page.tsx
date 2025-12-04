@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -61,13 +62,13 @@ export default function TeamManagementPage() {
           members: membersData.members || [],
         });
       } else {
-        console.error('Failed to fetch:', {
+        logger.error('Failed to fetch:', {
           org: orgResponse.status,
           members: membersResponse.status,
         });
       }
     } catch (error) {
-      console.error('Failed to fetch organization:', error);
+      logger.error('Failed to fetch organization:', error);
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,5 @@
 'use client';
+import { logger } from '@/lib/logger';
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -39,7 +40,7 @@ export function SearchSuggestions({ query, onSelect, onClose }: SearchSuggestion
           setSuggestions(data);
         }
       } catch (error) {
-        console.error('Failed to fetch suggestions:', error);
+        logger.error('Failed to fetch suggestions:', error);
       } finally {
         setLoading(false);
       }

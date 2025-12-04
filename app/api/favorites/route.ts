@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { createClient } from '@/lib/supabase/server';
 import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit';
 import { checkAndRecordUsage, decrementUsage } from '@/lib/billing/feature-gates';
+import { logger } from '@/lib/logger';
 
 /**
  * GET /api/favorites
@@ -77,7 +78,7 @@ async function getFavoritesHandler(_request: NextRequest) {
       })),
     });
   } catch (error) {
-    console.error('Failed to fetch favorites:', error);
+    logger.error('Failed to fetch favorites:', error);
     return NextResponse.json(
       {
         error: 'Failed to fetch favorites',
@@ -210,7 +211,7 @@ async function postFavoriteHandler(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Failed to add favorite:', error);
+    logger.error('Failed to add favorite:', error);
     return NextResponse.json(
       {
         error: 'Failed to add favorite',
@@ -271,7 +272,7 @@ async function deleteFavoriteHandler(request: NextRequest) {
       message: 'Favorite removed successfully',
     });
   } catch (error) {
-    console.error('Failed to remove favorite:', error);
+    logger.error('Failed to remove favorite:', error);
     return NextResponse.json(
       {
         error: 'Failed to remove favorite',
