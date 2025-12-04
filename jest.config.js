@@ -16,6 +16,8 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
     '@sentry/nextjs': '<rootDir>/__mocks__/@sentry/nextjs.js',
+    '^uuid$': '<rootDir>/__mocks__/uuid.js',
+    '^resend$': '<rootDir>/__mocks__/resend.js',
   },
   testPathIgnorePatterns: [
     '<rootDir>/.next/',
@@ -23,6 +25,8 @@ const customJestConfig = {
     '<rootDir>/tests/e2e/',
     '<rootDir>/tests/integration/e2e/',
   ],
+  // Transform ESM modules from node_modules
+  transformIgnorePatterns: ['node_modules/(?!(uuid|svix|resend)/)'],
   collectCoverageFrom: [
     'app/**/*.{js,jsx,ts,tsx}',
     'components/**/*.{js,jsx,ts,tsx}',
