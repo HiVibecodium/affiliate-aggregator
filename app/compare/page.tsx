@@ -23,9 +23,7 @@ export default function ComparePage() {
               d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
             />
           </svg>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Нет программ для сравнения
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Нет программ для сравнения</h1>
           <p className="text-gray-600 mb-6">
             Добавьте программы для сравнения на странице каталога
           </p>
@@ -53,20 +51,21 @@ export default function ComparePage() {
   ];
 
   const exportToCSV = () => {
-    const headers = comparisonFields.map(f => f.label);
-    const rows = comparisonList.map(program =>
-      comparisonFields.map(field => {
+    const headers = comparisonFields.map((f) => f.label);
+    const rows = comparisonList.map((program) =>
+      comparisonFields.map((field) => {
         if (field.key === 'network') return program.network.name;
         if (field.key === 'paymentMethods') return program.paymentMethods?.join(', ') || 'N/A';
         if (field.key === 'commissionRate') return `${program.commissionRate}%`;
         if (field.key === 'paymentThreshold') return `$${program.paymentThreshold}`;
-        return String((program as any)[field.key] || 'N/A');
+        const key = field.key as keyof typeof program;
+        return String(program[key] || 'N/A');
       })
     );
 
     const csv = [
       headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
     ].join('\n');
 
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -85,15 +84,14 @@ export default function ComparePage() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <Link href="/programs" className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
+              <Link
+                href="/programs"
+                className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block"
+              >
                 ← Назад к программам
               </Link>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Сравнение программ
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Выбрано программ: {comparisonList.length}
-              </p>
+              <h1 className="text-3xl font-bold text-gray-900">Сравнение программ</h1>
+              <p className="text-gray-600 mt-1">Выбрано программ: {comparisonList.length}</p>
             </div>
             <div className="flex gap-2">
               <button
@@ -157,7 +155,7 @@ export default function ComparePage() {
                     {field.label}
                   </td>
                   {comparisonList.map((program) => {
-                    let value: any;
+                    let value: React.ReactNode;
 
                     if (field.key === 'network') {
                       value = (
@@ -184,7 +182,11 @@ export default function ComparePage() {
                         </div>
                       );
                     } else if (field.key === 'commissionRate') {
-                      value = <span className="font-semibold text-green-600">{program.commissionRate}%</span>;
+                      value = (
+                        <span className="font-semibold text-green-600">
+                          {program.commissionRate}%
+                        </span>
+                      );
                     } else if (field.key === 'paymentThreshold') {
                       value = <span className="font-semibold">${program.paymentThreshold}</span>;
                     } else if (field.key === 'cookieDuration') {
@@ -198,7 +200,10 @@ export default function ComparePage() {
                     } else if (field.key === 'description') {
                       value = <p className="text-sm text-gray-600">{program.description}</p>;
                     } else {
-                      value = (program as any)[field.key] || 'N/A';
+                      const key = field.key as keyof typeof program;
+                      const rawValue = program[key];
+                      value =
+                        rawValue !== null && rawValue !== undefined ? String(rawValue) : 'N/A';
                     }
 
                     return (

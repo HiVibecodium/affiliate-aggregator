@@ -2,11 +2,23 @@
 
 import { useState, useEffect } from 'react';
 
+// Type for search filters stored in saved searches
+interface SearchFilters {
+  search?: string;
+  category?: string;
+  commissionType?: string;
+  minCommission?: number;
+  maxCommission?: number;
+  network?: string;
+  country?: string;
+  [key: string]: string | number | undefined;
+}
+
 interface SavedSearch {
   id: string;
   name: string;
   description: string | null;
-  filters: any;
+  filters: SearchFilters;
   alertsEnabled: boolean;
   alertFrequency: string;
   newMatchesCount: number;
@@ -15,7 +27,7 @@ interface SavedSearch {
 
 interface SavedSearchesProps {
   userId: string;
-  onApplySearch: (filters: any) => void;
+  onApplySearch: (filters: SearchFilters) => void;
 }
 
 export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
@@ -23,7 +35,7 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
   const [loading, setLoading] = useState(true);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [saveName, setSaveName] = useState('');
-  const [currentFilters, setCurrentFilters] = useState<any>(null);
+  const [currentFilters, setCurrentFilters] = useState<SearchFilters | null>(null);
 
   useEffect(() => {
     fetchSearches();
@@ -42,7 +54,7 @@ export function SavedSearches({ userId, onApplySearch }: SavedSearchesProps) {
     }
   };
 
-  const handleSaveSearch = async (filters: any) => {
+  const handleSaveSearch = async (filters: SearchFilters) => {
     setCurrentFilters(filters);
     setShowSaveDialog(true);
   };

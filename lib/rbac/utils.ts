@@ -202,6 +202,7 @@ export function createAuditLogData(
   action: string,
   context: RBACContext,
   targetUserId?: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   details?: Record<string, any>
 ): {
   action: string;
@@ -209,6 +210,7 @@ export function createAuditLogData(
   resourceType: string;
   resourceId: string | null;
   performedBy: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   details: Record<string, any>;
 } {
   return {
