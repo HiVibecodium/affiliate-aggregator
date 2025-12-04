@@ -24,6 +24,14 @@ node_modules
 .env.test.local
 .env.production.local
 
+# SECURITY: Never commit production environment files with real secrets
+.env.production
+.env.production.*
+!.env.production.template
+.env.staging
+.env.staging.*
+!.env.staging.template
+
 # Debug logs
 npm-debug.log*
 yarn-debug.log*
