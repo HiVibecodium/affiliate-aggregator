@@ -5,7 +5,18 @@ import { HomeHeader } from '@/components/HomeHeader';
 // Revalidate every 10 minutes
 export const revalidate = 600;
 
-async function getStats() {
+interface NetworkStats {
+  name: string;
+  programs: number;
+}
+
+interface HomeStats {
+  totalPrograms: number;
+  totalNetworks: number;
+  networks: NetworkStats[];
+}
+
+async function getStats(): Promise<HomeStats | null> {
   try {
     const [totalPrograms, totalNetworks, programsByNetwork] = await Promise.all([
       prisma.affiliateProgram.count(),
@@ -138,7 +149,7 @@ export default async function Home() {
               📊 Программ по сетям
             </h2>
             <div className="space-y-4">
-              {stats.networks.map((network: any) => (
+              {stats.networks.map((network: NetworkStats) => (
                 <Link
                   key={network.name}
                   href={`/programs?network=${encodeURIComponent(network.name)}`}

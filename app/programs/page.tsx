@@ -14,6 +14,10 @@ import { calculateDifficulty } from '@/lib/program-utils';
 // Disable static generation for this page (uses search params)
 export const dynamic = 'force-dynamic';
 
+interface Favorite {
+  programId: string;
+}
+
 interface Program {
   id: string;
   name: string;
@@ -179,9 +183,7 @@ function ProgramsContent() {
       const response = await fetch('/api/favorites');
       if (response.ok) {
         const data = await response.json();
-        const favoriteIds = new Set<string>(
-          data.favorites.map((fav: any) => fav.programId as string)
-        );
+        const favoriteIds = new Set<string>(data.favorites.map((fav: Favorite) => fav.programId));
         setFavorites(favoriteIds);
       }
     } catch (error) {

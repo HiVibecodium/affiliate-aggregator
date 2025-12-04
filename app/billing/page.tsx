@@ -10,6 +10,7 @@ import { prisma } from '@/lib/prisma';
 import { getActiveSubscription } from '@/lib/billing/subscription';
 import { getUsageSummary } from '@/lib/billing/feature-gates';
 import { redirect } from 'next/navigation';
+import type { Invoice } from '@prisma/client';
 
 export default async function BillingPage() {
   // Get authenticated user
@@ -196,7 +197,7 @@ export default async function BillingPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {subscriptionData.invoices.map((invoice: any) => (
+                  {subscriptionData.invoices.map((invoice: Invoice) => (
                     <tr key={invoice.id} className="text-sm">
                       <td className="py-3 text-gray-900">
                         {new Date(invoice.createdAt).toLocaleDateString()}

@@ -17,7 +17,7 @@ interface Plan {
     monthly?: string;
     yearly?: string;
   };
-  features?: any;
+  features?: string[];
   limits: string[];
   cta: string;
   popular: boolean;

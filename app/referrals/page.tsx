@@ -1,65 +1,75 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+
+interface ReferralData {
+  referralCode: string;
+  stats: {
+    total: number;
+    completed: number;
+    rewarded: number;
+    pending: number;
+  };
+}
 
 export default function ReferralsPage() {
-  const [referralData, setReferralData] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [copied, setCopied] = useState(false)
+  const [referralData, setReferralData] = useState<ReferralData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   // Mock user - replace with actual auth
-  const userId = 'current-user-id'
+  const userId = 'current-user-id';
 
   useEffect(() => {
-    fetchReferralData()
-  }, [])
+    fetchReferralData();
+  }, []);
 
   const fetchReferralData = async () => {
     try {
-      const response = await fetch(`/api/referrals?userId=${userId}`)
-      const data = await response.json()
-      setReferralData(data)
+      const response = await fetch(`/api/referrals?userId=${userId}`);
+      const data = await response.json();
+      setReferralData(data);
     } catch (error) {
-      console.error('Failed to fetch referral data:', error)
+      console.error('Failed to fetch referral data:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const copyReferralLink = () => {
-    const link = `${window.location.origin}/signup?ref=${referralData.referralCode}`
-    navigator.clipboard.writeText(link)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    if (!referralData) return;
+    const link = `${window.location.origin}/signup?ref=${referralData.referralCode}`;
+    navigator.clipboard.writeText(link);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const shareViaEmail = () => {
-    const link = `${window.location.origin}/signup?ref=${referralData.referralCode}`
-    const subject = 'Join Affiliate Aggregator - Get 50% Off!'
-    const body = `Hey! I've been using Affiliate Aggregator to find the best affiliate programs. Join using my link and get 50% off your first month:\n\n${link}`
-    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-  }
+    if (!referralData) return;
+    const link = `${window.location.origin}/signup?ref=${referralData.referralCode}`;
+    const subject = 'Join Affiliate Aggregator - Get 50% Off!';
+    const body = `Hey! I've been using Affiliate Aggregator to find the best affiliate programs. Join using my link and get 50% off your first month:\n\n${link}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-gray-600">Loading...</div>
       </div>
-    )
+    );
   }
 
   const referralLink = referralData
     ? `${window.location.origin}/signup?ref=${referralData.referralCode}`
-    : ''
+    : '';
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            🎁 Referral Program
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">🎁 Referral Program</h1>
           <p className="text-xl text-gray-600">
             Пригласи друзей и получи 1 месяц Pro бесплатно за каждого!
           </p>
@@ -73,11 +83,15 @@ export default function ReferralsPage() {
               <div className="text-sm text-gray-600">Всего приглашений</div>
             </div>
             <div className="bg-white rounded-lg p-6 border border-gray-200">
-              <div className="text-3xl font-bold text-green-600">{referralData.stats.completed}</div>
+              <div className="text-3xl font-bold text-green-600">
+                {referralData.stats.completed}
+              </div>
               <div className="text-sm text-gray-600">Зарегистрировались</div>
             </div>
             <div className="bg-white rounded-lg p-6 border border-gray-200">
-              <div className="text-3xl font-bold text-purple-600">{referralData.stats.rewarded}</div>
+              <div className="text-3xl font-bold text-purple-600">
+                {referralData.stats.rewarded}
+              </div>
               <div className="text-sm text-gray-600">Оплатили</div>
             </div>
             <div className="bg-white rounded-lg p-6 border border-gray-200">
@@ -115,9 +129,7 @@ export default function ReferralsPage() {
 
         {/* How It Works */}
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            Как Это Работает
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Как Это Работает</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
@@ -125,9 +137,7 @@ export default function ReferralsPage() {
                 1
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Пригласи</h3>
-              <p className="text-sm text-gray-600">
-                Отправь свою ссылку друзьям или коллегам
-              </p>
+              <p className="text-sm text-gray-600">Отправь свою ссылку друзьям или коллегам</p>
             </div>
 
             <div className="text-center">
@@ -135,9 +145,7 @@ export default function ReferralsPage() {
                 2
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Они Регистрируются</h3>
-              <p className="text-sm text-gray-600">
-                Друг получает 50% скидку на первый месяц Pro
-              </p>
+              <p className="text-sm text-gray-600">Друг получает 50% скидку на первый месяц Pro</p>
             </div>
 
             <div className="text-center">
@@ -164,7 +172,8 @@ export default function ReferralsPage() {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">Для Тебя</h3>
                 <p className="text-gray-600">
-                  <strong>1 месяц Pro бесплатно</strong> за каждого друга, который оформит платную подписку
+                  <strong>1 месяц Pro бесплатно</strong> за каждого друга, который оформит платную
+                  подписку
                 </p>
               </div>
             </div>
@@ -195,8 +204,11 @@ export default function ReferralsPage() {
           <div className="flex gap-3 justify-center">
             <button
               onClick={() => {
-                const text = `Нашёл отличный сервис для поиска партнёрских программ! ${referralLink}`
-                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
+                const text = `Нашёл отличный сервис для поиска партнёрских программ! ${referralLink}`;
+                window.open(
+                  `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
+                  '_blank'
+                );
               }}
               className="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500"
             >
@@ -204,7 +216,10 @@ export default function ReferralsPage() {
             </button>
             <button
               onClick={() => {
-                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`, '_blank')
+                window.open(
+                  `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`,
+                  '_blank'
+                );
               }}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
@@ -212,7 +227,10 @@ export default function ReferralsPage() {
             </button>
             <button
               onClick={() => {
-                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(referralLink)}`, '_blank')
+                window.open(
+                  `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(referralLink)}`,
+                  '_blank'
+                );
               }}
               className="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800"
             >
@@ -222,5 +240,5 @@ export default function ReferralsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

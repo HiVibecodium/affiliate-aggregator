@@ -45,9 +45,41 @@ interface PopularProgram {
   clicks: number;
 }
 
+interface AdvancedAnalyticsData {
+  overview: {
+    totalPrograms: number;
+    totalNetworks: number;
+    totalClicks: number;
+    totalReviews: number;
+    avgCommission: string;
+  };
+  commissionDistribution: Array<{
+    type: string;
+    count: number;
+    avgRate: string;
+  }>;
+  categoryStats: Array<{
+    category: string;
+    count: number;
+  }>;
+  newProgramsTrend: Array<{
+    date: string;
+    count: number;
+  }>;
+  topPrograms: Array<{
+    id: string;
+    name: string;
+    network: string;
+    commissionRate: number | null;
+    clicks: number;
+    reviews: number;
+    applications: number;
+  }>;
+}
+
 export default function AnalyticsPage() {
   const [popularPrograms, setPopularPrograms] = useState<PopularProgram[]>([]);
-  const [advancedData, setAdvancedData] = useState<any>(null);
+  const [advancedData, setAdvancedData] = useState<AdvancedAnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
