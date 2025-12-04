@@ -36,9 +36,26 @@ async function getFavoritesHandler(_request: NextRequest) {
 
     const favorites = await prisma.favorite.findMany({
       where: { userId: dbUser.id },
-      include: {
+      select: {
+        id: true,
+        programId: true,
+        createdAt: true,
         program: {
-          include: {
+          select: {
+            id: true,
+            networkId: true,
+            externalId: true,
+            name: true,
+            description: true,
+            category: true,
+            commissionRate: true,
+            commissionType: true,
+            cookieDuration: true,
+            paymentThreshold: true,
+            paymentMethods: true,
+            active: true,
+            createdAt: true,
+            updatedAt: true,
             network: {
               select: {
                 name: true,
@@ -108,9 +125,10 @@ async function postFavoriteHandler(request: NextRequest) {
       });
     }
 
-    // Check if program exists
+    // Check if program exists (only need id check, no data needed)
     const program = await prisma.affiliateProgram.findUnique({
       where: { id: programId },
+      select: { id: true },
     });
 
     if (!program) {
@@ -151,9 +169,26 @@ async function postFavoriteHandler(request: NextRequest) {
         userId: dbUser.id,
         programId: programId,
       },
-      include: {
+      select: {
+        id: true,
+        programId: true,
+        createdAt: true,
         program: {
-          include: {
+          select: {
+            id: true,
+            networkId: true,
+            externalId: true,
+            name: true,
+            description: true,
+            category: true,
+            commissionRate: true,
+            commissionType: true,
+            cookieDuration: true,
+            paymentThreshold: true,
+            paymentMethods: true,
+            active: true,
+            createdAt: true,
+            updatedAt: true,
             network: {
               select: {
                 name: true,

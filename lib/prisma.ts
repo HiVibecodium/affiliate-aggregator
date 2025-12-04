@@ -15,17 +15,25 @@ export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
-    // Optimize for serverless/edge environments
-    // These settings help reduce memory usage and connection overhead
     datasources: {
       db: {
         url: process.env.DATABASE_URL,
       },
     },
-    // Connection pool configuration to prevent memory leaks
-    // Limits the number of concurrent connections
-    // Critical for serverless environments like Vercel
-  });
+    // Connection pool configuration optimized for serverless (Vercel)
+    // Works with PgBouncer connection pooling (pgbouncer=true in DATABASE_URL)
+    // connection_limit=1 in DATABASE_URL ensures single connection per instance
+    __internal: {
+      engine: {
+        // Reduce connection acquisition timeout for faster failures
+        connection_timeout: 5,
+        // Close idle connections quickly in serverless
+        pool_timeout: 10,
+        // Maximum query execution time (30 seconds)
+        query_timeout: 30000,
+      },
+    },
+  } as any);
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 

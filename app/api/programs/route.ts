@@ -144,7 +144,21 @@ export async function GET(request: NextRequest) {
     const [programs, total] = await Promise.all([
       prisma.affiliateProgram.findMany({
         where,
-        include: {
+        select: {
+          id: true,
+          networkId: true,
+          externalId: true,
+          name: true,
+          description: true,
+          category: true,
+          commissionRate: true,
+          commissionType: true,
+          cookieDuration: true,
+          paymentThreshold: true,
+          paymentMethods: true,
+          active: true,
+          createdAt: true,
+          updatedAt: true,
           network: {
             select: {
               name: true,

@@ -12,7 +12,8 @@ export async function GET() {
           prisma.affiliateProgram.count(),
           prisma.affiliateNetwork.count(),
           prisma.affiliateNetwork.findMany({
-            include: {
+            select: {
+              name: true,
               _count: {
                 select: { programs: true },
               },

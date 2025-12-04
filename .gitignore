@@ -69,4 +69,9 @@ backup-*.md
 *BACKUP*.md
 *SESSION_SUMMARY*.md
 
+# Large database backups
+backups/*.json
+backups/*.sql
+backups/*.db
+
 .vercel
