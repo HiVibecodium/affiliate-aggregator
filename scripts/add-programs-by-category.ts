@@ -10,7 +10,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // All categories with target count 20-25 each
-const CATEGORIES = [
+const _CATEGORIES = [
   'Business & Investing',
   'Computers & Internet',
   'Cooking, Food & Wine',
