@@ -9,6 +9,9 @@ import { WebVitals } from './web-vitals';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
 import { defaultMetadata } from '@/lib/seo/metadata';
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
+import { PWAUpdateNotification } from '@/components/PWAUpdateNotification';
+import { OfflineIndicator } from '@/components/OfflineIndicator';
 
 export const metadata: Metadata = defaultMetadata;
 
@@ -39,14 +42,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="AffAgg" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png" />
       </head>
       <body>
+        <OfflineIndicator />
         <WebVitals />
         <ThemeProvider>
           <OrganizationProvider>
             <ComparisonProvider>
               {children}
               <ComparisonBar />
+              <PWAInstallPrompt />
+              <PWAUpdateNotification />
             </ComparisonProvider>
           </OrganizationProvider>
         </ThemeProvider>
