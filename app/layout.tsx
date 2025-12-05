@@ -12,6 +12,12 @@ import { defaultMetadata } from '@/lib/seo/metadata';
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
 import { PWAUpdateNotification } from '@/components/PWAUpdateNotification';
 import { OfflineIndicator } from '@/components/OfflineIndicator';
+import { JsonLd } from '@/components/JsonLd';
+import {
+  generateOrganizationSchema,
+  generateWebsiteSchema,
+  generateSoftwareApplicationSchema,
+} from '@/lib/seo/structured-data';
 
 export const metadata: Metadata = defaultMetadata;
 
@@ -48,6 +54,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png" />
       </head>
       <body>
+        <JsonLd
+          data={[
+            generateOrganizationSchema(),
+            generateWebsiteSchema(),
+            generateSoftwareApplicationSchema(),
+          ]}
+        />
         <OfflineIndicator />
         <WebVitals />
         <ThemeProvider>

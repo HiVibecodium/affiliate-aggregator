@@ -160,3 +160,151 @@ export function generateProgramStructuredData(program: {
     url: `${APP_URL}/programs/${program.id}`,
   };
 }
+
+/**
+ * Генерация metadata для категории
+ */
+export function generateCategoryMetadata(category: {
+  name: string;
+  slug: string;
+  programCount: number;
+  description?: string;
+}): Metadata {
+  const title = `${category.name} Affiliate Programs`;
+  const description =
+    category.description ||
+    `Browse ${category.programCount} affiliate programs in ${category.name} category. Find top-paying programs with detailed commission info.`;
+
+  const ogImageParams = new URLSearchParams({
+    title: title,
+    network: `${category.programCount} programs`,
+    category: category.name,
+  });
+  const ogImageUrl = `${APP_URL}/api/og?${ogImageParams.toString()}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: `${APP_URL}/categories/${category.slug}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+  };
+}
+
+/**
+ * Генерация metadata для сети
+ */
+export function generateNetworkMetadata(network: {
+  name: string;
+  slug: string;
+  programCount: number;
+  description?: string | null;
+}): Metadata {
+  const title = `${network.name} - Affiliate Network`;
+  const description =
+    network.description ||
+    `Explore ${network.programCount} affiliate programs from ${network.name}. Compare commission rates and join top programs.`;
+
+  const ogImageParams = new URLSearchParams({
+    title: network.name,
+    network: 'Affiliate Network',
+    commission: `${network.programCount} programs`,
+  });
+  const ogImageUrl = `${APP_URL}/api/og?${ogImageParams.toString()}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: `${APP_URL}/networks/${network.slug}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+  };
+}
+
+/**
+ * Генерация metadata для страницы сравнения
+ */
+export function generateCompareMetadata(programs: Array<{ name: string }>): Metadata {
+  const programNames = programs.map((p) => p.name).slice(0, 3);
+  const title = `Compare: ${programNames.join(' vs ')}`;
+  const description = `Side-by-side comparison of ${programs.length} affiliate programs. Compare commission rates, cookie duration, and more.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: `${APP_URL}/compare`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+    robots: {
+      index: false, // Dynamic comparison pages shouldn't be indexed
+      follow: true,
+    },
+  };
+}
+
+/**
+ * Генерация metadata для поиска
+ */
+export function generateSearchMetadata(query: string, resultCount: number): Metadata {
+  const title = query ? `Search: ${query}` : 'Search Affiliate Programs';
+  const description = query
+    ? `Found ${resultCount} affiliate programs matching "${query}". Browse and compare commission rates.`
+    : 'Search through 80,000+ affiliate programs. Filter by network, category, commission rate, and more.';
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: `${APP_URL}/programs`,
+    },
+    robots: {
+      index: !query, // Only index main search page, not specific queries
+      follow: true,
+    },
+  };
+}

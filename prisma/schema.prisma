@@ -108,6 +108,9 @@ model User {
 
   // 2FA sessions
   twoFactorSessions TwoFactorSession[]
+
+  // Email notification preferences (JSON object with notification type toggles)
+  emailNotifications Json?
 }
 
 // Organization/Tenant model
@@ -136,6 +139,7 @@ model Organization {
   programs      ProgramAccess[]
   networks      NetworkAccess[]
   subscriptions Subscription[]
+  apiKeys       ApiKey[]
 
   @@index([slug])
   @@index([tier])
@@ -238,8 +242,8 @@ model ProgramAccess {
 
 // Audit log for organization actions
 model AuditLog {
-  id             String @id @default(cuid())
-  organizationId String
+  id             String  @id @default(cuid())
+  organizationId String? // Optional for system-level logs
 
   action       String // e.g., "user_added", "role_changed", "data_exported"
   resourceType String // e.g., "user", "program", "network"
@@ -806,4 +810,37 @@ model TwoFactorSession {
   @@index([userId])
   @@index([token])
   @@index([expiresAt])
+}
+
+// ============================================================================
+// API KEYS
+// ============================================================================
+
+// API Key for external integrations
+model ApiKey {
+  id             String   @id @default(cuid())
+  name           String   // User-friendly name for the key
+  keyHash        String   @unique // SHA-256 hash of the actual key
+  keyPrefix      String   // First 7 chars for identification (aa_xxxx)
+  organizationId String
+
+  // Permissions and limits
+  permissions    String[] // Array of permission strings
+  rateLimit      Int      @default(1000) // Requests per hour
+
+  // Lifecycle
+  expiresAt      DateTime?
+  lastUsedAt     DateTime?
+  isActive       Boolean  @default(true)
+
+  // Timestamps
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([keyHash])
+  @@index([organizationId])
+  @@index([isActive])
 }
