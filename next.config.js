@@ -22,12 +22,71 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
 
-  // Image optimization
+  // Image optimization with CDN support
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 31536000, // 1 year cache for logos
+    remotePatterns: [
+      // Common affiliate network logo domains
+      {
+        protocol: 'https',
+        hostname: '*.amazonaws.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.cloudfront.net',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'logo.clearbit.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.logo.dev',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
+      // Affiliate networks
+      {
+        protocol: 'https',
+        hostname: '*.cj.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.shareasale.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.awin.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.impact.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.rakuten.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.partnerize.com',
+      },
+      // Generic pattern for any https images
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
   // Webpack optimizations

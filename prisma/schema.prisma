@@ -90,6 +90,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Two-Factor Authentication
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret  String? // Encrypted TOTP secret
+  backupCodes      String[] // Encrypted backup codes
+
   // Relations for multi-tenancy
   organizationMembers OrganizationMember[]
   favorites           Favorite[]
@@ -100,6 +105,9 @@ model User {
   subscriptions  Subscription[]
   paymentMethods PaymentMethod[]
   invoices       Invoice[]
+
+  // 2FA sessions
+  twoFactorSessions TwoFactorSession[]
 }
 
 // Organization/Tenant model
@@ -769,4 +777,33 @@ model SavedSearch {
   @@index([userId, active])
   @@index([alertsEnabled])
   @@index([lastCheckedAt])
+}
+
+// ============================================================================
+// TWO-FACTOR AUTHENTICATION
+// ============================================================================
+
+// 2FA session tracking - tracks verified 2FA sessions
+model TwoFactorSession {
+  id     String @id @default(cuid())
+  userId String
+
+  // Session details
+  token     String   @unique // Secure session token
+  expiresAt DateTime // When this 2FA verification expires
+
+  // Device info
+  userAgent String?
+  ipAddress String?
+
+  // Timestamps
+  createdAt  DateTime @default(now())
+  verifiedAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
 }

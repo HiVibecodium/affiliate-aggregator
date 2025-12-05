@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { calculateDifficulty, calculateQuality, isNewProgram } from '@/lib/program-utils';
 import { translateCategory } from '@/lib/translations/categories';
+import { NetworkLogo } from '@/components/OptimizedImage';
 
 interface Program {
   id: string;
@@ -20,6 +21,7 @@ interface Program {
   network: {
     name: string;
     website: string;
+    logo?: string | null;
   };
 }
 
@@ -70,15 +72,23 @@ export function ProgramCard({
       </div>
 
       <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <Link
-            href={`/programs/${program.id}`}
-            onClick={() => onClickTrack(program.id)}
-            className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors"
-          >
-            {program.name}
-          </Link>
-          <p className="text-sm text-gray-600 mt-1">{program.network.name}</p>
+        <div className="flex items-start gap-3 flex-1">
+          <NetworkLogo
+            networkName={program.network.name}
+            logoUrl={program.network.logo}
+            size="md"
+            className="flex-shrink-0"
+          />
+          <div className="flex-1 min-w-0">
+            <Link
+              href={`/programs/${program.id}`}
+              onClick={() => onClickTrack(program.id)}
+              className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors line-clamp-1"
+            >
+              {program.name}
+            </Link>
+            <p className="text-sm text-gray-600 mt-1">{program.network.name}</p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">

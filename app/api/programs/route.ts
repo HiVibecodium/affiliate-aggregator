@@ -5,10 +5,14 @@ import type { Prisma } from '@prisma/client';
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
+
+    // Pagination mode: offset-based (default) or cursor-based
+    const cursor = searchParams.get('cursor'); // For cursor-based pagination
     const page = parseInt(searchParams.get('page') || '1');
     // Limit maximum to 100 to prevent memory issues
     const requestedLimit = parseInt(searchParams.get('limit') || '20');
     const limit = Math.min(requestedLimit, 100);
+    const useCursor = !!cursor || searchParams.get('paginationType') === 'cursor';
 
     // Filters
     const network = searchParams.get('network');
@@ -141,47 +145,86 @@ export async function GET(request: NextRequest) {
       orderBy.createdAt = sortOrder as Prisma.SortOrder;
     }
 
-    const [programs, total] = await Promise.all([
-      prisma.affiliateProgram.findMany({
-        where,
+    // Common select fields
+    const selectFields = {
+      id: true,
+      networkId: true,
+      externalId: true,
+      name: true,
+      description: true,
+      category: true,
+      commissionRate: true,
+      commissionType: true,
+      cookieDuration: true,
+      paymentThreshold: true,
+      paymentMethods: true,
+      active: true,
+      createdAt: true,
+      updatedAt: true,
+      network: {
         select: {
-          id: true,
-          networkId: true,
-          externalId: true,
           name: true,
-          description: true,
-          category: true,
-          commissionRate: true,
-          commissionType: true,
-          cookieDuration: true,
-          paymentThreshold: true,
-          paymentMethods: true,
-          active: true,
-          createdAt: true,
-          updatedAt: true,
-          network: {
-            select: {
-              name: true,
-              website: true,
-            },
-          },
-          _count: {
-            select: {
-              reviews: {
-                where: { status: 'approved' },
-              },
-            },
+          website: true,
+          logo: true,
+        },
+      },
+      _count: {
+        select: {
+          reviews: {
+            where: { status: 'approved' },
           },
         },
-        skip,
-        take: limit,
+      },
+    };
+
+    // Use cursor-based pagination if cursor is provided or explicitly requested
+    let programs;
+    let total: number;
+
+    if (useCursor) {
+      // Cursor-based pagination (more efficient for large datasets and infinite scroll)
+      // Fetch one extra item to determine if there are more results
+      const queryOptions: Prisma.AffiliateProgramFindManyArgs = {
+        where,
+        select: selectFields,
+        take: limit + 1, // Fetch one extra to check for more
         orderBy,
-      }),
-      prisma.affiliateProgram.count({ where }),
-    ]);
+      };
+
+      if (cursor) {
+        queryOptions.cursor = { id: cursor };
+        queryOptions.skip = 1; // Skip the cursor item itself
+      }
+
+      const [results, count] = await Promise.all([
+        prisma.affiliateProgram.findMany(queryOptions),
+        prisma.affiliateProgram.count({ where }),
+      ]);
+
+      // Check if there are more results
+      const hasMore = results.length > limit;
+      programs = hasMore ? results.slice(0, -1) : results;
+      total = count;
+    } else {
+      // Traditional offset-based pagination
+      const [results, count] = await Promise.all([
+        prisma.affiliateProgram.findMany({
+          where,
+          select: selectFields,
+          skip,
+          take: limit,
+          orderBy,
+        }),
+        prisma.affiliateProgram.count({ where }),
+      ]);
+
+      programs = results;
+      total = count;
+    }
 
     // Only fetch ratings if limit is reasonable (≤50) to save memory
     // For larger requests, ratings are skipped to improve performance
+    type ProgramWithCount = (typeof programs)[number] & { _count?: { reviews: number } };
     let programsWithRatings;
 
     if (limit <= 50) {
@@ -199,28 +242,45 @@ export async function GET(request: NextRequest) {
 
       const ratingMap = new Map(ratings.map((r) => [r.programId, r._avg.rating || 0]));
 
-      programsWithRatings = programs.map((p) => ({
+      programsWithRatings = programs.map((p: ProgramWithCount) => ({
         ...p,
         averageRating: ratingMap.get(p.id) || null,
-        reviewCount: p._count.reviews,
+        reviewCount: p._count?.reviews ?? 0,
       }));
     } else {
       // Skip ratings for large requests to save memory
-      programsWithRatings = programs.map((p) => ({
+      programsWithRatings = programs.map((p: ProgramWithCount) => ({
         ...p,
         averageRating: null,
-        reviewCount: p._count.reviews,
+        reviewCount: p._count?.reviews ?? 0,
       }));
     }
 
+    // Build response based on pagination type
+    const lastProgram = programsWithRatings[programsWithRatings.length - 1];
+    const nextCursor = lastProgram?.id;
+    const hasMoreResults = useCursor
+      ? programs.length === limit // For cursor, we already sliced off the extra
+      : page * limit < total;
+
     return NextResponse.json({
       programs: programsWithRatings,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
+      pagination: useCursor
+        ? {
+            // Cursor-based pagination response
+            cursor: nextCursor,
+            hasMore: hasMoreResults,
+            limit,
+            total,
+          }
+        : {
+            // Offset-based pagination response
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit),
+            hasMore: hasMoreResults,
+          },
     });
   } catch (error) {
     return NextResponse.json(
