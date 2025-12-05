@@ -165,7 +165,6 @@ export async function GET(request: NextRequest) {
         select: {
           name: true,
           website: true,
-          logo: true,
         },
       },
       _count: {
