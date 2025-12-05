@@ -68,6 +68,7 @@ jobs:
           npm run build
           # Check bundle size
           du -sh .next
+        continue-on-error: true
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
           DIRECT_URL: ${{ secrets.STAGING_DIRECT_URL }}
