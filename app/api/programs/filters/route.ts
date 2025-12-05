@@ -18,16 +18,18 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
     const commissionType = searchParams.get('commissionType');
 
-    // Use cache with 5 minute TTL
+    // Use cache with 10 minute TTL - cache the DATA, not the Response
     const cacheKey = CacheKeys.PROGRAMS_FILTERS(network || undefined, category || undefined);
 
-    return getCached(
+    const data = await getCached(
       cacheKey,
       async () => {
         return await fetchFiltersData(network, category, commissionType);
       },
       600
-    ); // 10 minutes
+    );
+
+    return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(
       {
@@ -150,7 +152,7 @@ async function fetchFiltersData(
       },
     };
 
-    return NextResponse.json(result);
+    return result;
   } catch (error) {
     throw error;
   }

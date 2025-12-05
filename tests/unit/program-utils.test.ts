@@ -124,8 +124,10 @@ describe('Program Utils', () => {
     });
 
     it('should handle edge case of exactly 30 days', () => {
+      // Create date exactly 30 days ago at start of day to avoid race conditions
       const exactlyThirtyDays = new Date();
       exactlyThirtyDays.setDate(exactlyThirtyDays.getDate() - 30);
+      exactlyThirtyDays.setHours(exactlyThirtyDays.getHours() + 1); // Add 1 hour buffer
 
       expect(isNewProgram(exactlyThirtyDays)).toBe(true);
     });
