@@ -23,36 +23,60 @@ interface HealthCheckResult {
   };
 }
 
+// Simple cache for DB check to avoid hammering on frequent health checks
+let dbCheckCache: {
+  result: { status: 'up' | 'down'; latency?: number };
+  timestamp: number;
+} | null = null;
+const DB_CACHE_TTL = 5000; // 5 seconds
+
 async function checkDatabase(): Promise<{
   status: 'up' | 'down';
   latency?: number;
   error?: string;
 }> {
+  // Return cached result if fresh
+  if (dbCheckCache && Date.now() - dbCheckCache.timestamp < DB_CACHE_TTL) {
+    return { ...dbCheckCache.result, latency: dbCheckCache.result.latency };
+  }
+
   try {
     const start = Date.now();
-    await prisma.$queryRaw`SELECT 1`;
+    // Use $executeRawUnsafe for fastest possible ping
+    // AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    await prisma.$executeRawUnsafe('SELECT 1');
+    clearTimeout(timeoutId);
+
     const latency = Date.now() - start;
 
-    return {
-      status: 'up',
-      latency,
-    };
+    // Cache successful result
+    dbCheckCache = { result: { status: 'up', latency }, timestamp: Date.now() };
+
+    return { status: 'up', latency };
   } catch (error) {
+    // Don't cache errors - retry immediately
+    dbCheckCache = null;
     return {
       status: 'down',
       error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
-  // Note: DO NOT disconnect here - Prisma client is a singleton and should remain connected
-  // Disconnecting on every health check creates connection pool exhaustion
 }
 
 function getMemoryUsage() {
-  const used = process.memoryUsage();
+  const mem = process.memoryUsage();
+  // Use RSS (Resident Set Size) for actual memory footprint
+  // heapUsed/heapTotal can be misleading (GC hasn't run yet)
+  const rss = Math.round(mem.rss / 1024 / 1024);
+  // Vercel functions have 1024MB limit by default
+  const limit = 1024;
   return {
-    used: Math.round(used.heapUsed / 1024 / 1024),
-    total: Math.round(used.heapTotal / 1024 / 1024),
-    percentage: Math.round((used.heapUsed / used.heapTotal) * 100),
+    used: rss,
+    total: limit,
+    percentage: Math.round((rss / limit) * 100),
   };
 }
 
