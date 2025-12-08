@@ -4,9 +4,11 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchSuggestions } from '@/hooks/usePrograms';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 export function HeroSearch() {
   const router = useRouter();
+  const analytics = useAnalytics();
   const [query, setQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -38,19 +40,21 @@ export function HeroSearch() {
     (e: React.FormEvent) => {
       e.preventDefault();
       if (query.trim()) {
+        analytics.trackSearch(query.trim(), suggestions.length);
         router.push(`/programs?search=${encodeURIComponent(query.trim())}`);
         setShowSuggestions(false);
       }
     },
-    [query, router]
+    [query, router, analytics, suggestions.length]
   );
 
   const handleSuggestionClick = useCallback(
-    (suggestionId: string) => {
+    (suggestionId: string, suggestionName: string) => {
+      analytics.trackProgramClick(suggestionId, suggestionName, 'hero_search');
       router.push(`/programs/${suggestionId}`);
       setShowSuggestions(false);
     },
-    [router]
+    [router, analytics]
   );
 
   const handlePopularSearch = useCallback(
@@ -113,7 +117,7 @@ export function HeroSearch() {
           {suggestions.map((suggestion) => (
             <button
               key={suggestion.id}
-              onClick={() => handleSuggestionClick(suggestion.id)}
+              onClick={() => handleSuggestionClick(suggestion.id, suggestion.name)}
               className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left touch-target"
             >
               <div>

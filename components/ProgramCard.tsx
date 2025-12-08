@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { calculateDifficulty, calculateQuality, isNewProgram } from '@/lib/program-utils';
 import { translateCategory } from '@/lib/translations/categories';
 import { NetworkLogo } from '@/components/OptimizedImage';
+import { analytics } from '@/lib/analytics';
 
 interface Program {
   id: string;
@@ -88,6 +89,11 @@ export function ProgramCard({
       <div className="absolute right-0 top-0 bottom-0 flex items-stretch md:hidden">
         <button
           onClick={() => {
+            if (!isFavorite) {
+              analytics.trackAddToFavorites(program.id, program.name);
+            } else {
+              analytics.trackRemoveFromFavorites(program.id, program.name);
+            }
             onFavoriteToggle(program.id);
             resetSwipe();
           }}
@@ -99,6 +105,11 @@ export function ProgramCard({
         </button>
         <button
           onClick={() => {
+            if (!isInComparison) {
+              analytics.trackAddToCompare(program.id, program.name);
+            } else {
+              analytics.trackRemoveFromCompare(program.id, program.name);
+            }
             onComparisonToggle(program);
             resetSwipe();
           }}
@@ -171,6 +182,11 @@ export function ProgramCard({
             <button
               onClick={(e) => {
                 e.stopPropagation();
+                if (!isFavorite) {
+                  analytics.trackAddToFavorites(program.id, program.name);
+                } else {
+                  analytics.trackRemoveFromFavorites(program.id, program.name);
+                }
                 onFavoriteToggle(program.id);
               }}
               className={`p-3 rounded-lg transition-colors touch-target haptic-feedback ${
@@ -187,6 +203,11 @@ export function ProgramCard({
             <button
               onClick={(e) => {
                 e.stopPropagation();
+                if (!isInComparison) {
+                  analytics.trackAddToCompare(program.id, program.name);
+                } else {
+                  analytics.trackRemoveFromCompare(program.id, program.name);
+                }
                 onComparisonToggle(program);
               }}
               className={`px-4 py-2 text-sm rounded-lg transition-colors touch-target haptic-feedback ${
