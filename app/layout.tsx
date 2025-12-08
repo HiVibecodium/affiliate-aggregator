@@ -14,6 +14,7 @@ import { PWAUpdateNotification } from '@/components/PWAUpdateNotification';
 import { OfflineIndicator } from '@/components/OfflineIndicator';
 import { JsonLd } from '@/components/JsonLd';
 import { Navbar } from '@/components/Navbar';
+import { ToastProvider } from '@/components/Toast';
 import {
   generateOrganizationSchema,
   generateWebsiteSchema,
@@ -67,11 +68,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <OrganizationProvider>
             <ComparisonProvider>
-              <Navbar />
-              {children}
-              <ComparisonBar />
-              <PWAInstallPrompt />
-              <PWAUpdateNotification />
+              <ToastProvider>
+                <Navbar />
+                <div className="animate-page-enter">{children}</div>
+                <ComparisonBar />
+                <PWAInstallPrompt />
+                <PWAUpdateNotification />
+              </ToastProvider>
             </ComparisonProvider>
           </OrganizationProvider>
         </ThemeProvider>
