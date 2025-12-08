@@ -49,7 +49,7 @@ describe('Health Check API - GET /api/health', () => {
       let status = 'healthy';
       if (dbCheck.status === 'down') status = 'unhealthy';
       else if (dbCheck.latency > 1000) status = 'degraded';
-      else if (memory.percentage > 90) status = 'degraded';
+      else if (memory.percentage > 98) status = 'degraded';
 
       expect(status).toBe('healthy');
     });
@@ -73,13 +73,22 @@ describe('Health Check API - GET /api/health', () => {
       expect(status).toBe('degraded');
     });
 
-    it('should be degraded when memory usage is high', () => {
+    it('should be degraded when memory usage is critically high', () => {
+      const memory = { percentage: 99 };
+
+      let status = 'healthy';
+      if (memory.percentage > 98) status = 'degraded';
+
+      expect(status).toBe('degraded');
+    });
+
+    it('should be healthy when memory usage is normal for serverless (95%)', () => {
       const memory = { percentage: 95 };
 
       let status = 'healthy';
-      if (memory.percentage > 90) status = 'degraded';
+      if (memory.percentage > 98) status = 'degraded';
 
-      expect(status).toBe('degraded');
+      expect(status).toBe('healthy');
     });
   });
 

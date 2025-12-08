@@ -71,12 +71,20 @@ describe('/api/health', () => {
     expect(status).toBe('degraded');
   });
 
-  it('should determine degraded status for high memory', () => {
-    const memoryPercentage = 95;
+  it('should determine degraded status for critically high memory', () => {
+    const memoryPercentage = 99;
 
-    const status = memoryPercentage > 90 ? 'degraded' : 'healthy';
+    const status = memoryPercentage > 98 ? 'degraded' : 'healthy';
 
     expect(status).toBe('degraded');
+  });
+
+  it('should be healthy for normal serverless memory usage (95%)', () => {
+    const memoryPercentage = 95;
+
+    const status = memoryPercentage > 98 ? 'degraded' : 'healthy';
+
+    expect(status).toBe('healthy');
   });
 
   it('should return 503 for unhealthy status', () => {

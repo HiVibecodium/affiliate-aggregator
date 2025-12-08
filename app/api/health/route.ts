@@ -73,7 +73,9 @@ export async function GET() {
       status = 'unhealthy';
     } else if (dbCheck.latency && dbCheck.latency > 1000) {
       status = 'degraded';
-    } else if (memory.percentage > 90) {
+    } else if (memory.percentage > 98) {
+      // Vercel serverless functions normally use 90-95% memory
+      // Only degrade if critically close to limit
       status = 'degraded';
     }
 
