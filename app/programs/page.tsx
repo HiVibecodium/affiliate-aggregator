@@ -9,6 +9,7 @@ import { EnhancedProgramCard } from '@/components/EnhancedProgramCard';
 import { SearchSuggestions } from '@/components/SearchSuggestions';
 import { TourButton } from '@/components/TourButton';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { MobileFilterSheet } from '@/components/MobileFilterSheet';
 import { useTour } from '@/hooks/useTour';
 import { calculateDifficulty } from '@/lib/program-utils';
 
@@ -82,6 +83,7 @@ function ProgramsContent() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string[]>([]);
   const [hasReviews, setHasReviews] = useState(false);
   const [paymentFrequency, setPaymentFrequency] = useState('');
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
   // Initialize from URL params on client side
   useEffect(() => {
@@ -424,6 +426,26 @@ function ProgramsContent() {
               </p>
             </div>
             <div className="flex gap-2">
+              {/* Mobile filters button */}
+              <button
+                onClick={() => setIsMobileFiltersOpen(true)}
+                className="lg:hidden px-4 py-2 bg-blue-600 text-white rounded-lg flex items-center gap-2 touch-target haptic-feedback"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                  />
+                </svg>
+                <span>Фильтры</span>
+                {activeFiltersCount > 0 && (
+                  <span className="bg-white text-blue-600 text-xs font-bold px-1.5 py-0.5 rounded-full">
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </button>
               <TourButton />
               <ThemeToggle />
             </div>
@@ -433,10 +455,10 @@ function ProgramsContent() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* Sidebar with filters */}
-          <div className="lg:col-span-1">
+          {/* Sidebar with filters - hidden on mobile, shown on desktop */}
+          <div className="hidden lg:block lg:col-span-1">
             <div
-              className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 sticky top-4 space-y-6"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 sticky top-20 space-y-6 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide"
               data-tour="filters"
             >
               <div className="flex items-center justify-between">
@@ -869,39 +891,44 @@ function ProgramsContent() {
                   ))}
                 </div>
 
-                {/* Pagination */}
+                {/* Pagination - mobile optimized */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center gap-2">
+                  <div className="flex justify-center items-center gap-2 flex-wrap">
                     <button
                       onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                       disabled={currentPage === 1}
-                      className="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                      className="px-4 py-3 border dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 touch-target haptic-feedback min-w-[100px]"
                     >
                       ← Назад
                     </button>
-                    <div className="flex items-center gap-2">
+                    {/* Page numbers - simplified on mobile */}
+                    <div className="hidden sm:flex items-center gap-2">
                       {[...Array(Math.min(5, totalPages))].map((_, i) => {
                         const page = i + 1;
                         return (
                           <button
                             key={page}
                             onClick={() => setCurrentPage(page)}
-                            className={`px-4 py-2 rounded-lg ${
+                            className={`px-4 py-3 rounded-lg touch-target haptic-feedback ${
                               currentPage === page
                                 ? 'bg-blue-600 text-white'
-                                : 'border hover:bg-gray-50'
+                                : 'border dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
                             }`}
                           >
                             {page}
                           </button>
                         );
                       })}
-                      {totalPages > 5 && <span className="px-2">...</span>}
+                      {totalPages > 5 && <span className="px-2 text-gray-500">...</span>}
                     </div>
+                    {/* Mobile page indicator */}
+                    <span className="sm:hidden px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm font-medium">
+                      {currentPage} / {totalPages}
+                    </span>
                     <button
                       onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                       disabled={currentPage === totalPages}
-                      className="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                      className="px-4 py-3 border dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 touch-target haptic-feedback min-w-[100px]"
                     >
                       Вперед →
                     </button>
@@ -917,6 +944,147 @@ function ProgramsContent() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Filter Sheet */}
+      <MobileFilterSheet
+        isOpen={isMobileFiltersOpen}
+        onClose={() => setIsMobileFiltersOpen(false)}
+        title={`Фильтры ${activeFiltersCount > 0 ? `(${activeFiltersCount})` : ''}`}
+      >
+        <div className="space-y-6">
+          {/* Reset button */}
+          {activeFiltersCount > 0 && (
+            <button
+              onClick={() => {
+                resetFilters();
+                setIsMobileFiltersOpen(false);
+              }}
+              className="w-full py-3 text-blue-600 font-semibold border-2 border-blue-600 rounded-lg touch-target haptic-feedback"
+            >
+              Сбросить все фильтры
+            </button>
+          )}
+
+          {/* Search */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              Поиск по названию
+            </label>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="Введите название..."
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 touch-target"
+            />
+          </div>
+
+          {/* Network filter */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              Партнерская сеть
+            </label>
+            <select
+              value={selectedNetwork}
+              onChange={(e) => {
+                setSelectedNetwork(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 touch-target"
+            >
+              <option value="">Все сети</option>
+              {stats?.networks.map((network) => (
+                <option key={network.name} value={network.name}>
+                  {network.name} ({network.programs.toLocaleString()})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Category filter */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              Категория
+            </label>
+            <select
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 touch-target"
+            >
+              <option value="">Все категории</option>
+              {filters?.categories.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.value} ({cat.count.toLocaleString()})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Commission type filter */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              Тип комиссии
+            </label>
+            <select
+              value={selectedCommissionType}
+              onChange={(e) => {
+                setSelectedCommissionType(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 touch-target"
+            >
+              <option value="">Все типы</option>
+              {filters?.commissionTypes.map((ct) => (
+                <option key={ct.value} value={ct.value}>
+                  {ct.value} ({ct.count.toLocaleString()})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Commission range */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              Диапазон комиссии (%)
+            </label>
+            <div className="flex gap-3">
+              <input
+                type="number"
+                value={minCommission}
+                onChange={(e) => {
+                  setMinCommission(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="От"
+                min={0}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 touch-target"
+              />
+              <input
+                type="number"
+                value={maxCommission}
+                onChange={(e) => {
+                  setMaxCommission(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="До"
+                max={100}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 touch-target"
+              />
+            </div>
+          </div>
+
+          {/* Apply button */}
+          <button
+            onClick={() => setIsMobileFiltersOpen(false)}
+            className="w-full py-4 bg-blue-600 text-white font-bold rounded-lg touch-target haptic-feedback mt-4"
+          >
+            Показать {stats?.totalPrograms.toLocaleString() || '0'} программ
+          </button>
+        </div>
+      </MobileFilterSheet>
     </div>
   );
 }
