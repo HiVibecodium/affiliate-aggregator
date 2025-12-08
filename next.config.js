@@ -92,7 +92,7 @@ const nextConfig = {
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
     // Production optimizations
-    if (!dev) {
+    if (!dev && !isServer) {
       config.optimization = {
         ...config.optimization,
         moduleIds: 'deterministic',
@@ -101,6 +101,13 @@ const nextConfig = {
     }
 
     return config;
+  },
+
+  // Modular imports for tree-shaking
+  modularizeImports: {
+    'lucide-react': {
+      transform: 'lucide-react/dist/esm/icons/{{member}}',
+    },
   },
 
   // Security Headers

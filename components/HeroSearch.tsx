@@ -1,48 +1,22 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-
-interface SearchSuggestion {
-  id: string;
-  name: string;
-  network: string;
-  commissionRate: number;
-}
+import { useSearchSuggestions } from '@/hooks/usePrograms';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export function HeroSearch() {
   const router = useRouter();
   const [query, setQuery] = useState('');
-  const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
-  // Fetch suggestions on query change
-  useEffect(() => {
-    if (query.length < 2) {
-      setSuggestions([]);
-      return;
-    }
+  // Debounce the search query
+  const debouncedQuery = useDebounce(query, 300);
 
-    const timeoutId = setTimeout(async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(`/api/programs/search?q=${encodeURIComponent(query)}&limit=5`);
-        if (response.ok) {
-          const data = await response.json();
-          setSuggestions(data.suggestions || []);
-        }
-      } catch (error) {
-        console.error('Search error:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [query]);
+  // Use SWR for cached search suggestions
+  const { suggestions, isLoading } = useSearchSuggestions(debouncedQuery);
 
   // Close suggestions on click outside
   useEffect(() => {
@@ -60,16 +34,31 @@ export function HeroSearch() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (query.trim()) {
-      router.push(`/programs?search=${encodeURIComponent(query.trim())}`);
-    }
-  };
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (query.trim()) {
+        router.push(`/programs?search=${encodeURIComponent(query.trim())}`);
+        setShowSuggestions(false);
+      }
+    },
+    [query, router]
+  );
 
-  const handleSuggestionClick = (suggestion: SearchSuggestion) => {
-    router.push(`/programs/${suggestion.id}`);
-  };
+  const handleSuggestionClick = useCallback(
+    (suggestionId: string) => {
+      router.push(`/programs/${suggestionId}`);
+      setShowSuggestions(false);
+    },
+    [router]
+  );
+
+  const handlePopularSearch = useCallback(
+    (term: string) => {
+      router.push(`/programs?search=${encodeURIComponent(term)}`);
+    },
+    [router]
+  );
 
   return (
     <div className="w-full max-w-2xl mx-auto relative">
@@ -124,7 +113,7 @@ export function HeroSearch() {
           {suggestions.map((suggestion) => (
             <button
               key={suggestion.id}
-              onClick={() => handleSuggestionClick(suggestion)}
+              onClick={() => handleSuggestionClick(suggestion.id)}
               className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left touch-target"
             >
               <div>
@@ -148,19 +137,28 @@ export function HeroSearch() {
         </div>
       )}
 
-      {/* Popular searches */}
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
-        <span className="text-gray-500 dark:text-gray-400">Популярные:</span>
-        {['Amazon', 'Shopify', 'ClickBank', 'финансы', 'SaaS'].map((term) => (
-          <button
-            key={term}
-            onClick={() => router.push(`/programs?search=${encodeURIComponent(term)}`)}
-            className="px-3 py-1 bg-white/50 dark:bg-gray-700/50 hover:bg-white dark:hover:bg-gray-700 rounded-full text-gray-700 dark:text-gray-300 transition-colors"
-          >
-            {term}
-          </button>
-        ))}
-      </div>
+      {/* Popular searches - memoized */}
+      <PopularSearches onSearch={handlePopularSearch} />
+    </div>
+  );
+}
+
+// Memoized popular searches component
+const popularTerms = ['Amazon', 'Shopify', 'ClickBank', 'финансы', 'SaaS'];
+
+function PopularSearches({ onSearch }: { onSearch: (term: string) => void }) {
+  return (
+    <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
+      <span className="text-gray-500 dark:text-gray-400">Популярные:</span>
+      {popularTerms.map((term) => (
+        <button
+          key={term}
+          onClick={() => onSearch(term)}
+          className="px-3 py-1 bg-white/50 dark:bg-gray-700/50 hover:bg-white dark:hover:bg-gray-700 rounded-full text-gray-700 dark:text-gray-300 transition-colors"
+        >
+          {term}
+        </button>
+      ))}
     </div>
   );
 }
