@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { logger } from '@/lib/logger';
+import { HeroSearch } from '@/components/HeroSearch';
 
 // Revalidate every 10 minutes
 export const revalidate = 600;
@@ -60,6 +61,12 @@ export default async function Home() {
             {stats?.totalNetworks || 6} major networks. Compare commissions, track applications, and
             grow your income.
           </p>
+
+          {/* Hero Search */}
+          <div className="mb-8">
+            <HeroSearch />
+          </div>
+
           <div className="flex gap-4 justify-center flex-wrap">
             <Link
               href="/programs"

@@ -40,6 +40,7 @@ interface EnhancedProgramCardProps {
   program: Program;
   showFavoriteButton?: boolean;
   showCompareButton?: boolean;
+  onQuickView?: (programId: string) => void;
 }
 
 // Helper: Get payment frequency display
@@ -67,6 +68,7 @@ export function EnhancedProgramCard({
   program,
   showFavoriteButton = true,
   showCompareButton = true,
+  onQuickView,
 }: EnhancedProgramCardProps) {
   const { addToComparison, removeFromComparison, isInComparison } = useComparison();
   const difficulty = calculateDifficulty(program);
@@ -210,10 +212,23 @@ export function EnhancedProgramCard({
       <div className="flex gap-2">
         <Link
           href={`/programs/${program.id}`}
-          className="flex-1 text-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm font-medium"
+          className="flex-1 text-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm font-medium touch-target haptic-feedback"
         >
           View Details
         </Link>
+
+        {onQuickView && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              onQuickView(program.id);
+            }}
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-sm touch-target haptic-feedback"
+            title="Quick view"
+          >
+            👁️
+          </button>
+        )}
 
         {showFavoriteButton && (
           <button

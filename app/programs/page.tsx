@@ -10,6 +10,7 @@ import { SearchSuggestions } from '@/components/SearchSuggestions';
 import { TourButton } from '@/components/TourButton';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { MobileFilterSheet } from '@/components/MobileFilterSheet';
+import { QuickViewModal } from '@/components/QuickViewModal';
 import { useTour } from '@/hooks/useTour';
 import { calculateDifficulty } from '@/lib/program-utils';
 
@@ -84,6 +85,7 @@ function ProgramsContent() {
   const [hasReviews, setHasReviews] = useState(false);
   const [paymentFrequency, setPaymentFrequency] = useState('');
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [quickViewProgramId, setQuickViewProgramId] = useState<string | null>(null);
 
   // Initialize from URL params on client side
   useEffect(() => {
@@ -194,7 +196,6 @@ function ProgramsContent() {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function toggleFavorite(programId: string) {
     if (favoritesLoading) return;
 
@@ -830,29 +831,102 @@ function ProgramsContent() {
 
           {/* Programs list */}
           <div className="lg:col-span-3">
-            {/* Sorting controls */}
-            <div className="bg-white rounded-lg shadow p-4 mb-6">
+            {/* Quick filters chips */}
+            <div className="mb-4 overflow-x-auto scrollbar-hide">
+              <div className="flex gap-2 pb-2">
+                <button
+                  onClick={() => {
+                    setMinCommission('20');
+                    setCurrentPage(1);
+                  }}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors touch-target ${
+                    minCommission === '20'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  💰 Комиссия 20%+
+                </button>
+                <button
+                  onClick={() => {
+                    setMinCookieDuration('30');
+                    setCurrentPage(1);
+                  }}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors touch-target ${
+                    minCookieDuration === '30'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  🍪 Cookie 30+ дней
+                </button>
+                <button
+                  onClick={() => {
+                    setMaxPaymentThreshold('100');
+                    setCurrentPage(1);
+                  }}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors touch-target ${
+                    maxPaymentThreshold === '100'
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  💵 Выплата до $100
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedPaymentMethod('PayPal');
+                    setCurrentPage(1);
+                  }}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors touch-target ${
+                    selectedPaymentMethod === 'PayPal'
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  💳 PayPal
+                </button>
+                <button
+                  onClick={() => {
+                    setHasReviews(true);
+                    setCurrentPage(1);
+                  }}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors touch-target ${
+                    hasReviews
+                      ? 'bg-yellow-500 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  ⭐ С отзывами
+                </button>
+              </div>
+            </div>
+
+            {/* Sorting controls - improved */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
               <div className="flex items-center justify-between flex-wrap gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600">Сортировать:</span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Сортировать:</span>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm touch-target"
                   >
-                    <option value="createdAt">По дате добавления</option>
-                    <option value="commission">По комиссии</option>
-                    <option value="name">По названию</option>
+                    <option value="createdAt">📅 По дате</option>
+                    <option value="commission">💰 По комиссии</option>
+                    <option value="name">🔤 По названию</option>
                   </select>
                   <button
                     onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                    className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm"
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 text-sm touch-target haptic-feedback"
                   >
-                    {sortOrder === 'asc' ? '↑ По возрастанию' : '↓ По убыванию'}
+                    {sortOrder === 'asc' ? '↑ Возр.' : '↓ Убыв.'}
                   </button>
                 </div>
-                <div className="text-sm text-gray-600">
-                  Найдено программ: {stats?.totalPrograms.toLocaleString()}
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {stats?.totalPrograms.toLocaleString()} программ
+                  </span>
                 </div>
               </div>
             </div>
@@ -887,6 +961,7 @@ function ProgramsContent() {
                       }}
                       showFavoriteButton={true}
                       showCompareButton={true}
+                      onQuickView={(id) => setQuickViewProgramId(id)}
                     />
                   ))}
                 </div>
@@ -944,6 +1019,20 @@ function ProgramsContent() {
           </div>
         </div>
       </div>
+
+      {/* Quick View Modal */}
+      <QuickViewModal
+        programId={quickViewProgramId}
+        onClose={() => setQuickViewProgramId(null)}
+        onAddToFavorites={(id) => {
+          toggleFavorite(id);
+          setQuickViewProgramId(null);
+        }}
+        onAddToCompare={(program) => {
+          addToComparison(program);
+          setQuickViewProgramId(null);
+        }}
+      />
 
       {/* Mobile Filter Sheet */}
       <MobileFilterSheet
