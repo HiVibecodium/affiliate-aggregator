@@ -71,7 +71,9 @@ export async function GET() {
 
     if (dbCheck.status === 'down') {
       status = 'unhealthy';
-    } else if (dbCheck.latency && dbCheck.latency > 1000) {
+    } else if (dbCheck.latency && dbCheck.latency > 3000) {
+      // Serverless cold starts + remote DB can take 1-2s normally
+      // Only degrade if DB is significantly slow (>3s)
       status = 'degraded';
     } else if (memory.percentage > 98) {
       // Vercel serverless functions normally use 90-95% memory

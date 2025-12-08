@@ -63,12 +63,20 @@ describe('/api/health', () => {
     expect(timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
 
-  it('should determine degraded status for slow DB', () => {
-    const dbLatency = 1500; // 1.5 seconds
+  it('should determine degraded status for very slow DB', () => {
+    const dbLatency = 4000; // 4 seconds
 
-    const status = dbLatency > 1000 ? 'degraded' : 'healthy';
+    const status = dbLatency > 3000 ? 'degraded' : 'healthy';
 
     expect(status).toBe('degraded');
+  });
+
+  it('should be healthy for normal serverless DB latency (1-2s)', () => {
+    const dbLatency = 1500; // 1.5 seconds - normal for cold start
+
+    const status = dbLatency > 3000 ? 'degraded' : 'healthy';
+
+    expect(status).toBe('healthy');
   });
 
   it('should determine degraded status for critically high memory', () => {

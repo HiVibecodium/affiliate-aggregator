@@ -48,7 +48,7 @@ describe('Health Check API - GET /api/health', () => {
 
       let status = 'healthy';
       if (dbCheck.status === 'down') status = 'unhealthy';
-      else if (dbCheck.latency > 1000) status = 'degraded';
+      else if (dbCheck.latency > 3000) status = 'degraded';
       else if (memory.percentage > 98) status = 'degraded';
 
       expect(status).toBe('healthy');
@@ -63,14 +63,24 @@ describe('Health Check API - GET /api/health', () => {
       expect(status).toBe('unhealthy');
     });
 
-    it('should be degraded when database is slow', () => {
+    it('should be degraded when database is very slow', () => {
+      const dbCheck = { status: 'up', latency: 4000 };
+
+      let status = 'healthy';
+      if (dbCheck.status === 'down') status = 'unhealthy';
+      else if (dbCheck.latency > 3000) status = 'degraded';
+
+      expect(status).toBe('degraded');
+    });
+
+    it('should be healthy when database has normal serverless latency (1-2s)', () => {
       const dbCheck = { status: 'up', latency: 1500 };
 
       let status = 'healthy';
       if (dbCheck.status === 'down') status = 'unhealthy';
-      else if (dbCheck.latency > 1000) status = 'degraded';
+      else if (dbCheck.latency > 3000) status = 'degraded';
 
-      expect(status).toBe('degraded');
+      expect(status).toBe('healthy');
     });
 
     it('should be degraded when memory usage is critically high', () => {
