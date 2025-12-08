@@ -13,6 +13,7 @@ import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
 import { PWAUpdateNotification } from '@/components/PWAUpdateNotification';
 import { OfflineIndicator } from '@/components/OfflineIndicator';
 import { JsonLd } from '@/components/JsonLd';
+import { Navbar } from '@/components/Navbar';
 import {
   generateOrganizationSchema,
   generateWebsiteSchema,
@@ -66,6 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <OrganizationProvider>
             <ComparisonProvider>
+              <Navbar />
               {children}
               <ComparisonBar />
               <PWAInstallPrompt />
