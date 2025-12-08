@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import type { Prisma } from '@prisma/client';
+import { getCached, CacheKeys, isCacheableQuery } from '@/lib/cache';
 
 export async function GET(request: NextRequest) {
   try {
@@ -180,6 +181,19 @@ export async function GET(request: NextRequest) {
     let programs;
     let total: number;
 
+    // Check if this query can be cached
+    const canCache = isCacheableQuery(searchParams);
+    const cacheKey = canCache
+      ? CacheKeys.PROGRAMS_LIST({
+          page,
+          limit,
+          network: network || undefined,
+          category: category || undefined,
+          sortBy,
+          sortOrder,
+        })
+      : null;
+
     if (useCursor) {
       // Cursor-based pagination (more efficient for large datasets and infinite scroll)
       // Fetch one extra item to determine if there are more results
@@ -204,8 +218,29 @@ export async function GET(request: NextRequest) {
       const hasMore = results.length > limit;
       programs = hasMore ? results.slice(0, -1) : results;
       total = count;
+    } else if (cacheKey) {
+      // Cacheable offset-based pagination - use cache
+      const cached = await getCached(
+        cacheKey,
+        async () => {
+          const [results, count] = await Promise.all([
+            prisma.affiliateProgram.findMany({
+              where,
+              select: selectFields,
+              skip,
+              take: limit,
+              orderBy,
+            }),
+            prisma.affiliateProgram.count({ where }),
+          ]);
+          return { programs: results, total: count };
+        },
+        300 // 5 minutes cache
+      );
+      programs = cached.programs;
+      total = cached.total;
     } else {
-      // Traditional offset-based pagination
+      // Traditional offset-based pagination (no cache for complex queries)
       const [results, count] = await Promise.all([
         prisma.affiliateProgram.findMany({
           where,

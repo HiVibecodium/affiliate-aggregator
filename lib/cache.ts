@@ -147,4 +147,40 @@ export const CacheKeys = {
     return key;
   },
   POPULAR_PROGRAMS: 'analytics:popular',
+  // Programs list cache - only for simple queries (first pages, no search)
+  PROGRAMS_LIST: (params: {
+    page?: number;
+    limit?: number;
+    network?: string;
+    category?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  }) => {
+    const parts = ['programs:list'];
+    if (params.page) parts.push(`p${params.page}`);
+    if (params.limit) parts.push(`l${params.limit}`);
+    if (params.network) parts.push(`n:${params.network}`);
+    if (params.category) parts.push(`c:${params.category}`);
+    if (params.sortBy) parts.push(`s:${params.sortBy}`);
+    if (params.sortOrder) parts.push(`o:${params.sortOrder}`);
+    return parts.join(':');
+  },
 };
+
+// Check if a programs query is cacheable (simple, common queries only)
+export function isCacheableQuery(params: URLSearchParams): boolean {
+  // Don't cache: search queries, complex filters, cursor pagination
+  const hasSearch = params.has('search');
+  const hasCursor = params.has('cursor');
+  const hasComplexFilters =
+    params.has('minCommission') ||
+    params.has('maxCommission') ||
+    params.has('minCookieDuration') ||
+    params.has('paymentMethod') ||
+    params.has('hasReviews') ||
+    params.has('since');
+  const page = parseInt(params.get('page') || '1');
+
+  // Only cache first 5 pages of simple queries
+  return !hasSearch && !hasCursor && !hasComplexFilters && page <= 5;
+}
