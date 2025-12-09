@@ -218,3 +218,153 @@ export function usePWAInstallStatus() {
 
   return { isInstalled, isInstallable };
 }
+
+/**
+ * Offline indicator component that shows when the user goes offline/online
+ */
+export function OfflineIndicator() {
+  const [isOnline, setIsOnline] = useState(true);
+  const [showIndicator, setShowIndicator] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    setIsOnline(navigator.onLine);
+
+    const handleOnline = () => {
+      setIsOnline(true);
+      setShowIndicator(true);
+      setTimeout(() => setShowIndicator(false), 3000);
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      setShowIndicator(true);
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  if (!showIndicator) return null;
+
+  return (
+    <div
+      className={`fixed top-0 left-0 right-0 py-2 px-4 text-center text-sm font-medium z-[100] transition-all duration-300 ${
+        isOnline ? 'bg-green-500 text-white' : 'bg-yellow-500 text-yellow-900'
+      }`}
+    >
+      <div className="flex items-center justify-center gap-2">
+        {isOnline ? (
+          <>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            <span>Back online</span>
+          </>
+        ) : (
+          <>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414"
+              />
+            </svg>
+            <span>You are offline</span>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Update prompt component that shows when a new service worker is available
+ */
+export function UpdatePrompt() {
+  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
+  const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
+
+    const handleUpdate = () => {
+      navigator.serviceWorker.getRegistration().then((registration) => {
+        if (registration?.waiting) {
+          setWaitingWorker(registration.waiting);
+          setIsUpdateAvailable(true);
+        }
+      });
+    };
+
+    handleUpdate();
+
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      window.location.reload();
+    });
+
+    const interval = setInterval(handleUpdate, 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleUpdate = () => {
+    if (waitingWorker) {
+      waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+    }
+  };
+
+  const handleDismiss = () => {
+    setIsUpdateAvailable(false);
+  };
+
+  if (!isUpdateAvailable) return null;
+
+  return (
+    <div className="fixed bottom-20 md:bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 bg-blue-600 text-white rounded-xl shadow-lg p-4 z-50 animate-slide-up">
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            />
+          </svg>
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-medium">Update available</p>
+          <p className="text-sm text-blue-100">A new version is ready to install</p>
+        </div>
+        <button onClick={handleDismiss} className="flex-shrink-0 text-blue-200 hover:text-white">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <button
+        onClick={handleUpdate}
+        className="w-full mt-3 px-4 py-2 bg-white text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition-colors"
+      >
+        Update now
+      </button>
+    </div>
+  );
+}

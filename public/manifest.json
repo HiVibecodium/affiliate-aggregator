@@ -4,12 +4,17 @@
   "description": "Find and compare the best affiliate programs from top networks. 80,000+ programs with high commissions.",
   "start_url": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#0f172a",
   "theme_color": "#3b82f6",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
   "dir": "ltr",
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
@@ -114,5 +119,23 @@
     }
   ],
   "prefer_related_applications": false,
-  "id": "affiliate-aggregator-pwa"
+  "id": "affiliate-aggregator-pwa",
+  "share_target": {
+    "action": "/programs",
+    "method": "GET",
+    "params": {
+      "text": "search",
+      "title": "search",
+      "url": "search"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+affiliate",
+      "url": "/programs?search=%s"
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
 }
