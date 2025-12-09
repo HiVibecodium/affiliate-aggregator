@@ -10,6 +10,7 @@ import { SearchSuggestions } from '@/components/SearchSuggestions';
 import { TourButton } from '@/components/TourButton';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { MobileFilterSheet } from '@/components/MobileFilterSheet';
+import { MobileSearch } from '@/components/MobileSearch';
 import { QuickViewModal } from '@/components/QuickViewModal';
 import { useTour } from '@/hooks/useTour';
 import { calculateDifficulty } from '@/lib/program-utils';
@@ -85,6 +86,7 @@ function ProgramsContent() {
   const [hasReviews, setHasReviews] = useState(false);
   const [paymentFrequency, setPaymentFrequency] = useState('');
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [quickViewProgramId, setQuickViewProgramId] = useState<string | null>(null);
 
   // Initialize from URL params on client side
@@ -427,6 +429,21 @@ function ProgramsContent() {
               </p>
             </div>
             <div className="flex gap-2">
+              {/* Mobile search button */}
+              <button
+                onClick={() => setIsMobileSearchOpen(true)}
+                className="lg:hidden p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg touch-target haptic-feedback"
+                aria-label="Search"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </button>
               {/* Mobile filters button */}
               <button
                 onClick={() => setIsMobileFiltersOpen(true)}
@@ -1196,6 +1213,17 @@ function ProgramsContent() {
           </button>
         </div>
       </MobileFilterSheet>
+
+      {/* Mobile Search */}
+      <MobileSearch
+        isOpen={isMobileSearchOpen}
+        onClose={() => setIsMobileSearchOpen(false)}
+        initialValue={search}
+        onSearch={(query) => {
+          setSearch(query);
+          setCurrentPage(1);
+        }}
+      />
     </div>
   );
 }

@@ -195,6 +195,16 @@ body {
     padding-bottom: env(safe-area-inset-bottom);
   }
 
+  /* Safe area for bottom navigation */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Ensure touch manipulation for better scrolling */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+
   /* Hide scrollbar but keep functionality */
   .scrollbar-hide {
     -ms-overflow-style: none;

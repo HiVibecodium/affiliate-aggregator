@@ -59,20 +59,26 @@ export default async function BillingPage() {
   const usageData = await getUsageSummary(dbUser.id);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-4 sm:py-8 pb-20 md:pb-8">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Billing & Subscription</h1>
-          <p className="text-gray-600">Manage your subscription and view billing history</p>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Billing & Subscription
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Manage your subscription and view billing history
+          </p>
         </div>
 
         {/* Current Plan Card */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-start justify-between mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
+          <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-1">Current Plan</h2>
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-1">
+                  Current Plan
+                </h2>
                 <div className="flex items-center gap-3">
                   <span
                     className={`text-3xl font-bold ${
@@ -112,10 +118,10 @@ export default async function BillingPage() {
             </div>
 
             {subscriptionData.subscription && (
-              <div className="border-t border-gray-200 pt-4 space-y-3">
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Next billing date:</span>
-                  <span className="font-medium text-gray-900">
+                  <span className="text-gray-600 dark:text-gray-400">Next billing date:</span>
+                  <span className="font-medium text-gray-900 dark:text-white">
                     {subscriptionData.subscription.currentPeriodEnd
                       ? new Date(
                           subscriptionData.subscription.currentPeriodEnd
@@ -152,12 +158,12 @@ export default async function BillingPage() {
             )}
 
             {subscriptionData.tier === 'free' && (
-              <div className="border-t border-gray-200 pt-4">
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4">
-                  <p className="text-sm font-medium text-gray-900 mb-2">
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-4">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">
                     Upgrade to unlock powerful features:
                   </p>
-                  <ul className="text-sm text-gray-700 space-y-1">
+                  <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                     <li>• Unlimited favorites and comparisons</li>
                     <li>• Application tracking</li>
                     <li>• Advanced analytics</li>
@@ -181,14 +187,16 @@ export default async function BillingPage() {
         </div>
 
         {/* Billing History */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Billing History</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            Billing History
+          </h2>
 
           {subscriptionData.invoices && subscriptionData.invoices.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="border-b border-gray-200">
-                  <tr className="text-left text-sm text-gray-600">
+                <thead className="border-b border-gray-200 dark:border-gray-700">
+                  <tr className="text-left text-sm text-gray-600 dark:text-gray-400">
                     <th className="pb-3 font-medium">Date</th>
                     <th className="pb-3 font-medium">Description</th>
                     <th className="pb-3 font-medium">Amount</th>
@@ -196,16 +204,16 @@ export default async function BillingPage() {
                     <th className="pb-3 font-medium">Invoice</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                   {subscriptionData.invoices.map((invoice: Invoice) => (
                     <tr key={invoice.id} className="text-sm">
-                      <td className="py-3 text-gray-900">
+                      <td className="py-3 text-gray-900 dark:text-white">
                         {new Date(invoice.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="py-3 text-gray-700">
+                      <td className="py-3 text-gray-700 dark:text-gray-300">
                         {invoice.description || `${subscriptionData.tier} subscription`}
                       </td>
-                      <td className="py-3 text-gray-900 font-medium">
+                      <td className="py-3 text-gray-900 dark:text-white font-medium">
                         ${invoice.amount.toFixed(2)}
                       </td>
                       <td className="py-3">
@@ -253,8 +261,8 @@ export default async function BillingPage() {
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                 />
               </svg>
-              <p className="text-gray-600">No billing history yet</p>
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-gray-600 dark:text-gray-400">No billing history yet</p>
+              <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
                 Invoices will appear here after you subscribe to a paid plan
               </p>
             </div>
