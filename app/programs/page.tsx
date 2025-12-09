@@ -12,6 +12,8 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { MobileFilterSheet } from '@/components/MobileFilterSheet';
 import { MobileSearch } from '@/components/MobileSearch';
 import { QuickViewModal } from '@/components/QuickViewModal';
+import { FloatingActionButton, ScrollToTopFAB } from '@/components/FloatingActionButton';
+import { ProgramListSkeleton } from '@/components/MobileSkeletons';
 import { useTour } from '@/hooks/useTour';
 import { calculateDifficulty } from '@/lib/program-utils';
 
@@ -971,9 +973,8 @@ function ProgramsContent() {
             </div>
 
             {loading ? (
-              <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
-                <p className="mt-4 text-gray-600 dark:text-gray-400">Загрузка программ...</p>
+              <div className="py-4">
+                <ProgramListSkeleton count={5} />
               </div>
             ) : filteredPrograms.length === 0 ? (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
@@ -1224,6 +1225,62 @@ function ProgramsContent() {
           setCurrentPage(1);
         }}
       />
+
+      {/* Floating Action Button - Mobile only */}
+      <div className="md:hidden">
+        <FloatingActionButton
+          actions={[
+            {
+              icon: (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              ),
+              label: 'Поиск',
+              color: 'bg-blue-500',
+              onClick: () => setIsMobileSearchOpen(true),
+            },
+            {
+              icon: (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                  />
+                </svg>
+              ),
+              label: 'Фильтры',
+              color: 'bg-purple-500',
+              onClick: () => setIsMobileFiltersOpen(true),
+            },
+            {
+              icon: (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              ),
+              label: 'Избранное',
+              color: 'bg-pink-500',
+              href: '/favorites',
+            },
+          ]}
+        />
+      </div>
+
+      {/* Scroll to top FAB */}
+      <ScrollToTopFAB />
     </div>
   );
 }

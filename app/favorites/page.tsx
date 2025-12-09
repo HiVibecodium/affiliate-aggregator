@@ -3,6 +3,9 @@ import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { SwipeableCard } from '@/components/SwipeableCard';
+import { ProgramListSkeleton } from '@/components/MobileSkeletons';
+import { ScrollToTopFAB } from '@/components/FloatingActionButton';
 
 interface Program {
   id: string;
@@ -123,20 +126,22 @@ export default function FavoritesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
           <div className="container mx-auto px-4 py-6">
-            <Link href="/" className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
+            <Link
+              href="/"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm mb-2 inline-block"
+            >
               ← Назад на главную
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900">Избранные программы</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Избранные программы
+            </h1>
           </div>
         </div>
-        <div className="container mx-auto px-4 py-12">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
-            <p className="mt-4 text-gray-600">Загрузка избранного...</p>
-          </div>
+        <div className="container mx-auto px-4 py-8">
+          <ProgramListSkeleton count={3} />
         </div>
       </div>
     );
@@ -144,17 +149,22 @@ export default function FavoritesPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
           <div className="container mx-auto px-4 py-6">
-            <Link href="/" className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
+            <Link
+              href="/"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm mb-2 inline-block"
+            >
               ← Назад на главную
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900">Избранные программы</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Избранные программы
+            </h1>
           </div>
         </div>
-        <div className="container mx-auto px-4 py-12">
-          <div className="bg-white rounded-lg shadow p-12 text-center">
+        <div className="container mx-auto px-4 py-12 pb-24 md:pb-12">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
             <svg
               className="mx-auto h-12 w-12 text-red-400"
               fill="none"
@@ -168,10 +178,10 @@ export default function FavoritesPage() {
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
               />
             </svg>
-            <p className="text-gray-600 text-lg mt-4">{error}</p>
+            <p className="text-gray-600 dark:text-gray-300 text-lg mt-4">{error}</p>
             <Link
               href="/auth/signin"
-              className="mt-6 inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="mt-6 inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 touch-target"
             >
               Войти в систему
             </Link>
@@ -182,17 +192,22 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
         <div className="container mx-auto px-4 py-6">
-          <Link href="/" className="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
+          <Link
+            href="/"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm mb-2 inline-block"
+          >
             ← Назад на главную
           </Link>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Избранные программы</h1>
-              <p className="text-gray-600 mt-1">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                Избранные программы
+              </h1>
+              <p className="text-gray-600 dark:text-gray-300 mt-1">
                 {favorites.length === 0
                   ? 'У вас пока нет избранных программ'
                   : `${favorites.length} ${favorites.length === 1 ? 'программа' : favorites.length < 5 ? 'программы' : 'программ'}`}
@@ -201,7 +216,7 @@ export default function FavoritesPage() {
             {favorites.length > 0 && (
               <button
                 onClick={exportToCSV}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
+                className="flex items-center gap-2 px-3 md:px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors touch-target"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -211,16 +226,23 @@ export default function FavoritesPage() {
                     d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                   />
                 </svg>
-                Экспорт в CSV
+                <span className="hidden sm:inline">Экспорт в CSV</span>
+                <span className="sm:hidden">CSV</span>
               </button>
             )}
           </div>
+          {/* Mobile swipe hint */}
+          {favorites.length > 0 && (
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 md:hidden">
+              Свайп влево для удаления
+            </p>
+          )}
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 pb-24 md:pb-8">
         {favorites.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
             <svg
               className="mx-auto h-16 w-16 text-gray-400"
               fill="none"
@@ -234,104 +256,140 @@ export default function FavoritesPage() {
                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
               />
             </svg>
-            <p className="text-gray-500 text-lg mt-4">У вас пока нет избранных программ</p>
-            <p className="text-gray-400 text-sm mt-2">
+            <p className="text-gray-500 dark:text-gray-400 text-lg mt-4">
+              У вас пока нет избранных программ
+            </p>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">
               Добавьте программы в избранное, нажав на иконку сердца на странице программ
             </p>
             <Link
               href="/programs"
-              className="mt-6 inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="mt-6 inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 touch-target"
             >
               Перейти к программам
             </Link>
           </div>
         ) : (
-          <div className="grid gap-6">
+          <div className="grid gap-4 md:gap-6">
             {favorites.map((favorite) => (
-              <div
+              <SwipeableCard
                 key={favorite.id}
-                className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6"
+                rightActions={[
+                  {
+                    icon: (
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    ),
+                    label: 'Удалить',
+                    color: 'bg-red-500',
+                    onClick: () => removeFavorite(favorite.programId),
+                  },
+                ]}
+                className="rounded-lg overflow-hidden shadow"
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      {favorite.program.name}
-                    </h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-2 flex-wrap">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                        {favorite.program.network.name}
-                      </span>
-                      {favorite.program.category && (
-                        <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded">
-                          {favorite.program.category}
+                <div className="bg-white dark:bg-gray-800 p-4 md:p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-2 truncate">
+                        {favorite.program.name}
+                      </h3>
+                      <div className="flex items-center gap-2 text-sm text-gray-600 mb-2 flex-wrap">
+                        <span className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-1 rounded text-xs">
+                          {favorite.program.network.name}
                         </span>
-                      )}
-                      {favorite.program.commissionType && (
-                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
-                          {favorite.program.commissionType}
-                        </span>
-                      )}
+                        {favorite.program.category && (
+                          <span className="bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 px-2 py-1 rounded text-xs">
+                            {favorite.program.category}
+                          </span>
+                        )}
+                        {favorite.program.commissionType && (
+                          <span className="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-2 py-1 rounded text-xs">
+                            {favorite.program.commissionType}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 hidden md:block">
+                        {favorite.program.description}
+                      </p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                        Добавлено: {new Date(favorite.createdAt).toLocaleDateString('ru-RU')}
+                      </p>
                     </div>
-                    <p className="text-gray-600 text-sm line-clamp-2">
-                      {favorite.program.description}
-                    </p>
-                    <p className="text-xs text-gray-400 mt-2">
-                      Добавлено: {new Date(favorite.createdAt).toLocaleDateString('ru-RU')}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => removeFavorite(favorite.programId)}
-                    disabled={removingId === favorite.programId}
-                    className="ml-4 p-2 rounded-full text-red-500 bg-red-50 hover:bg-red-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Удалить из избранного"
-                  >
-                    <svg
-                      className="w-6 h-6"
-                      fill="currentColor"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                    {/* Desktop delete button */}
+                    <button
+                      onClick={() => removeFavorite(favorite.programId)}
+                      disabled={removingId === favorite.programId}
+                      className="hidden md:flex ml-4 p-2 rounded-full text-red-500 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Удалить из избранного"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                      <svg
+                        className="w-6 h-6"
+                        fill="currentColor"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
-                  <div>
-                    <div className="text-xs text-gray-500 mb-1">Комиссия</div>
-                    <div className="font-semibold text-green-600">
-                      {favorite.program.commissionRate}% {favorite.program.commissionType}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 pt-4 border-t dark:border-gray-700">
+                    <div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Комиссия</div>
+                      <div className="font-semibold text-green-600 dark:text-green-400 text-sm md:text-base">
+                        {favorite.program.commissionRate}% {favorite.program.commissionType}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Cookie</div>
+                      <div className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">
+                        {favorite.program.cookieDuration} дней
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                        Мин. выплата
+                      </div>
+                      <div className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">
+                        ${favorite.program.paymentThreshold}
+                      </div>
+                    </div>
+                    <div className="flex items-end">
+                      <a
+                        href={favorite.program.network.website || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-semibold px-3 md:px-4 py-2 rounded transition-colors touch-target w-full text-center"
+                      >
+                        Подробнее →
+                      </a>
                     </div>
                   </div>
-                  <div>
-                    <div className="text-xs text-gray-500 mb-1">Cookie</div>
-                    <div className="font-semibold">{favorite.program.cookieDuration} дней</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-500 mb-1">Мин. выплата</div>
-                    <div className="font-semibold">${favorite.program.paymentThreshold}</div>
-                  </div>
-                  <div>
-                    <a
-                      href={favorite.program.network.website || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded transition-colors"
-                    >
-                      Подробнее →
-                    </a>
-                  </div>
                 </div>
-              </div>
+              </SwipeableCard>
             ))}
           </div>
         )}
       </div>
+
+      {/* Scroll to top FAB */}
+      <ScrollToTopFAB />
     </div>
   );
 }
