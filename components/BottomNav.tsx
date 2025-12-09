@@ -2,17 +2,18 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
-interface NavItem {
-  label: string;
+interface NavItemConfig {
+  labelKey: string;
   href: string;
   icon: React.ReactNode;
   activeIcon?: React.ReactNode;
 }
 
-const navItems: NavItem[] = [
+const navItemsConfig: NavItemConfig[] = [
   {
-    label: 'Home',
+    labelKey: 'home',
     href: '/',
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,7 +32,7 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    label: 'Programs',
+    labelKey: 'programs',
     href: '/programs',
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,7 +51,7 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    label: 'Favorites',
+    labelKey: 'favorites',
     href: '/favorites',
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,7 +70,7 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    label: 'Compare',
+    labelKey: 'compare',
     href: '/compare',
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +89,7 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    label: 'More',
+    labelKey: 'more',
     href: '/settings',
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,6 +111,7 @@ const navItems: NavItem[] = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const t = useTranslations('nav');
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
@@ -129,7 +131,7 @@ export function BottomNav() {
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 safe-area-bottom">
         <div className="flex items-center justify-around h-16">
-          {navItems.map((item) => {
+          {navItemsConfig.map((item) => {
             const active = isActive(item.href);
             return (
               <Link
@@ -149,7 +151,7 @@ export function BottomNav() {
                   )}
                 </span>
                 <span className={`text-xs mt-1 truncate max-w-full ${active ? 'font-medium' : ''}`}>
-                  {item.label}
+                  {t(item.labelKey)}
                 </span>
               </Link>
             );

@@ -8,6 +8,8 @@ const withPWA = require('next-pwa')({
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
 });
+const createNextIntlPlugin = require('next-intl/plugin');
+const withNextIntl = createNextIntlPlugin('./lib/i18n/request.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -185,8 +187,8 @@ const nextConfig = {
   },
 };
 
-// Wrap config with Bundle Analyzer, Sentry and PWA
-module.exports = withSentryConfig(withBundleAnalyzer(withPWA(nextConfig)), {
+// Wrap config with Bundle Analyzer, Sentry, PWA and i18n
+module.exports = withSentryConfig(withNextIntl(withBundleAnalyzer(withPWA(nextConfig))), {
   // Sentry Webpack Plugin Options
   silent: true, // Suppresses all logs
   org: process.env.SENTRY_ORG,

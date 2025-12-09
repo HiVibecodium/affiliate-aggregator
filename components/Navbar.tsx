@@ -3,35 +3,32 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { ThemeToggle } from './ThemeToggle';
-
-interface NavItem {
-  label: string;
-  href: string;
-  icon?: string;
-}
-
-const mainNavItems: NavItem[] = [
-  { label: 'Programs', href: '/programs', icon: '📋' },
-  { label: 'Analytics', href: '/analytics', icon: '📊' },
-  { label: 'Favorites', href: '/favorites', icon: '❤️' },
-  { label: 'Compare', href: '/compare', icon: '⚖️' },
-];
-
-const secondaryNavItems: NavItem[] = [
-  { label: 'Dashboard', href: '/dashboard' },
-  { label: 'Applications', href: '/applications' },
-  { label: 'Settings', href: '/settings' },
-];
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const t = useTranslations('nav');
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
     return pathname.startsWith(href);
   };
+
+  const navItems = [
+    { label: t('programs'), href: '/programs', icon: '📋' },
+    { label: 'Analytics', href: '/analytics', icon: '📊' },
+    { label: t('favorites'), href: '/favorites', icon: '❤️' },
+    { label: t('compare'), href: '/compare', icon: '⚖️' },
+  ];
+
+  const moreItems = [
+    { label: t('dashboard'), href: '/dashboard' },
+    { label: 'Applications', href: '/applications' },
+    { label: t('settings'), href: '/settings' },
+  ];
 
   return (
     <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
@@ -45,7 +42,7 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
-            {mainNavItems.map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -63,7 +60,7 @@ export function Navbar() {
             {/* More Dropdown */}
             <div className="relative group">
               <button className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                More
+                {t('more')}
                 <svg
                   className="inline-block ml-1 w-4 h-4"
                   fill="none"
@@ -79,7 +76,7 @@ export function Navbar() {
                 </svg>
               </button>
               <div className="absolute right-0 mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                {secondaryNavItems.map((item) => (
+                {moreItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
@@ -98,6 +95,7 @@ export function Navbar() {
 
           {/* Right Side */}
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <ThemeToggle />
 
             {/* Auth Buttons - Desktop */}
@@ -106,13 +104,13 @@ export function Navbar() {
                 href="/login"
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
-                Sign In
+                {t('login')}
               </Link>
               <Link
                 href="/signup"
                 className="px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
               >
-                Sign Up
+                {t('signup')}
               </Link>
             </div>
 
@@ -149,7 +147,7 @@ export function Navbar() {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
             <div className="space-y-1">
-              {mainNavItems.map((item) => (
+              {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -165,7 +163,7 @@ export function Navbar() {
                 </Link>
               ))}
               <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
-              {secondaryNavItems.map((item) => (
+              {moreItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -186,14 +184,14 @@ export function Navbar() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex-1 px-4 py-2 text-sm font-medium text-center border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
-                  Sign In
+                  {t('login')}
                 </Link>
                 <Link
                   href="/signup"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex-1 px-4 py-2 text-sm font-medium text-center bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
                 >
-                  Sign Up
+                  {t('signup')}
                 </Link>
               </div>
             </div>

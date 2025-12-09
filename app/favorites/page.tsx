@@ -3,6 +3,7 @@ import { logger } from '@/lib/logger';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { SwipeableCard } from '@/components/SwipeableCard';
 import { ProgramListSkeleton } from '@/components/MobileSkeletons';
 import { ScrollToTopFAB } from '@/components/FloatingActionButton';
@@ -30,6 +31,8 @@ interface Favorite {
 }
 
 export default function FavoritesPage() {
+  const t = useTranslations('favorites');
+  const common = useTranslations('common');
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +49,7 @@ export default function FavoritesPage() {
       const response = await fetch('/api/favorites');
 
       if (response.status === 401) {
-        setError('Пожалуйста, войдите в систему, чтобы увидеть избранное');
+        setError(t('loginRequired'));
         setLoading(false);
         return;
       }
@@ -58,7 +61,7 @@ export default function FavoritesPage() {
       const data = await response.json();
       setFavorites(data.favorites);
     } catch (err) {
-      setError('Произошла ошибка при загрузке избранного');
+      setError(common('error'));
       logger.error('Failed to fetch favorites:', err);
     } finally {
       setLoading(false);
@@ -67,18 +70,18 @@ export default function FavoritesPage() {
 
   function exportToCSV() {
     if (favorites.length === 0) {
-      alert('Нет избранных программ для экспорта');
+      alert(t('empty'));
       return;
     }
 
-    const headers = ['Название', 'Сеть', 'Категория', 'Комиссия', 'Тип', 'Cookie', 'Мин. выплата'];
+    const headers = ['Name', 'Network', 'Category', 'Commission', 'Type', 'Cookie', 'Min. Payment'];
     const rows = favorites.map((fav) => [
       fav.program.name,
       fav.program.network.name,
       fav.program.category || '',
       `${fav.program.commissionRate}%`,
       fav.program.commissionType || '',
-      `${fav.program.cookieDuration} дней`,
+      `${fav.program.cookieDuration}`,
       `$${fav.program.paymentThreshold}`,
     ]);
 
@@ -118,7 +121,7 @@ export default function FavoritesPage() {
       }
     } catch (err) {
       logger.error('Failed to remove favorite:', err);
-      alert('Произошла ошибка. Попробуйте снова.');
+      alert(common('error'));
     } finally {
       setRemovingId(null);
     }
@@ -133,11 +136,9 @@ export default function FavoritesPage() {
               href="/"
               className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm mb-2 inline-block"
             >
-              ← Назад на главную
+              {common('backToHome')}
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Избранные программы
-            </h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('title')}</h1>
           </div>
         </div>
         <div className="container mx-auto px-4 py-8">
@@ -156,11 +157,9 @@ export default function FavoritesPage() {
               href="/"
               className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm mb-2 inline-block"
             >
-              ← Назад на главную
+              {common('backToHome')}
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Избранные программы
-            </h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('title')}</h1>
           </div>
         </div>
         <div className="container mx-auto px-4 py-12 pb-24 md:pb-12">
@@ -183,7 +182,7 @@ export default function FavoritesPage() {
               href="/auth/signin"
               className="mt-6 inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 touch-target"
             >
-              Войти в систему
+              {common('login')}
             </Link>
           </div>
         </div>
@@ -200,17 +199,15 @@ export default function FavoritesPage() {
             href="/"
             className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm mb-2 inline-block"
           >
-            ← Назад на главную
+            {common('backToHome')}
           </Link>
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-                Избранные программы
+                {t('title')}
               </h1>
               <p className="text-gray-600 dark:text-gray-300 mt-1">
-                {favorites.length === 0
-                  ? 'У вас пока нет избранных программ'
-                  : `${favorites.length} ${favorites.length === 1 ? 'программа' : favorites.length < 5 ? 'программы' : 'программ'}`}
+                {favorites.length === 0 ? t('empty') : t('subtitle', { count: favorites.length })}
               </p>
             </div>
             {favorites.length > 0 && (
@@ -226,7 +223,7 @@ export default function FavoritesPage() {
                     d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                   />
                 </svg>
-                <span className="hidden sm:inline">Экспорт в CSV</span>
+                <span className="hidden sm:inline">{common('exportCSV')}</span>
                 <span className="sm:hidden">CSV</span>
               </button>
             )}
@@ -234,7 +231,7 @@ export default function FavoritesPage() {
           {/* Mobile swipe hint */}
           {favorites.length > 0 && (
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 md:hidden">
-              Свайп влево для удаления
+              {t('swipeHint')}
             </p>
           )}
         </div>
@@ -256,17 +253,13 @@ export default function FavoritesPage() {
                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
               />
             </svg>
-            <p className="text-gray-500 dark:text-gray-400 text-lg mt-4">
-              У вас пока нет избранных программ
-            </p>
-            <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">
-              Добавьте программы в избранное, нажав на иконку сердца на странице программ
-            </p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg mt-4">{t('empty')}</p>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">{t('emptyHint')}</p>
             <Link
               href="/programs"
               className="mt-6 inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 touch-target"
             >
-              Перейти к программам
+              {t('goToPrograms')}
             </Link>
           </div>
         ) : (
@@ -291,7 +284,7 @@ export default function FavoritesPage() {
                         />
                       </svg>
                     ),
-                    label: 'Удалить',
+                    label: common('delete'),
                     color: 'bg-red-500',
                     onClick: () => removeFavorite(favorite.programId),
                   },

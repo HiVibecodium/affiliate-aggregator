@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import './tour.css';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 import { ComparisonProvider } from '@/contexts/ComparisonContext';
 import { ComparisonBar } from '@/components/ComparisonBar';
 import { ThemeProvider } from '@/contexts/ThemeContext';
@@ -24,9 +26,12 @@ import {
 
 export const metadata: Metadata = defaultMetadata;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         {/* Prevent flash of wrong theme */}
         <script
@@ -81,20 +86,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <OfflineIndicator />
         <WebVitals />
-        <ThemeProvider>
-          <OrganizationProvider>
-            <ComparisonProvider>
-              <ToastProvider>
-                <Navbar />
-                <div className="animate-page-enter">{children}</div>
-                <ComparisonBar />
-                <BottomNav />
-                <PWAInstallPrompt />
-                <PWAUpdateNotification />
-              </ToastProvider>
-            </ComparisonProvider>
-          </OrganizationProvider>
-        </ThemeProvider>
+        <NextIntlClientProvider messages={messages}>
+          <ThemeProvider>
+            <OrganizationProvider>
+              <ComparisonProvider>
+                <ToastProvider>
+                  <Navbar />
+                  <div className="animate-page-enter">{children}</div>
+                  <ComparisonBar />
+                  <BottomNav />
+                  <PWAInstallPrompt />
+                  <PWAUpdateNotification />
+                </ToastProvider>
+              </ComparisonProvider>
+            </OrganizationProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
         <SpeedInsights />
         <Analytics />
       </body>
