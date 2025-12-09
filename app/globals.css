@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode for Tailwind v4 */
+@variant dark (&:where(.dark, .dark *));
+
 /* Tailwind v4 theme configuration */
 @theme {
   --color-background: #ffffff;
