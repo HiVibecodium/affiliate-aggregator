@@ -18,8 +18,8 @@ describe('Analytics Library', () => {
 
   afterEach(() => {
     // Cleanup
-    delete (window as any).va;
-    delete (window as any).gtag;
+    delete (window as unknown as Record<string, unknown>).va;
+    delete (window as unknown as Record<string, unknown>).gtag;
   });
 
   describe('trackEvent', () => {
@@ -48,13 +48,13 @@ describe('Analytics Library', () => {
     });
 
     it('does not throw when window.va is undefined', () => {
-      delete (window as any).va;
+      delete (window as unknown as Record<string, unknown>).va;
 
       expect(() => trackEvent('search', {})).not.toThrow();
     });
 
     it('does not throw when window.gtag is undefined', () => {
-      delete (window as any).gtag;
+      delete (window as unknown as Record<string, unknown>).gtag;
 
       expect(() => trackEvent('search', {})).not.toThrow();
     });

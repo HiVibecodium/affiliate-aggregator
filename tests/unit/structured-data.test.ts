@@ -19,7 +19,7 @@ import {
 } from '@/lib/seo/structured-data';
 
 describe('Structured Data Library', () => {
-  const APP_URL = 'https://affiliate-aggregator-five.vercel.app';
+  const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://affiliate-aggregator-five.vercel.app';
 
   describe('generateOrganizationSchema', () => {
     it('generates valid organization schema', () => {

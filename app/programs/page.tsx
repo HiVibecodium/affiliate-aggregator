@@ -500,7 +500,7 @@ function ProgramsContent() {
 
               {/* Network filter */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Партнерская сеть
                 </label>
                 <select
@@ -509,7 +509,7 @@ function ProgramsContent() {
                     setSelectedNetwork(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Все сети</option>
                   {stats?.networks.map((network) => (
@@ -522,14 +522,16 @@ function ProgramsContent() {
 
               {/* Category filter */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Категория</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Категория
+                </label>
                 <select
                   value={selectedCategory}
                   onChange={(e) => {
                     setSelectedCategory(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Все категории</option>
                   {filters?.categories.map((cat) => (
@@ -542,7 +544,7 @@ function ProgramsContent() {
 
               {/* Commission type filter */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Тип комиссии
                 </label>
                 <select
@@ -551,7 +553,7 @@ function ProgramsContent() {
                     setSelectedCommissionType(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Все типы</option>
                   {filters?.commissionTypes.map((ct) => (
@@ -564,7 +566,7 @@ function ProgramsContent() {
 
               {/* Country filter */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   🌍 Страна сети
                 </label>
                 <select
@@ -573,7 +575,7 @@ function ProgramsContent() {
                     setSelectedCountry(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Все страны</option>
                   {filters?.countries.map((country) => (
@@ -586,7 +588,7 @@ function ProgramsContent() {
 
               {/* Commission range */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Диапазон комиссии (%)
                 </label>
                 <div className="flex gap-2">
@@ -599,7 +601,7 @@ function ProgramsContent() {
                     }}
                     placeholder="От"
                     min={0}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <input
                     type="number"
@@ -610,11 +612,11 @@ function ProgramsContent() {
                     }}
                     placeholder="До"
                     max={100}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 {filters && (
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Доступно: {filters.commissionRange.min}% - {filters.commissionRange.max}%
                   </p>
                 )}
@@ -622,7 +624,7 @@ function ProgramsContent() {
 
               {/* Payment Method filter */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   💳 Способ оплаты
                 </label>
                 <select
@@ -631,7 +633,7 @@ function ProgramsContent() {
                     setSelectedPaymentMethod(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Все способы</option>
                   <option value="PayPal">💳 PayPal</option>
@@ -642,12 +644,14 @@ function ProgramsContent() {
                   <option value="ACH">🏛️ ACH</option>
                   <option value="Cryptocurrency">₿ Криптовалюта</option>
                 </select>
-                <p className="text-xs text-gray-500 mt-1">Фильтр по доступным методам выплат</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Фильтр по доступным методам выплат
+                </p>
               </div>
 
               {/* Cookie Duration filter */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   🍪 Длительность Cookie (дни)
                 </label>
                 <div className="flex gap-2">
@@ -660,7 +664,7 @@ function ProgramsContent() {
                       setCurrentPage(1);
                     }}
                     min={0}
-                    className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-1/2 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <input
                     type="number"
@@ -671,15 +675,17 @@ function ProgramsContent() {
                       setCurrentPage(1);
                     }}
                     max={365}
-                    className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-1/2 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Популярно: 30, 60, 90, 365 дней</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Популярно: 30, 60, 90, 365 дней
+                </p>
               </div>
 
               {/* Payment Threshold filter */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   💵 Минимальная выплата ($)
                 </label>
                 <div className="flex gap-2">
@@ -692,7 +698,7 @@ function ProgramsContent() {
                       setCurrentPage(1);
                     }}
                     min={0}
-                    className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-1/2 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <input
                     type="number"
@@ -703,15 +709,17 @@ function ProgramsContent() {
                       setCurrentPage(1);
                     }}
                     max={10000}
-                    className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-1/2 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Типично: $50, $100, $500</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Типично: $50, $100, $500
+                </p>
               </div>
 
               {/* Difficulty Level filter */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   🎯 Сложность входа
                 </label>
                 <div className="space-y-2">
@@ -729,7 +737,9 @@ function ProgramsContent() {
                       }}
                       className="w-4 h-4 text-green-600 rounded"
                     />
-                    <span className="text-sm">🟢 Легкий старт</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      🟢 Легкий старт
+                    </span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -745,7 +755,9 @@ function ProgramsContent() {
                       }}
                       className="w-4 h-4 text-yellow-600 rounded"
                     />
-                    <span className="text-sm">🟡 Средние требования</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      🟡 Средние требования
+                    </span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -761,7 +773,9 @@ function ProgramsContent() {
                       }}
                       className="w-4 h-4 text-red-600 rounded"
                     />
-                    <span className="text-sm">🔴 Высокие требования</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      🔴 Высокие требования
+                    </span>
                   </label>
                 </div>
               </div>
@@ -779,10 +793,12 @@ function ProgramsContent() {
                     className="w-4 h-4 text-blue-600 rounded"
                   />
                   <div>
-                    <span className="text-sm font-semibold text-gray-700">
+                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                       ⭐ Только с отзывами
                     </span>
-                    <p className="text-xs text-gray-500">Программы с рейтингами пользователей</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Программы с рейтингами пользователей
+                    </p>
                   </div>
                 </label>
               </div>
@@ -813,16 +829,22 @@ function ProgramsContent() {
               </div> */}
 
               {/* Quick stats */}
-              <div className="border-t pt-4">
-                <h4 className="font-semibold text-sm text-gray-700 mb-3">Статистика</h4>
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                <h4 className="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3">
+                  Статистика
+                </h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Всего программ:</span>
-                    <span className="font-semibold">{stats?.totalPrograms.toLocaleString()}</span>
+                    <span className="text-gray-600 dark:text-gray-400">Всего программ:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">
+                      {stats?.totalPrograms.toLocaleString()}
+                    </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Сетей:</span>
-                    <span className="font-semibold">{stats?.totalNetworks}</span>
+                    <span className="text-gray-600 dark:text-gray-400">Сетей:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">
+                      {stats?.totalNetworks}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -934,12 +956,12 @@ function ProgramsContent() {
             {loading ? (
               <div className="text-center py-12">
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
-                <p className="mt-4 text-gray-600">Загрузка программ...</p>
+                <p className="mt-4 text-gray-600 dark:text-gray-400">Загрузка программ...</p>
               </div>
             ) : filteredPrograms.length === 0 ? (
-              <div className="bg-white rounded-lg shadow p-12 text-center">
-                <p className="text-gray-500 text-lg">Программы не найдены</p>
-                <p className="text-gray-400 text-sm mt-2">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
+                <p className="text-gray-500 dark:text-gray-400 text-lg">Программы не найдены</p>
+                <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">
                   Попробуйте изменить параметры фильтрации
                 </p>
                 <button
@@ -1011,7 +1033,7 @@ function ProgramsContent() {
                 )}
 
                 {/* Page info */}
-                <div className="text-center text-sm text-gray-600 mt-4">
+                <div className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
                   Страница {currentPage} из {totalPages.toLocaleString()}
                 </div>
               </>
@@ -1182,10 +1204,10 @@ export default function ProgramsPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Загрузка...</p>
+            <p className="text-gray-600 dark:text-gray-400">Загрузка...</p>
           </div>
         </div>
       }

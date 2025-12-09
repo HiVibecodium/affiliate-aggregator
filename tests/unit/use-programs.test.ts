@@ -2,7 +2,7 @@
  * usePrograms Hooks Tests
  */
 
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor as _waitFor } from '@testing-library/react';
 import {
   usePrograms,
   useProgram,
@@ -58,7 +58,7 @@ describe('usePrograms Hooks', () => {
         isLoading: false,
         mutate: jest.fn(),
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => usePrograms());
 
@@ -75,7 +75,7 @@ describe('usePrograms Hooks', () => {
         isLoading: true,
         mutate: jest.fn(),
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => usePrograms());
 
@@ -95,7 +95,7 @@ describe('usePrograms Hooks', () => {
         isLoading: false,
         mutate: jest.fn(),
         isValidating: false,
-      } as any);
+      });
 
       const filters = {
         page: 2,
@@ -126,7 +126,7 @@ describe('usePrograms Hooks', () => {
         isLoading: false,
         mutate: jest.fn(),
         isValidating: false,
-      } as any);
+      });
 
       renderHook(() => usePrograms({}));
 
@@ -145,7 +145,7 @@ describe('usePrograms Hooks', () => {
         isLoading: false,
         mutate: jest.fn(),
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => usePrograms());
 
@@ -160,7 +160,7 @@ describe('usePrograms Hooks', () => {
         isLoading: false,
         mutate: mockMutate,
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => usePrograms());
 
@@ -189,7 +189,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => useProgram('123'));
 
@@ -208,7 +208,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       renderHook(() => useProgram(null));
 
@@ -221,7 +221,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: true,
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => useProgram('123'));
 
@@ -246,7 +246,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => useStats());
 
@@ -266,7 +266,7 @@ describe('usePrograms Hooks', () => {
         error: mockError,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => useStats());
 
@@ -297,7 +297,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => useFilters());
 
@@ -311,7 +311,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       renderHook(() =>
         useFilters({
@@ -333,7 +333,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       renderHook(() => useFilters());
 
@@ -359,7 +359,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => useSearchSuggestions('am'));
 
@@ -372,7 +372,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => useSearchSuggestions('a'));
 
@@ -386,7 +386,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       renderHook(() => useSearchSuggestions('test query'));
 
@@ -401,7 +401,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: true,
         isValidating: false,
-      } as any);
+      });
 
       const { result } = renderHook(() => useSearchSuggestions('amazon'));
 
@@ -418,7 +418,7 @@ describe('usePrograms Hooks', () => {
         isLoading: false,
         mutate: jest.fn(),
         isValidating: false,
-      } as any);
+      });
 
       renderHook(() => usePrograms());
 
@@ -435,7 +435,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       renderHook(() => useProgram('123'));
 
@@ -450,7 +450,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       renderHook(() => useStats());
 
@@ -465,7 +465,7 @@ describe('usePrograms Hooks', () => {
         error: undefined,
         isLoading: false,
         isValidating: false,
-      } as any);
+      });
 
       renderHook(() => useSearchSuggestions('test'));
 

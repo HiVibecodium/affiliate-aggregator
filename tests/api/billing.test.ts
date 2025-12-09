@@ -239,7 +239,7 @@ describe('Billing API', () => {
   describe('Price IDs', () => {
     it('should get correct price ID for pro monthly', () => {
       const tier = 'pro';
-      const interval = 'month';
+      const _interval = 'month';
       const expectedKey = `${tier}_monthly`;
 
       expect(expectedKey).toBe('pro_monthly');
@@ -247,7 +247,7 @@ describe('Billing API', () => {
 
     it('should get correct price ID for pro yearly', () => {
       const tier = 'pro';
-      const interval = 'year';
+      const _interval = 'year';
       const expectedKey = `${tier}_yearly`;
 
       expect(expectedKey).toBe('pro_yearly');
@@ -255,7 +255,7 @@ describe('Billing API', () => {
 
     it('should get correct price ID for business monthly', () => {
       const tier = 'business';
-      const interval = 'month';
+      const _interval = 'month';
       const expectedKey = `${tier}_monthly`;
 
       expect(expectedKey).toBe('business_monthly');

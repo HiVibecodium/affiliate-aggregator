@@ -329,7 +329,7 @@ describe('Email Sender', () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 
       // Override sendEmail to simulate failures
-      const originalError = console.error;
+      const _originalError = console.error;
       let callCount = 0;
       consoleSpy.mockImplementation(() => {
         callCount++;

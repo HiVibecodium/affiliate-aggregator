@@ -6,7 +6,7 @@ import {
   CacheDurations,
   getCacheControlHeader,
   withCacheHeaders,
-  cachedJson,
+  cachedJson as _cachedJson,
   CachePresets,
   staleWhileRevalidate,
   generateETag,

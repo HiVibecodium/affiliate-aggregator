@@ -219,7 +219,7 @@ describe('Toast Component', () => {
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
       // Reset toast function
-      setToastFunction(null as any);
+      setToastFunction(null as unknown as Parameters<typeof setToastFunction>[0]);
 
       toast('Test message');
 

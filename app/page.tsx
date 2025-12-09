@@ -149,14 +149,16 @@ export default async function Home() {
                       <div className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                         {network.name}
                       </div>
-                      <div className="text-sm text-gray-500">Партнерская сеть</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        Партнерская сеть
+                      </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       {network.programs.toLocaleString()}
                     </div>
-                    <div className="text-sm text-gray-500">программ</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">программ</div>
                   </div>
                 </Link>
               ))}
@@ -166,22 +168,32 @@ export default async function Home() {
 
         {/* Features Section */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <div className="text-center p-6 bg-white rounded-xl shadow-lg">
+          <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
             <div className="text-4xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold mb-2">Умный поиск</h3>
-            <p className="text-gray-600">
+            <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+              Умный поиск
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300">
               Фильтруйте программы по категориям, комиссиям и условиям
             </p>
           </div>
-          <div className="text-center p-6 bg-white rounded-xl shadow-lg">
+          <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
             <div className="text-4xl mb-4">📈</div>
-            <h3 className="text-xl font-semibold mb-2">Только качество</h3>
-            <p className="text-gray-600">750+ отборных программ с высокими комиссиями</p>
+            <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+              Только качество
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300">
+              750+ отборных программ с высокими комиссиями
+            </p>
           </div>
-          <div className="text-center p-6 bg-white rounded-xl shadow-lg">
+          <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
             <div className="text-4xl mb-4">💼</div>
-            <h3 className="text-xl font-semibold mb-2">Для бизнеса</h3>
-            <p className="text-gray-600">Multi-tenant система с ролевым доступом</p>
+            <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+              Для бизнеса
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300">
+              Multi-tenant система с ролевым доступом
+            </p>
           </div>
         </div>
 

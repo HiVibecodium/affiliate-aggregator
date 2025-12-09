@@ -13,7 +13,7 @@ import {
 } from '@/lib/seo/metadata';
 
 describe('SEO Metadata Generators', () => {
-  const APP_URL = 'https://affiliate-aggregator-five.vercel.app';
+  const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://affiliate-aggregator-five.vercel.app';
 
   describe('defaultMetadata', () => {
     it('has correct title configuration', () => {

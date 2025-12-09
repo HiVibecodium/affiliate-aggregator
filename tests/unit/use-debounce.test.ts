@@ -2,7 +2,7 @@
  * useDebounce and useDebouncedCallback Hooks Tests
  */
 
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act, waitFor as _waitFor } from '@testing-library/react';
 import { useDebounce, useDebouncedCallback } from '@/hooks/useDebounce';
 
 describe('useDebounce Hook', () => {
