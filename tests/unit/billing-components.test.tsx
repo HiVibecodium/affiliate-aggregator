@@ -43,8 +43,8 @@ describe('PricingTable', () => {
     render(<PricingTable />);
 
     expect(screen.getByText('$0')).toBeInTheDocument();
-    expect(screen.getByText('$12')).toBeInTheDocument();
-    expect(screen.getByText('$49')).toBeInTheDocument();
+    expect(screen.getByText('$9')).toBeInTheDocument();
+    expect(screen.getByText('$29')).toBeInTheDocument();
     expect(screen.getByText('Custom')).toBeInTheDocument();
   });
 
@@ -55,8 +55,8 @@ describe('PricingTable', () => {
     fireEvent.click(yearlyButton);
 
     // Should show yearly prices (per month equivalent)
-    expect(screen.getByText('$8.25')).toBeInTheDocument();
-    expect(screen.getByText('$33.25')).toBeInTheDocument();
+    expect(screen.getByText('$6.58')).toBeInTheDocument();
+    expect(screen.getByText('$20.75')).toBeInTheDocument();
   });
 
   it('shows savings text for yearly plans', () => {
@@ -65,8 +65,8 @@ describe('PricingTable', () => {
     const yearlyButton = screen.getByText('Yearly', { exact: false });
     fireEvent.click(yearlyButton);
 
-    expect(screen.getByText('30% off yearly')).toBeInTheDocument();
-    expect(screen.getByText('32% off yearly')).toBeInTheDocument();
+    expect(screen.getByText('27% off yearly')).toBeInTheDocument();
+    expect(screen.getByText('28% off yearly')).toBeInTheDocument();
   });
 
   it('marks Pro as most popular', () => {

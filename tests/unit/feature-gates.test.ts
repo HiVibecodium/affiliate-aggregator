@@ -45,8 +45,8 @@ describe('Feature Gates', () => {
         expect(TIER_LIMITS.free.can_export).toBe(false);
       });
 
-      it('should not allow analytics', () => {
-        expect(TIER_LIMITS.free.can_access_analytics).toBe(false);
+      it('should have basic analytics', () => {
+        expect(TIER_LIMITS.free.can_access_analytics).toBe('basic');
       });
 
       it('should not allow API access', () => {
@@ -79,8 +79,8 @@ describe('Feature Gates', () => {
         expect(TIER_LIMITS.pro.can_export).toBe(true);
       });
 
-      it('should allow analytics', () => {
-        expect(TIER_LIMITS.pro.can_access_analytics).toBe(true);
+      it('should have advanced analytics', () => {
+        expect(TIER_LIMITS.pro.can_access_analytics).toBe('advanced');
       });
 
       it('should not allow API', () => {
@@ -108,7 +108,7 @@ describe('Feature Gates', () => {
       it('should have all pro features', () => {
         expect(TIER_LIMITS.business.can_write_reviews).toBe(true);
         expect(TIER_LIMITS.business.can_export).toBe(true);
-        expect(TIER_LIMITS.business.can_access_analytics).toBe(true);
+        expect(TIER_LIMITS.business.can_access_analytics).toBe('full');
       });
     });
 
@@ -125,7 +125,7 @@ describe('Feature Gates', () => {
       it('should have all features enabled', () => {
         expect(TIER_LIMITS.enterprise.can_write_reviews).toBe(true);
         expect(TIER_LIMITS.enterprise.can_export).toBe(true);
-        expect(TIER_LIMITS.enterprise.can_access_analytics).toBe(true);
+        expect(TIER_LIMITS.enterprise.can_access_analytics).toBe('full');
         expect(TIER_LIMITS.enterprise.can_use_api).toBe(true);
       });
     });

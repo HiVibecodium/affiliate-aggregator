@@ -52,6 +52,7 @@ export function PricingTable({ currentTier = 'free', userId, userEmail }: Pricin
         'Basic search & filters',
         'View program details',
         'Read reviews',
+        'Basic analytics',
       ],
       cta: 'Current Plan',
       popular: false,
@@ -61,50 +62,52 @@ export function PricingTable({ currentTier = 'free', userId, userEmail }: Pricin
       name: 'Pro',
       description: 'For serious affiliate marketers',
       price: {
-        monthly: 1200,
-        yearly: 9900,
-        monthlyFormatted: '$12',
-        yearlyFormatted: '$99',
-        yearlyMonthly: '$8.25',
+        monthly: 900,
+        yearly: 7900,
+        monthlyFormatted: '$9',
+        yearlyFormatted: '$79',
+        yearlyMonthly: '$6.58',
       },
       limits: [
         'Unlimited favorites',
         'Unlimited comparisons',
         '10 saved searches',
-        'Unlimited application tracking',
+        '25 application tracking',
+        '3 email alerts',
         'Write reviews',
         'Export to CSV/Excel',
-        'Analytics dashboard',
+        'Advanced analytics',
         'Priority support',
       ],
       cta: 'Upgrade to Pro',
       popular: true,
-      savings: '30% off yearly',
+      savings: '27% off yearly',
     },
     {
       id: 'business',
       name: 'Business',
       description: 'For teams and agencies',
       price: {
-        monthly: 4900,
-        yearly: 39900,
-        monthlyFormatted: '$49',
-        yearlyFormatted: '$399',
-        yearlyMonthly: '$33.25',
+        monthly: 2900,
+        yearly: 24900,
+        monthlyFormatted: '$29',
+        yearlyFormatted: '$249',
+        yearlyMonthly: '$20.75',
       },
       limits: [
         'Everything in Pro',
+        'Unlimited saved searches',
+        'Unlimited application tracking',
+        'Unlimited email alerts',
         'API access (10,000 calls/month)',
         'Up to 5 team members',
-        'Advanced analytics',
-        'Custom integrations',
-        'Webhooks',
+        'Full analytics dashboard',
+        'Webhooks & integrations',
         'Priority email + chat support',
-        'Custom onboarding',
       ],
       cta: 'Upgrade to Business',
       popular: false,
-      savings: '32% off yearly',
+      savings: '28% off yearly',
     },
     {
       id: 'enterprise',
@@ -170,17 +173,19 @@ export function PricingTable({ currentTier = 'free', userId, userEmail }: Pricin
     <div className="w-full max-w-7xl mx-auto px-4 py-12">
       {/* Header */}
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Plan</h1>
-        <p className="text-xl text-gray-600 mb-8">Start free, upgrade when you need more</p>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Choose Your Plan</h1>
+        <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+          Start free, upgrade when you need more
+        </p>
 
         {/* Interval Toggle */}
-        <div className="inline-flex items-center bg-gray-100 rounded-lg p-1">
+        <div className="inline-flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
           <button
             onClick={() => setInterval('month')}
             className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
               interval === 'month'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
             Monthly
@@ -189,12 +194,14 @@ export function PricingTable({ currentTier = 'free', userId, userEmail }: Pricin
             onClick={() => setInterval('year')}
             className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
               interval === 'year'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
             Yearly
-            <span className="ml-2 text-xs text-green-600 font-semibold">Save up to 32%</span>
+            <span className="ml-2 text-xs text-green-600 dark:text-green-400 font-semibold">
+              Save up to 28%
+            </span>
           </button>
         </div>
       </div>
@@ -213,8 +220,10 @@ export function PricingTable({ currentTier = 'free', userId, userEmail }: Pricin
             <div
               key={plan.id}
               className={`relative rounded-2xl border-2 p-8 ${
-                plan.popular ? 'border-blue-500 shadow-xl scale-105' : 'border-gray-200 shadow-sm'
-              } ${isCurrentPlan ? 'bg-gray-50' : 'bg-white'}`}
+                plan.popular
+                  ? 'border-blue-500 shadow-xl scale-105'
+                  : 'border-gray-200 dark:border-gray-700 shadow-sm'
+              } ${isCurrentPlan ? 'bg-gray-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800'}`}
             >
               {/* Popular Badge */}
               {plan.popular && (
@@ -236,20 +245,24 @@ export function PricingTable({ currentTier = 'free', userId, userEmail }: Pricin
 
               {/* Plan Header */}
               <div className="mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                <p className="text-gray-600 text-sm">{plan.description}</p>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  {plan.name}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{plan.description}</p>
               </div>
 
               {/* Price */}
               <div className="mb-6">
                 <div className="flex items-baseline">
-                  <span className="text-4xl font-bold text-gray-900">{price}</span>
+                  <span className="text-4xl font-bold text-gray-900 dark:text-white">{price}</span>
                   {plan.id !== 'enterprise' && plan.id !== 'free' && (
-                    <span className="text-gray-600 ml-2">/month</span>
+                    <span className="text-gray-600 dark:text-gray-400 ml-2">/month</span>
                   )}
                 </div>
                 {interval === 'year' && plan.savings && (
-                  <p className="text-sm text-green-600 font-medium mt-1">{plan.savings}</p>
+                  <p className="text-sm text-green-600 dark:text-green-400 font-medium mt-1">
+                    {plan.savings}
+                  </p>
                 )}
               </div>
 
@@ -261,10 +274,10 @@ export function PricingTable({ currentTier = 'free', userId, userEmail }: Pricin
                   plan.popular && !isCurrentPlan
                     ? 'bg-blue-500 text-white hover:bg-blue-600'
                     : isCurrentPlan
-                      ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                      ? 'bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
                       : plan.id === 'enterprise'
                         ? 'bg-gray-800 text-white hover:bg-gray-700'
-                        : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
               >
                 {isLoading ? 'Loading...' : isCurrentPlan ? 'Current Plan' : plan.cta}
@@ -273,7 +286,10 @@ export function PricingTable({ currentTier = 'free', userId, userEmail }: Pricin
               {/* Features List */}
               <ul className="space-y-3">
                 {plan.limits.map((limit, idx) => (
-                  <li key={idx} className="flex items-start text-sm text-gray-700">
+                  <li
+                    key={idx}
+                    className="flex items-start text-sm text-gray-700 dark:text-gray-300"
+                  >
                     <svg
                       className="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
                       fill="none"
@@ -297,11 +313,14 @@ export function PricingTable({ currentTier = 'free', userId, userEmail }: Pricin
       </div>
 
       {/* FAQ or Additional Info */}
-      <div className="mt-12 text-center text-sm text-gray-600">
+      <div className="mt-12 text-center text-sm text-gray-600 dark:text-gray-400">
         <p>All plans include 14-day free trial • Cancel anytime • No hidden fees</p>
         <p className="mt-2">
           Questions?{' '}
-          <a href="mailto:support@example.com" className="text-blue-500 hover:underline">
+          <a
+            href="mailto:support@example.com"
+            className="text-blue-500 dark:text-blue-400 hover:underline"
+          >
             Contact us
           </a>
         </p>

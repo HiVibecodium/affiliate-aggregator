@@ -4,8 +4,8 @@
  * Enforce tier-based feature limits
  */
 
-import { prisma } from '@/lib/prisma'
-import { getUserTier } from './subscription'
+import { prisma } from '@/lib/prisma';
+import { getUserTier } from './subscription';
 
 /**
  * Feature limits by tier
@@ -16,23 +16,25 @@ export const TIER_LIMITS = {
     comparisons_daily: 3,
     saved_searches: 0,
     applications: 0,
+    email_alerts: 0,
     api_calls_monthly: 0,
     team_members: 1,
     can_write_reviews: false,
     can_export: false,
-    can_access_analytics: false,
+    can_access_analytics: 'basic' as const,
     can_use_api: false,
   },
   pro: {
     favorites: Infinity,
     comparisons_daily: Infinity,
     saved_searches: 10,
-    applications: Infinity,
+    applications: 25,
+    email_alerts: 3,
     api_calls_monthly: 0,
     team_members: 1,
     can_write_reviews: true,
     can_export: true,
-    can_access_analytics: true,
+    can_access_analytics: 'advanced' as const,
     can_use_api: false,
   },
   business: {
@@ -40,11 +42,12 @@ export const TIER_LIMITS = {
     comparisons_daily: Infinity,
     saved_searches: Infinity,
     applications: Infinity,
+    email_alerts: Infinity,
     api_calls_monthly: 10000,
     team_members: 5,
     can_write_reviews: true,
     can_export: true,
-    can_access_analytics: true,
+    can_access_analytics: 'full' as const,
     can_use_api: true,
   },
   enterprise: {
@@ -52,31 +55,38 @@ export const TIER_LIMITS = {
     comparisons_daily: Infinity,
     saved_searches: Infinity,
     applications: Infinity,
+    email_alerts: Infinity,
     api_calls_monthly: Infinity,
     team_members: Infinity,
     can_write_reviews: true,
     can_export: true,
-    can_access_analytics: true,
+    can_access_analytics: 'full' as const,
     can_use_api: true,
   },
-} as const
+} as const;
 
-export type Tier = keyof typeof TIER_LIMITS
-export type Feature = keyof typeof TIER_LIMITS.free
+export type Tier = keyof typeof TIER_LIMITS;
+export type Feature = keyof typeof TIER_LIMITS.free;
 
 /**
  * Get current usage for a metric
  */
-async function getCurrentUsage(userId: string, metric: string, period: 'daily' | 'monthly' | 'lifetime'): Promise<number> {
-  const date = new Date()
-  let dateKey: Date
+async function getCurrentUsage(
+  userId: string,
+  metric: string,
+  period: 'daily' | 'monthly' | 'lifetime'
+): Promise<number> {
+  const date = new Date();
+  let dateKey: Date;
 
   if (period === 'daily') {
-    dateKey = new Date(date.toISOString().split('T')[0])
+    dateKey = new Date(date.toISOString().split('T')[0]);
   } else if (period === 'monthly') {
-    dateKey = new Date(`${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-01`)
+    dateKey = new Date(
+      `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-01`
+    );
   } else {
-    dateKey = new Date('1970-01-01') // Epoch for lifetime
+    dateKey = new Date('1970-01-01'); // Epoch for lifetime
   }
 
   const usage = await prisma.usageMetric.findUnique({
@@ -88,9 +98,9 @@ async function getCurrentUsage(userId: string, metric: string, period: 'daily' |
         date: dateKey,
       },
     },
-  })
+  });
 
-  return usage?.value || 0
+  return usage?.value || 0;
 }
 
 /**
@@ -102,15 +112,17 @@ export async function recordUsage(
   period: 'daily' | 'monthly' | 'lifetime' = 'daily',
   increment = 1
 ): Promise<void> {
-  const date = new Date()
-  let dateKey: Date
+  const date = new Date();
+  let dateKey: Date;
 
   if (period === 'daily') {
-    dateKey = new Date(date.toISOString().split('T')[0])
+    dateKey = new Date(date.toISOString().split('T')[0]);
   } else if (period === 'monthly') {
-    dateKey = new Date(`${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-01`)
+    dateKey = new Date(
+      `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-01`
+    );
   } else {
-    dateKey = new Date('1970-01-01')
+    dateKey = new Date('1970-01-01');
   }
 
   await prisma.usageMetric.upsert({
@@ -132,7 +144,7 @@ export async function recordUsage(
       date: dateKey,
       value: increment,
     },
-  })
+  });
 }
 
 /**
@@ -142,15 +154,15 @@ export async function checkFeatureAccess(
   userId: string,
   feature: Feature
 ): Promise<{
-  allowed: boolean
-  limit?: number
-  current?: number
-  remaining?: number
-  tier: Tier
-  requiresUpgrade?: boolean
+  allowed: boolean;
+  limit?: number;
+  current?: number;
+  remaining?: number;
+  tier: Tier;
+  requiresUpgrade?: boolean;
 }> {
-  const tier = await getUserTier(userId)
-  const limit = TIER_LIMITS[tier][feature]
+  const tier = await getUserTier(userId);
+  const limit = TIER_LIMITS[tier][feature];
 
   // For boolean features
   if (typeof limit === 'boolean') {
@@ -158,7 +170,15 @@ export async function checkFeatureAccess(
       allowed: limit,
       tier,
       requiresUpgrade: !limit,
-    }
+    };
+  }
+
+  // For string features (like can_access_analytics: 'basic' | 'advanced' | 'full')
+  if (typeof limit === 'string') {
+    return {
+      allowed: true, // String features are always "allowed" but with different levels
+      tier,
+    };
   }
 
   // For unlimited features
@@ -166,7 +186,7 @@ export async function checkFeatureAccess(
     return {
       allowed: true,
       tier,
-    }
+    };
   }
 
   // For counted features, check usage
@@ -175,30 +195,32 @@ export async function checkFeatureAccess(
     comparisons_daily: { metric: 'comparisons_count', period: 'daily' },
     saved_searches: { metric: 'saved_searches_count', period: 'lifetime' },
     applications: { metric: 'applications_count', period: 'lifetime' },
+    email_alerts: { metric: 'email_alerts_count', period: 'lifetime' },
     api_calls_monthly: { metric: 'api_calls_count', period: 'monthly' },
     team_members: { metric: 'team_members_count', period: 'lifetime' },
-  }
+  };
 
-  const metricConfig = metricMap[feature]
+  const metricConfig = metricMap[feature];
   if (!metricConfig) {
     // Unknown feature, deny access
     return {
       allowed: false,
       tier,
       requiresUpgrade: true,
-    }
+    };
   }
 
-  const current = await getCurrentUsage(userId, metricConfig.metric, metricConfig.period)
+  const current = await getCurrentUsage(userId, metricConfig.metric, metricConfig.period);
+  const numericLimit = limit as number;
 
   return {
-    allowed: current < limit,
-    limit,
+    allowed: current < numericLimit,
+    limit: numericLimit,
     current,
-    remaining: Math.max(0, limit - current),
+    remaining: Math.max(0, numericLimit - current),
     tier,
-    requiresUpgrade: current >= limit,
-  }
+    requiresUpgrade: current >= numericLimit,
+  };
 }
 
 /**
@@ -210,11 +232,11 @@ export async function checkAndRecordUsage(
   feature: Feature,
   increment = 1
 ): Promise<{
-  allowed: boolean
-  message?: string
-  upgradeUrl?: string
+  allowed: boolean;
+  message?: string;
+  upgradeUrl?: string;
 }> {
-  const access = await checkFeatureAccess(userId, feature)
+  const access = await checkFeatureAccess(userId, feature);
 
   if (!access.allowed) {
     const messages: Record<string, string> = {
@@ -227,33 +249,35 @@ export async function checkAndRecordUsage(
       can_export: 'Data export is a Pro feature. Upgrade to export your data.',
       can_access_analytics: 'Analytics is a Pro feature. Upgrade to view detailed analytics.',
       can_use_api: 'API access is a Business feature. Upgrade to use our API.',
-    }
+    };
 
     return {
       allowed: false,
       message: messages[feature] || 'This feature requires an upgrade.',
       upgradeUrl: '/billing/upgrade',
-    }
+    };
   }
 
   // Record usage if it's a counted feature
   if (typeof access.limit === 'number' && access.limit !== Infinity) {
-    const metricMap: Record<string, { metric: string; period: 'daily' | 'monthly' | 'lifetime' }> = {
-      favorites: { metric: 'favorites_count', period: 'lifetime' },
-      comparisons_daily: { metric: 'comparisons_count', period: 'daily' },
-      saved_searches: { metric: 'saved_searches_count', period: 'lifetime' },
-      applications: { metric: 'applications_count', period: 'lifetime' },
-      api_calls_monthly: { metric: 'api_calls_count', period: 'monthly' },
-      team_members: { metric: 'team_members_count', period: 'lifetime' },
-    }
+    const metricMap: Record<string, { metric: string; period: 'daily' | 'monthly' | 'lifetime' }> =
+      {
+        favorites: { metric: 'favorites_count', period: 'lifetime' },
+        comparisons_daily: { metric: 'comparisons_count', period: 'daily' },
+        saved_searches: { metric: 'saved_searches_count', period: 'lifetime' },
+        applications: { metric: 'applications_count', period: 'lifetime' },
+        email_alerts: { metric: 'email_alerts_count', period: 'lifetime' },
+        api_calls_monthly: { metric: 'api_calls_count', period: 'monthly' },
+        team_members: { metric: 'team_members_count', period: 'lifetime' },
+      };
 
-    const metricConfig = metricMap[feature]
+    const metricConfig = metricMap[feature];
     if (metricConfig) {
-      await recordUsage(userId, metricConfig.metric, metricConfig.period, increment)
+      await recordUsage(userId, metricConfig.metric, metricConfig.period, increment);
     }
   }
 
-  return { allowed: true }
+  return { allowed: true };
 }
 
 /**
@@ -269,22 +293,25 @@ export async function decrementUsage(
     comparisons_daily: { metric: 'comparisons_count', period: 'daily' },
     saved_searches: { metric: 'saved_searches_count', period: 'lifetime' },
     applications: { metric: 'applications_count', period: 'lifetime' },
+    email_alerts: { metric: 'email_alerts_count', period: 'lifetime' },
     api_calls_monthly: { metric: 'api_calls_count', period: 'monthly' },
     team_members: { metric: 'team_members_count', period: 'lifetime' },
-  }
+  };
 
-  const metricConfig = metricMap[feature]
-  if (!metricConfig) return
+  const metricConfig = metricMap[feature];
+  if (!metricConfig) return;
 
-  const date = new Date()
-  let dateKey: Date
+  const date = new Date();
+  let dateKey: Date;
 
   if (metricConfig.period === 'daily') {
-    dateKey = new Date(date.toISOString().split('T')[0])
+    dateKey = new Date(date.toISOString().split('T')[0]);
   } else if (metricConfig.period === 'monthly') {
-    dateKey = new Date(`${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-01`)
+    dateKey = new Date(
+      `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-01`
+    );
   } else {
-    dateKey = new Date('1970-01-01')
+    dateKey = new Date('1970-01-01');
   }
 
   await prisma.usageMetric.updateMany({
@@ -297,42 +324,51 @@ export async function decrementUsage(
     data: {
       value: { decrement },
     },
-  })
+  });
 }
 
 /**
  * Get usage summary for user
  */
 export async function getUsageSummary(userId: string) {
-  const tier = await getUserTier(userId)
-  const limits = TIER_LIMITS[tier]
+  const tier = await getUserTier(userId);
+  const limits = TIER_LIMITS[tier];
 
-  const usage: Record<string, { current: number; limit: number | boolean | typeof Infinity; percentage?: number }> = {}
+  const usage: Record<
+    string,
+    { current: number; limit: number | boolean | string | typeof Infinity; percentage?: number }
+  > = {};
 
   for (const [feature, limit] of Object.entries(limits)) {
-    const access = await checkFeatureAccess(userId, feature as Feature)
+    const access = await checkFeatureAccess(userId, feature as Feature);
 
     if (typeof limit === 'boolean') {
       usage[feature] = {
         current: limit ? 1 : 0,
         limit,
-      }
+      };
+    } else if (typeof limit === 'string') {
+      // String features like can_access_analytics: 'basic' | 'advanced' | 'full'
+      usage[feature] = {
+        current: 0,
+        limit,
+      };
     } else if (limit === Infinity) {
       usage[feature] = {
         current: access.current || 0,
         limit: Infinity,
-      }
+      };
     } else {
       usage[feature] = {
         current: access.current || 0,
         limit,
-        percentage: ((access.current || 0) / limit) * 100,
-      }
+        percentage: ((access.current || 0) / (limit as number)) * 100,
+      };
     }
   }
 
   return {
     tier,
     usage,
-  }
+  };
 }
